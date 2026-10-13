@@ -1,0 +1,123 @@
+/*
+ * TermsTabs (design section 12, Req 31.1). One panel set, presented by data-mode:
+ * static (pre-hydration / no JS: stacked, all open), tabs (>= 1024px), accordion (< 1024px).
+ * Accordion visuals come from components/ui/Accordion.module.css.
+ */
+
+.root {
+  scroll-margin-top: var(--header-h);
+}
+
+/* ---- Tab list (tabs mode only) ---- */
+.tablist {
+  display: none;
+}
+
+.root[data-mode="tabs"] .tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-md);
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 200ms cubic-bezier(.2, .7, .2, 1), color 200ms cubic-bezier(.2, .7, .2, 1),
+    background-color 200ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.tab:hover {
+  border-color: var(--gold-2);
+  color: var(--gold-1);
+}
+
+.tab[aria-selected="true"] {
+  border-color: transparent;
+  background: var(--gold-grad);
+  color: var(--bg-0);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+/* ---- Panels ---- */
+.heading {
+  scroll-margin-top: var(--header-h);
+}
+
+.trigger {
+  font-size: 1.0625rem;
+}
+
+.panel {
+  scroll-margin-top: var(--header-h);
+}
+
+/* Author display:grid would otherwise override the [hidden] UA rule. */
+.panel[hidden] {
+  display: none;
+}
+
+.content {
+  padding-bottom: 24px;
+  color: var(--text-md);
+  line-height: 1.7;
+}
+
+/* Static (no JS): headings are plain titles, not toggles. */
+.root[data-mode="static"] .trigger {
+  cursor: default;
+}
+
+.root[data-mode="static"] .trigger:hover {
+  color: var(--text-hi);
+}
+
+.root[data-mode="static"] .trigger > [aria-hidden="true"] {
+  display: none;
+}
+
+/* Tabs: no accordion chrome. */
+.root[data-mode="tabs"] .panels {
+  border-top: 0;
+}
+
+.root[data-mode="tabs"] .item {
+  border-bottom: 0;
+}
+
+.root[data-mode="tabs"] .heading {
+  display: none;
+}
+
+.root[data-mode="tabs"] .panel {
+  display: block;
+  padding: 24px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: var(--glass);
+}
+
+.root[data-mode="tabs"] .panel[hidden] {
+  display: none;
+}
+
+.root[data-mode="tabs"] .panel:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.root[data-mode="tabs"] .content {
+  padding-bottom: 0;
+}

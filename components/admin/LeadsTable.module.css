@@ -1,0 +1,71 @@
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  font-size: 0.875rem;
+}
+
+.table a {
+  color: var(--gold-1);
+  overflow-wrap: anywhere;
+}
+
+.table a:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.notes {
+  min-width: 12rem;
+  max-width: 20rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.links {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pagerText {
+  margin: 0;
+  color: var(--text-md);
+}
+
+.pagerLinks {
+  display: flex;
+  gap: 8px;
+}
+
+.title {
+  margin: 0 0 8px;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: 1.75rem;
+}
+
+.intro {
+  margin: 0 0 24px;
+  color: var(--text-md);
+}
+
+.alert {
+  margin: 0 0 24px;
+  color: var(--danger);
+  font-weight: 600;
+}

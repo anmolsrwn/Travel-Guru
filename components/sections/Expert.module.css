@@ -1,0 +1,111 @@
+/* Your Travel Expert (design section 9): stacked on mobile, photo beside text
+   from tablet, 5/12 + 7/12 split on desktop (Req 24.1–24.3). */
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.media {
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+/* Fixed 4:5 frame with a gold ring; holds the Logo_Mark under the photo. */
+.frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--gold-a30);
+  border-radius: var(--r-lg);
+  box-shadow:
+    0 0 0 6px var(--gold-a08),
+    var(--shadow-card);
+  background:
+    radial-gradient(90% 70% at 30% 20%, var(--gold-a12) 0%, transparent 65%),
+    var(--bg-1);
+}
+
+/* Logo_Mark sized relative to the frame (overrides LogoImage's --logo-size). */
+.frame .mark {
+  width: 40%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.frame .mark > span {
+  font-size: clamp(2rem, 7vw, 3.5rem);
+}
+
+/* Photo (img) and SafeImage's failure placeholder (span) fill the frame. */
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Failed or missing photo: let the Logo_Mark beneath show through (Req 36.5). */
+span.photo {
+  background: none;
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  margin-top: var(--space-3);
+  font-size: var(--fs-h2);
+}
+
+.role {
+  margin-top: var(--space-2);
+  color: var(--gold-2);
+  font-weight: 600;
+}
+
+.bio {
+  margin-top: var(--space-4);
+  max-width: 56ch;
+  color: var(--text-md);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* Full-width stacked buttons on mobile. */
+.action {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-7);
+  }
+
+  .media {
+    max-width: none;
+  }
+
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .action {
+    width: auto;
+  }
+}

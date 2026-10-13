@@ -1,0 +1,308 @@
+/* Itinerary modal content (design 5 wireframe, Req 11). Shell styles live in Modal.module.css. */
+
+.strip {
+  clear: both; /* sit below the floated close button */
+  margin-bottom: var(--space-5);
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+}
+
+.stripImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+}
+
+.head {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  margin-bottom: var(--space-5);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  color: var(--gold-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.meta span + span::before {
+  content: "·";
+  margin-right: var(--space-2);
+  color: var(--text-lo);
+}
+
+.title {
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  line-height: 1.2;
+}
+
+.transferBasis {
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.block {
+  padding-block: var(--space-5);
+  border-top: 1px solid var(--glass-border);
+}
+
+.blockTitle {
+  margin-bottom: var(--space-3);
+  color: var(--text-hi);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.activeRow td {
+  background: var(--gold-a08);
+}
+
+.hotelLabel {
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+}
+
+.tierRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.tierLabel {
+  color: var(--text-md);
+  font-weight: 600;
+}
+
+/* 150ms crossfade when the active tier changes (Req 3.10). */
+.tierBody {
+  animation: tierFade 150ms var(--ease, cubic-bezier(.2, .7, .2, 1)) both;
+}
+
+@keyframes tierFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.priceLine {
+  color: var(--text-md);
+  font-size: 1rem;
+}
+
+.land {
+  color: var(--text-lo);
+  font-size: 0.875rem;
+}
+
+.priceNote {
+  margin-top: var(--space-1);
+  color: var(--text-lo);
+  font-size: 0.875rem;
+}
+
+.priceLine + .blockTitle,
+.priceNote + .blockTitle {
+  margin-top: var(--space-5);
+}
+
+.hotels {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.hotel {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr;
+  gap: var(--space-3);
+  color: var(--text-md);
+}
+
+.hotelWhere {
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+.roomType {
+  color: var(--text-lo);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  white-space: normal;
+}
+
+.extras {
+  margin-block: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+}
+
+.extras + .block {
+  border-top: 0;
+}
+
+.extrasList {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.subList {
+  margin-top: var(--space-1);
+  padding-left: var(--space-5);
+  list-style: disc;
+}
+
+.timeline {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day {
+  position: relative;
+  padding-left: var(--space-6);
+}
+
+/* Dot + connecting line. */
+.day::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--gold-grad);
+  box-shadow: 0 0 0 4px var(--bg-1);
+}
+
+.day:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 22px;
+  bottom: calc(-1 * var(--space-4));
+  left: 10px;
+  width: 1px;
+  background: var(--gold-a40);
+}
+
+.dayHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.dayNum {
+  color: var(--gold-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dayTitle {
+  flex: 1 1 200px;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.transfer {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
+.dayText {
+  margin-top: var(--space-1);
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.notes {
+  display: grid;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+  color: var(--text-md);
+  list-style: disc;
+}
+
+.exclusions {
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.exclusions strong {
+  color: var(--text-hi);
+}
+
+.termsLink {
+  color: var(--gold-1);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.termsLink:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--glass-border);
+}
+
+@media (max-width: 639px) {
+  .stripImage {
+    aspect-ratio: 16 / 9;
+  }
+
+  .hotel {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .actions > * {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tierBody {
+    animation: none;
+  }
+}

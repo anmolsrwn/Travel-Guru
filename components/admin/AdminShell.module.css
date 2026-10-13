@@ -1,0 +1,112 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4, 16px);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-1);
+}
+
+.brand {
+  margin: 0;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.nav {
+  flex: 1 1 auto;
+}
+
+.navList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-3, 12px);
+  border-radius: var(--r-sm, 8px);
+  color: var(--text-md);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: var(--text-hi);
+  background-color: var(--glass);
+}
+
+.navLink[aria-current="page"] {
+  color: var(--text-hi);
+  background-color: var(--bg-2);
+}
+
+.navLink:focus-visible,
+.signOut:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.signOutForm {
+  margin: 0 0 0 auto;
+}
+
+.signOut {
+  min-height: 44px;
+  padding: 0 var(--space-4, 16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--r-pill, 999px);
+  background: transparent;
+  color: var(--text-hi);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signOut:hover {
+  background-color: var(--glass);
+}
+
+.main {
+  max-width: var(--container-max, 1200px);
+  margin: 0 auto;
+  padding: var(--space-6, 32px) var(--space-4, 16px);
+}
+
+.notice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4, 16px);
+  max-width: 480px;
+  margin: 10vh auto;
+  padding: var(--space-6, 32px) var(--space-5, 24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-md, 16px);
+  background-color: var(--bg-1);
+}
+
+.noticeTitle {
+  margin: 0;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: 1.5rem;
+}
+
+.noticeText {
+  margin: 0;
+  color: var(--text-md);
+}
+
+.notice .signOutForm {
+  margin: 0;
+}

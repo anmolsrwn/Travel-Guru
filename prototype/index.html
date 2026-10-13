@@ -1,0 +1,717 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Guru Raipur · Design Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Design tokens ===== */
+:root{
+  --bg-0:#070b14;--bg-1:#0d1424;--bg-2:#141d33;
+  --glass:rgba(255,255,255,.04);--glass-border:rgba(252,229,156,.14);
+  --gold-1:#fce59c;--gold-2:#d4af37;--gold-grad:linear-gradient(135deg,#fce59c 0%,#d4af37 100%);
+  --emerald:#10b981;--whatsapp:#25D366;
+  --text-hi:#f5f1e8;--text-md:#b8bfd0;--text-lo:#7a849c;--danger:#f87171;
+  --r-sm:8px;--r-md:16px;--r-lg:24px;--r-pill:999px;
+  --shadow-card:0 10px 30px -10px rgba(0,0,0,.6);--shadow-gold:0 8px 28px -8px rgba(212,175,55,.45);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --serif:'Playfair Display',Georgia,serif;--sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg-0);color:var(--text-md);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:96px 0}
+.alt{background:var(--bg-1)}
+h1,h2,h3{font-family:var(--serif);color:var(--text-hi);font-weight:600;line-height:1.15}
+h2{font-size:clamp(2rem,4vw,3rem)}
+h3{font-size:1.375rem}
+.gold-text{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:var(--gold-2);margin-bottom:16px}
+.eyebrow::before{content:"";width:32px;height:1px;background:var(--gold-2)}
+.section-head{text-align:center;margin-bottom:56px}
+.section-head .eyebrow{justify-content:center}
+.section-head p{max-width:620px;margin:16px auto 0}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:var(--r-pill);font:600 .9375rem/1 var(--sans);letter-spacing:.02em;cursor:pointer;border:1px solid transparent;transition:all .2s var(--ease)}
+.btn:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+.btn-gold{background:var(--gold-grad);background-size:200% 200%;color:var(--bg-0)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:var(--shadow-gold);background-position:100% 0}
+.btn-outline{background:transparent;border-color:var(--gold-2);color:var(--gold-1)}
+.btn-outline:hover{background:rgba(212,175,55,.1)}
+.btn-wa{background:var(--whatsapp);color:#fff}
+.btn-wa:hover{transform:translateY(-2px);box-shadow:0 8px 28px -8px rgba(37,211,102,.5)}
+.btn-block{width:100%}
+.wa-icon{width:18px;height:18px;fill:currentColor}
+
+/* ===== Glass card ===== */
+.glass{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--r-md);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);transition:transform .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+@supports not (backdrop-filter:blur(1px)){.glass{background:var(--bg-1)}}
+.lift:hover{transform:translateY(-6px);border-color:rgba(252,229,156,.35);box-shadow:var(--shadow-card)}
+
+/* ===== Chips ===== */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r-pill);font-size:.75rem;font-weight:600}
+.chip-gold{background:rgba(212,175,55,.12);color:var(--gold-1);border:1px solid rgba(212,175,55,.3)}
+.chip-em{background:rgba(16,185,129,.12);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)}
+.chip-n{background:rgba(255,255,255,.06);color:var(--text-md)}
+
+/* ===== Header ===== */
+header{position:fixed;inset:0 0 auto 0;z-index:50;height:72px;transition:background .3s}
+header.scrolled{background:rgba(7,11,20,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--glass-border)}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;flex-direction:column;line-height:1.1}
+.logo b{font-family:var(--serif);font-size:1.25rem;letter-spacing:.12em;color:var(--text-hi)}
+.logo b span{color:var(--gold-2)}
+.logo small{font-size:.6875rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-lo)}
+.nav-links{display:flex;gap:28px;font-size:.875rem;font-weight:500}
+.nav-links a:hover{color:var(--gold-1)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-right .btn{padding:10px 20px;font-size:.875rem}
+
+/* ===== Hero ===== */
+.hero{min-height:92vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 0 80px}
+.hero-bg{position:absolute;inset:0;background:#0d1424 url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1920&q=75') center/cover;animation:kenburns 20s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,20,.95) 0%,rgba(7,11,20,.7) 50%,rgba(7,11,20,.35) 100%),linear-gradient(0deg,var(--bg-0) 0%,transparent 40%)}
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.12)}}
+.hero .container{position:relative;z-index:1}
+.hero h1{font-size:clamp(2.5rem,6vw,4.75rem);max-width:780px}
+.hero h1 em{font-style:italic}
+.hero p.lead{font-size:1.125rem;max-width:560px;margin:24px 0 36px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px}
+.guarantee{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:14px;margin-top:36px;padding:16px 24px;border-radius:var(--r-md);background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.4);backdrop-filter:blur(14px)}
+.guarantee::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(252,229,156,.25),transparent);animation:shimmer 6s infinite}
+@keyframes shimmer{0%,80%{left:-60%}100%{left:130%}}
+.guarantee .bolt{font-size:1.5rem}
+.guarantee strong{display:block;color:var(--gold-1);font-size:.9375rem}
+.guarantee span{font-size:.8125rem;color:var(--text-md)}
+.hero-proof{margin-top:28px;display:flex;flex-wrap:wrap;gap:20px;font-size:.875rem}
+.hero-proof .star{color:var(--gold-2)}
+.hero-proof .tick{color:var(--emerald)}
+
+/* ===== Trust strip ===== */
+.trust{padding:40px 0;background:var(--bg-1);border-block:1px solid var(--glass-border)}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.trust-grid b{display:block;font-family:var(--serif);font-size:1.75rem;color:var(--text-hi)}
+.trust-grid span{font-size:.8125rem;color:var(--text-lo)}
+
+/* ===== Services ===== */
+.services-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+.service{grid-column:span 3;padding:32px 28px;display:flex;flex-direction:column}
+.service:nth-child(5){grid-column:2/span 3}
+.service:nth-child(6){grid-column:5/span 3}
+.service:nth-child(7){grid-column:8/span 3}
+.s-icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);margin-bottom:20px}
+.service h3{margin-bottom:10px}
+.service p{font-size:.9rem}
+.service ul{list-style:none;margin:16px 0 20px;font-size:.8125rem;flex:1}
+.service li{padding:4px 0 4px 22px;position:relative}
+.service li::before{content:"✓";position:absolute;left:0;color:var(--emerald);font-weight:700}
+.enquire{color:var(--gold-1);font-weight:600;font-size:.875rem;background:none;border:0;cursor:pointer;text-align:left;font-family:inherit}
+.enquire:hover{color:var(--gold-2)}
+</style>
+<style>
+/* ===== Collections ===== */
+.toolbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-bottom:36px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:var(--r-pill);background:var(--bg-2);border:1px solid rgba(255,255,255,.06)}
+.seg button{padding:9px 16px;border-radius:var(--r-pill);border:0;background:transparent;color:var(--text-md);font:600 .8125rem var(--sans);cursor:pointer;transition:all .2s}
+.seg button:hover{color:var(--text-hi)}
+.seg button.active{background:var(--gold-grad);color:var(--bg-0)}
+.cur-label{font-size:.8125rem;color:var(--text-lo);margin-right:8px}
+.pk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.pk{overflow:hidden;display:flex;flex-direction:column}
+.pk-img{aspect-ratio:4/3;overflow:hidden;background:linear-gradient(135deg,#141d33,#0d1424)}
+.pk-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.pk:hover .pk-img img{transform:scale(1.05)}
+.pk-body{padding:24px;display:flex;flex-direction:column;flex:1}
+.pk-meta{display:flex;justify-content:space-between;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);font-weight:600;margin-bottom:10px}
+.pk-meta span:last-child{color:var(--text-lo)}
+.pk-inc{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 20px}
+.pk-price{margin-top:auto;display:flex;align-items:baseline;gap:8px;margin-bottom:18px}
+.pk-price small{font-size:.75rem;color:var(--text-lo)}
+.price{font-family:var(--serif);font-size:1.75rem;font-weight:700;transition:opacity .15s}
+.pk-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pk-actions .btn{padding:12px 14px;font-size:.8125rem}
+.fade{opacity:0}
+
+/* ===== How it works ===== */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative}
+.steps::before{content:"";position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-2),transparent)}
+.step{text-align:center;position:relative}
+.step-num{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:1.375rem;font-weight:700;color:var(--bg-0);background:var(--gold-grad);box-shadow:0 0 0 8px var(--bg-0)}
+.step h3{font-size:1.125rem;margin-bottom:6px}
+.step p{font-size:.875rem}
+
+/* ===== Quote engine ===== */
+.quote-wrap{display:grid;grid-template-columns:5fr 7fr;gap:48px;align-items:start}
+.quote-side h2{margin-bottom:20px}
+.quote-side .guarantee{margin:8px 0 28px;display:flex}
+.perks{list-style:none;display:grid;gap:12px}
+.perks li{display:flex;gap:12px;align-items:center;color:var(--text-hi)}
+.perks li::before{content:"✓";width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;font-weight:700;background:rgba(16,185,129,.15);color:var(--emerald)}
+.chat-note{margin-top:28px;font-size:.875rem;color:var(--text-lo)}
+.quote-form{padding:36px;border-radius:var(--r-lg)}
+.step-label{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--gold-2);margin:0 0 14px}
+.step-label:not(:first-child){margin-top:28px}
+.svc-tiles{display:flex;flex-wrap:wrap;gap:10px}
+.tile{position:relative}
+.tile input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.tile span{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:var(--r-sm);background:var(--bg-2);border:1px solid rgba(255,255,255,.08);font-size:.875rem;font-weight:500;color:var(--text-md);transition:all .2s}
+.tile span::before{content:"";width:16px;height:16px;border-radius:4px;border:1.5px solid var(--text-lo);transition:all .2s}
+.tile input:checked+span{border-color:var(--gold-2);background:rgba(212,175,55,.1);color:var(--text-hi)}
+.tile input:checked+span::before{content:"✓";background:var(--gold-grad);border-color:transparent;color:var(--bg-0);font-size:.6875rem;font-weight:800;display:grid;place-items:center}
+.tile input:focus-visible+span{outline:2px solid var(--gold-2);outline-offset:2px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fields .full{grid-column:1/-1}
+.field label{display:block;font-size:.8125rem;font-weight:600;color:var(--text-hi);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;min-height:48px;padding:12px 14px;border-radius:var(--r-sm);background:var(--bg-2);border:1px solid rgba(255,255,255,.08);color:var(--text-hi);font:400 .9375rem var(--sans);transition:border-color .2s,box-shadow .2s}
+.field textarea{resize:vertical}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-lo)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold-2);box-shadow:0 0 0 2px rgba(212,175,55,.35)}
+.field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold-2) 50%),linear-gradient(135deg,var(--gold-2) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.field input[type=date]{color-scheme:dark}
+.field.error input{border-color:var(--danger)}
+.field .err{font-size:.75rem;color:var(--danger);margin-top:4px}
+.or{display:flex;align-items:center;gap:14px;margin:16px 0;font-size:.75rem;color:var(--text-lo);text-transform:uppercase;letter-spacing:.2em}
+.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.08)}
+.privacy{text-align:center;font-size:.75rem;color:var(--text-lo);margin-top:14px}
+.form-actions{margin-top:28px}
+
+/* ===== Reviews ===== */
+.rating-line{text-align:center;margin:-36px 0 48px;color:var(--text-hi)}
+.rating-line .star{color:var(--gold-2);letter-spacing:2px}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.rev{padding:32px}
+.rev .quote-mark{font-family:var(--serif);font-size:3rem;line-height:.5;color:var(--gold-2)}
+.rev blockquote{font-family:var(--serif);font-style:italic;font-size:1.0625rem;color:var(--text-hi);margin:16px 0 24px;line-height:1.6}
+.rev-who{display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--gold-grad);color:var(--bg-0);display:grid;place-items:center;font-weight:700;font-size:.875rem}
+.rev-who b{display:block;color:var(--text-hi);font-size:.9375rem}
+.badges{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:48px}
+.badges .chip{padding:10px 18px;font-size:.8125rem}
+
+/* ===== FAQ ===== */
+.faq{max-width:820px;margin:0 auto}
+.faq details{border-bottom:1px solid var(--glass-border)}
+.faq summary{list-style:none;cursor:pointer;padding:22px 0;display:flex;justify-content:space-between;gap:24px;font-family:var(--serif);font-size:1.1875rem;color:var(--text-hi)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--sans);font-size:1.5rem;line-height:1;color:var(--gold-2);transition:transform .3s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 22px;font-size:.9375rem}
+
+/* ===== CTA band / footer ===== */
+.cta-band{text-align:center;border-block:1px solid rgba(212,175,55,.35);background:radial-gradient(ellipse at center,rgba(212,175,55,.08),transparent 70%)}
+.cta-band h2{max-width:700px;margin:0 auto 32px}
+.cta-band .hero-ctas{justify-content:center}
+footer{padding:72px 0 32px;font-size:.875rem}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:40px;margin-bottom:48px}
+footer h4{font-family:var(--sans);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-2);margin-bottom:16px}
+footer ul{list-style:none;display:grid;gap:8px}
+footer a:hover{color:var(--gold-1)}
+.foot-bottom{border-top:1px solid var(--glass-border);padding-top:24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:var(--text-lo);font-size:.8125rem}
+
+/* ===== Floating WhatsApp ===== */
+.fab{position:fixed;right:24px;bottom:24px;z-index:60;display:flex;align-items:center;gap:12px}
+.fab-tip{background:var(--bg-1);border:1px solid var(--glass-border);color:var(--text-hi);font-size:.8125rem;padding:8px 14px;border-radius:var(--r-pill);opacity:0;transform:translateX(8px);transition:all .25s var(--ease);pointer-events:none;white-space:nowrap}
+.fab:hover .fab-tip{opacity:1;transform:none}
+.fab-btn{width:60px;height:60px;border-radius:50%;background:var(--whatsapp);display:grid;place-items:center;position:relative;box-shadow:0 10px 30px -6px rgba(37,211,102,.6)}
+.fab-btn::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--whatsapp);animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.fab-btn svg{width:30px;height:30px;fill:#fff}
+.mobile-bar{display:none}
+
+/* ===== Modal ===== */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:rgba(7,11,20,.75);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:all .35s var(--ease)}
+.modal.open{opacity:1;visibility:visible}
+.modal-box{width:100%;max-width:560px;max-height:90vh;overflow:auto;background:var(--bg-1);border:1px solid var(--glass-border);border-radius:var(--r-lg);padding:36px;transform:translateY(24px) scale(.98);transition:transform .35s var(--ease);position:relative}
+.modal.open .modal-box{transform:none}
+.modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-border);background:transparent;color:var(--text-hi);cursor:pointer;font-size:1.125rem}
+.ok-icon{width:56px;height:56px;border-radius:50%;background:rgba(16,185,129,.15);color:var(--emerald);display:grid;place-items:center;font-size:1.5rem;margin-bottom:16px}
+.ticket{margin:20px 0;padding:18px;text-align:center;border-radius:var(--r-md);border:1px dashed var(--gold-2);background:rgba(212,175,55,.06);font:700 1.75rem ui-monospace,Consolas,monospace;letter-spacing:.08em}
+.summary{display:grid;grid-template-columns:auto 1fr;gap:8px 20px;font-size:.875rem}
+.summary dt{color:var(--text-lo)}
+.summary dd{color:var(--text-hi)}
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.modal-actions .btn{flex:1;padding:12px 16px;font-size:.875rem}
+.proto-note{position:fixed;left:16px;bottom:16px;z-index:70;background:var(--bg-2);border:1px solid var(--glass-border);color:var(--text-lo);font-size:.75rem;padding:6px 12px;border-radius:var(--r-pill)}
+
+/* ===== Reveal ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== Responsive ===== */
+@media (max-width:1023px){
+  .nav-links{display:none}
+  .service,.service:nth-child(n){grid-column:span 6}
+  .pk-grid,.rev-grid{grid-template-columns:repeat(2,1fr)}
+  .quote-wrap{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:639px){
+  section{padding:56px 0}
+  .container{padding:0 16px}
+  .nav-right .btn{display:none}
+  .trust-grid{grid-template-columns:1fr 1fr}
+  .service,.service:nth-child(n){grid-column:1/-1}
+  .pk-grid,.rev-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr;gap:32px}.steps::before{display:none}
+  .fields{grid-template-columns:1fr}
+  .quote-form{padding:24px}
+  .quote-side .perks,.quote-side .chat-note{display:none}
+  .hero-ctas .btn{width:100%}
+  .seg{flex-wrap:nowrap;overflow-x:auto;max-width:100%}
+  .seg button{white-space:nowrap}
+  .foot-grid{grid-template-columns:1fr}
+  .modal{padding:0;place-items:end stretch}
+  .modal-box{max-height:92vh;border-radius:var(--r-lg) var(--r-lg) 0 0}
+  .mobile-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:fixed;inset:auto 0 0 0;z-index:55;padding:10px 16px;background:rgba(7,11,20,.95);border-top:1px solid var(--glass-border)}
+  .mobile-bar .btn{padding:12px;font-size:.875rem}
+  .fab{bottom:84px;right:16px}.fab-tip{display:none}
+  .proto-note{display:none}
+  body{padding-bottom:70px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wa" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></symbol>
+</svg>
+
+<header id="hdr">
+  <div class="container nav">
+    <a href="#" class="logo"><b><span>✦</span> TRAVEL GURU</b><small>Raipur · Verified 4.9★</small></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services">Services</a><a href="#collections">Collections</a><a href="#how">How it Works</a><a href="#reviews">Reviews</a><a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <a href="#quote" class="btn btn-gold">Get Free Quote ✦</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="container">
+    <div class="eyebrow">Raipur's Direct Travel Agency</div>
+    <h1>Journeys crafted by hand,<br>not by <em class="gold-text">algorithms.</em></h1>
+    <p class="lead">Vietnam, Thailand, Malaysia, Dubai and beyond. Tours, flights, hotels, cruises, rail, forex and visas under one roof, planned by a real consultant in Raipur.</p>
+    <div class="hero-ctas">
+      <a href="#quote" class="btn btn-gold">⚡ Get My Custom Quote</a>
+      <a href="https://wa.me/919584297000" target="_blank" rel="noopener" class="btn btn-wa"><svg class="wa-icon"><use href="#wa"/></svg> WhatsApp Us</a>
+    </div>
+    <div class="guarantee"><span class="bolt">⚡</span><div><strong>Guaranteed Call Back &amp; Custom Quotation</strong><span>Within 24 hours. Zero obligation.</span></div></div>
+    <div class="hero-proof"><span><span class="star">★★★★★</span> 4.9 rated · Verified</span><span><span class="tick">✓</span> Private airport transfers</span><span><span class="tick">✓</span> 24×7 customer support</span></div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="container trust-grid">
+    <div><b class="gold-text">450+</b><span>Global airlines</span></div>
+    <div><b class="gold-text">7 in 1</b><span>Services, one consultant</span></div>
+    <div><b class="gold-text">24h</b><span>Call-back guarantee</span></div>
+    <div><b class="gold-text">B2B</b><span>Partner net fares</span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">Under One Roof</div><h2>Seven services. <em class="gold-text">One</em> trusted atelier.</h2><p>Every part of your journey handled by a single consultant who knows your plans end to end.</p></div>
+    <div class="services-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<!-- COLLECTIONS -->
+<section id="collections" class="alt">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">Curated Collections</div><h2>Handcrafted journeys, <em class="gold-text">priced transparently</em></h2><p>Land packages from our recent itineraries. Flights from Raipur are quoted separately at live fares.</p></div>
+    <div class="toolbar">
+      <div class="seg" id="filters" role="tablist" aria-label="Filter collections">
+        <button class="active" data-cat="all">All</button><button data-cat="couples">Honeymoon &amp; Couples</button><button data-cat="islands">Islands &amp; Beaches</button><button data-cat="family">Family</button><button data-cat="group">Group Getaways</button><button data-cat="cultural">Culture &amp; Cities</button>
+      </div>
+      <div><span class="cur-label">Prices in</span><div class="seg" id="currency" aria-label="Currency">
+        <button class="active" data-cur="INR">₹ INR</button><button data-cur="USD">$ USD</button><button data-cur="EUR">€ EUR</button><button data-cur="GBP">£ GBP</button><button data-cur="AUD">A$ AUD</button>
+      </div></div>
+    </div>
+    <div class="pk-grid" id="pkGrid"></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">How It Works</div><h2>From wishlist to <em class="gold-text">wanderlust</em></h2></div>
+    <div class="steps reveal">
+      <div class="step"><div class="step-num">1</div><h3>Share your wishlist</h3><p>Two minutes on our quote form or WhatsApp.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>We call you back</h3><p>A real consultant within 24 hours.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Receive your quote</h3><p>Tailored itinerary at B2B net rates.</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Confirm with 50%</h3><p>Advance on booking, balance 21 days before departure.</p></div>
+    </div>
+  </div>
+</section>
+<!-- QUOTE ENGINE -->
+<section id="quote" class="alt">
+  <div class="container quote-wrap">
+    <div class="quote-side reveal">
+      <div class="eyebrow">Zero-Obligation Quote</div>
+      <h2>Tell us your dream trip. <em class="gold-text">We'll do the rest.</em></h2>
+      <div class="guarantee"><span class="bolt">⚡</span><div><strong>Guaranteed Call Back &amp; Custom Quotation Within 24 Hours</strong><span>Or chat now for an instant WhatsApp quote.</span></div></div>
+      <ul class="perks"><li>No consultation fees, zero obligation</li><li>A real consultant in Raipur, not a bot</li><li>Private airport pick-up &amp; drop on every package</li><li>Partner B2B net fares on flights &amp; hotels</li></ul>
+      <p class="chat-note">Prefer chat? Our average WhatsApp reply time is 8 minutes.</p>
+    </div>
+
+    <form class="quote-form glass" id="quoteForm" novalidate>
+      <p class="step-label">Step 1 · What do you need?</p>
+      <div class="svc-tiles" id="svcTiles"></div>
+
+      <p class="step-label">Step 2 · Trip details</p>
+      <div class="fields">
+        <div class="field"><label for="from">Departure city</label><input id="from" value="Raipur"></div>
+        <div class="field"><label for="to">Destination(s)</label><input id="to" placeholder="e.g. Vietnam, Dubai, Phuket"></div>
+        <div class="field"><label for="date">Estimated departure</label><input id="date" type="date"></div>
+        <div class="field"><label for="dur">Duration</label><select id="dur"><option>5-7 days</option><option selected>8-10 days</option><option>11-14 days</option><option>15+ days</option></select></div>
+        <div class="field"><label for="trav">Travellers</label><select id="trav"><option>Solo</option><option selected>Couple/Honeymoon</option><option>Family</option><option>Group</option></select></div>
+        <div class="field"><label for="bud">Budget preference</label><select id="bud"><option>3★ Value</option><option selected>4★ Deluxe</option><option>4★+ Superior / Premium</option><option>5★ Luxury</option></select></div>
+      </div>
+
+      <p class="step-label">Step 3 · Your details</p>
+      <div class="fields">
+        <div class="field"><label for="name">Full name</label><input id="name" placeholder="Your full name"></div>
+        <div class="field error"><label for="phone">Phone / WhatsApp</label><input id="phone" placeholder="+91 98765 43210" aria-describedby="phoneErr"><p class="err" id="phoneErr">Example error state: enter a valid number</p></div>
+        <div class="field"><label for="email">Email address</label><input id="email" type="email" placeholder="you@example.com"></div>
+        <div class="field"><label for="slot">Preferred call-back time</label><select id="slot"><option>Anytime (Fastest)</option><option>Morning (9:00 AM – 12:00 PM)</option><option>Afternoon (12:00 PM – 4:00 PM)</option><option>Evening (4:00 PM – 8:00 PM)</option></select></div>
+        <div class="field full"><label for="notes">Special requests</label><textarea id="notes" rows="4" placeholder="Forex amount, visa timeline, flight class, dietary needs…"></textarea></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-gold btn-block" data-open="ticketModal">⚡ Submit &amp; Guarantee 24h Call Back with Quotation</button>
+        <div class="or">or</div>
+        <button type="button" class="btn btn-wa btn-block"><svg class="wa-icon"><use href="#wa"/></svg> Instant Quote via WhatsApp (&lt; 10 mins)</button>
+        <p class="privacy">🔒 We never share your details.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">Verified Traveller Stories</div><h2>Loved by couples &amp; <em class="gold-text">families</em></h2></div>
+    <p class="rating-line"><span class="star">★★★★★</span> 4.9 / 5 · Verified agency</p>
+    <div class="rev-grid">
+      <article class="rev glass lift reveal"><div class="quote-mark">“</div><blockquote>Hanoi to Halong Bay, Hoi An lanterns and Phu Quoc islands. Every transfer was on time and the quote came the same evening.</blockquote><div class="rev-who"><div class="avatar">PA</div><div><b>Sample Couple</b><span class="chip chip-em">✓ Verified · Vietnam</span></div></div></article>
+      <article class="rev glass lift reveal"><div class="quote-mark">“</div><blockquote>Our Dubai e-visas, Burj Khalifa tickets and desert safari were all sorted from Raipur. Zero stress for the family.</blockquote><div class="rev-who"><div class="avatar">SF</div><div><b>Sample Family</b><span class="chip chip-em">✓ Verified · Dubai</span></div></div></article>
+      <article class="rev glass lift reveal"><div class="quote-mark">“</div><blockquote>Langkawi and Kuala Lumpur with our 10-year-old. Genting cable car and the fireflies tour were the highlights.</blockquote><div class="rev-who"><div class="avatar">SG</div><div><b>Sample Guest</b><span class="chip chip-em">✓ Verified · Malaysia</span></div></div></article>
+    </div>
+    <div class="badges"><span class="chip chip-gold">★ 4.9 Rated</span><span class="chip chip-em">✓ Verified Agency</span><span class="chip chip-n">� Transparent Cancellation Policy</span><span class="chip chip-gold">⚡ 24h Call Back</span><span class="chip chip-em">☎ 24×7 Support</span></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="alt">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">How We Keep Costs Low</div><h2>Operations &amp; <em class="gold-text">transparency</em></h2></div>
+    <div class="faq">
+      <details open><summary>How does an independent agency get net fares?</summary><p>We work through free B2B consolidator portals that give registered agents access to wholesale airline, hotel, rail and cruise inventory. You get the same rates as large chains without their overheads.</p></details>
+      <details><summary>Do you charge subscription or booking fees?</summary><p>No. Our lean, zero-subscription setup means there are no consultation or booking fees. Our margin is built transparently into your quote.</p></details>
+      <details><summary>How much do I pay to confirm a booking?</summary><p>Packages below ₹25,000 per person: 100% at booking. ₹25,000 and above per person: 50% advance at booking and the balance 21 days before departure. Bookings made within 21 days of departure need 100% payment.</p></details>
+      <details><summary>What is your cancellation policy?</summary><p>Charges per person on the package cost: 46+ days before departure 10%, 31–45 days 35%, 16–30 days 50%, 8–15 days 75%, 0–7 days or no-show 100%. Air tickets, visas, insurance and other non-refundable services follow the supplier's policy. Requests must be sent in writing by email or WhatsApp.</p></details>
+      <details><summary>Are GST, TCS and flights included?</summary><p>Package prices cover hotels, listed meals, transfers and sightseeing. Flights are quoted separately at live fares. GST (currently 5%) and TCS for international tours are extra as per Government of India rules.</p></details>
+      <details><summary>What documents do I need?</summary><p>A passport valid for at least 6 months from the travel date. For e-visas such as Dubai, send a clear scan of the passport and a white-background photo at least 15 days before travel.</p></details>
+      <details><summary>Who handles my forex card and cash?</summary><p>An RBI-authorised forex partner issues your multi-currency card and delivers cash to your door. We coordinate everything for you.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="container reveal">
+    <h2>Your next journey begins with <em class="gold-text">one conversation.</em></h2>
+    <div class="hero-ctas"><a href="#quote" class="btn btn-gold">⚡ Get My Free Quote</a><a href="https://wa.me/919584297000" target="_blank" rel="noopener" class="btn btn-wa"><svg class="wa-icon"><use href="#wa"/></svg> Chat on WhatsApp</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><a href="#" class="logo"><b><span>✦</span> TRAVEL GURU</b><small>Raipur · Verified 4.9★</small></a><p style="margin-top:16px;max-width:300px">1st Floor, Currency Tower, Shop No 1087–1088, VIP Chowk, Telibandha, Raipur, Chhattisgarh 492001</p></div>
+      <div><h4>Services</h4><ul><li><a href="#services">Tours &amp; Honeymoons</a></li><li><a href="#services">Flights</a></li><li><a href="#services">Hotels</a></li><li><a href="#services">Cruises &amp; Rail</a></li><li><a href="#services">Forex &amp; Visas</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#how">How it Works</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="tel:+919584297000">+91 95842 97000</a></li><li><a href="tel:+919171995559">+91 91719 95559</a></li><li><a href="mailto:travelguru008@gmail.com">travelguru008@gmail.com</a></li><li><a href="https://www.travelgururaipur.com" target="_blank" rel="noopener">www.travelgururaipur.com</a></li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Travel Guru Raipur · Prices indicative, valid 24h, subject to availability · GST &amp; TCS extra</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<div class="fab"><span class="fab-tip">Typically replies in under 10 mins</span><a href="https://wa.me/919584297000" target="_blank" rel="noopener" class="fab-btn" aria-label="Chat on WhatsApp"><svg><use href="#wa"/></svg></a></div>
+<div class="mobile-bar"><a href="#quote" class="btn btn-gold">⚡ Get Quote</a><a href="https://wa.me/919584297000" target="_blank" rel="noopener" class="btn btn-wa"><svg class="wa-icon"><use href="#wa"/></svg> WhatsApp</a></div>
+<div class="proto-note">Design prototype · not final</div>
+
+<!-- Sample ticket modal -->
+<div class="modal" id="ticketModal" role="dialog" aria-modal="true" aria-labelledby="tkTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <div class="ok-icon">✓</div>
+    <p class="eyebrow">Request received</p>
+    <h3 id="tkTitle">Your Quotation Ticket</h3>
+    <div class="ticket gold-text">QT-2026-4821</div>
+    <dl class="summary">
+      <dt>Services</dt><dd>Tour Package, Flights, Visa/Passport</dd>
+      <dt>Route</dt><dd>Raipur → Hanoi, Da Nang, Phu Quoc</dd>
+      <dt>Departs</dt><dd>25 Nov 2026 · 8-10 days</dd>
+      <dt>Travellers</dt><dd>Couple/Honeymoon · 4★ Deluxe</dd>
+      <dt>Call back</dt><dd>Evening (4:00 PM – 8:00 PM)<br><span class="chip chip-em" style="margin-top:6px">✓ Guaranteed within 24 hours</span></dd>
+    </dl>
+    <div class="modal-actions"><button class="btn btn-outline">Copy Ticket ID</button><button class="btn btn-wa"><svg class="wa-icon"><use href="#wa"/></svg> Continue on WhatsApp</button></div>
+  </div>
+</div>
+<!-- Sample itinerary modal -->
+<style>
+#itinModal .modal-box{max-width:860px;padding:0}
+.it-hero{height:220px;background:#141d33 center/cover;border-radius:var(--r-lg) var(--r-lg) 0 0}
+.it-body{padding:32px}
+.it-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.it-facts div{background:var(--bg-2);border-radius:var(--r-sm);padding:10px 14px;font-size:.8125rem}
+.it-facts b{display:block;color:var(--text-hi);font-size:.875rem}
+.it-h{font-family:var(--sans);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-2);margin:28px 0 12px}
+.timeline{border-left:1px solid rgba(212,175,55,.4);padding-left:24px;display:grid;gap:20px}
+.tl-item{position:relative}
+.tl-item::before{content:"";position:absolute;left:-30px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--gold-grad);box-shadow:0 0 0 4px var(--bg-1)}
+.tl-item h4{font-family:var(--serif);color:var(--text-hi);font-size:1.0625rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tl-item h4 small{font-family:var(--sans);font-size:.75rem;color:var(--gold-2);letter-spacing:.12em;text-transform:uppercase}
+.tl-item ul{list-style:none;margin-top:6px;font-size:.875rem;display:grid;gap:6px}
+.tl-item li .chip{margin-left:6px;padding:2px 8px;font-size:.6875rem}
+.hotel-table{width:100%;border-collapse:collapse;font-size:.875rem}
+.hotel-table th,.hotel-table td{text-align:left;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.hotel-table th{color:var(--text-lo);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em}
+.hotel-table td:first-child{color:var(--gold-1);white-space:nowrap}
+.hotel-table td b{color:var(--text-hi);font-weight:600}
+.pay-box{padding:20px;margin-top:8px}
+.pay-row{display:flex;justify-content:space-between;gap:16px;padding:6px 0;font-size:.9rem}
+.pay-row.total{border-top:1px solid var(--glass-border);margin-top:6px;padding-top:12px;color:var(--text-hi);font-weight:600}
+.pay-row .gold-text{font-weight:700}
+.note{font-size:.8125rem;color:var(--text-lo);margin-top:10px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:.8125rem}
+.cols2 ul{list-style:none;display:grid;gap:6px}
+.inc li::before{content:"✓ ";color:var(--emerald);font-weight:700}
+.exc li::before{content:"✕ ";color:var(--danger);font-weight:700}
+@media (max-width:639px){.it-body{padding:22px}.cols2{grid-template-columns:1fr}}
+</style>
+<div class="modal" id="itinModal" role="dialog" aria-modal="true" aria-labelledby="itTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Close" style="z-index:2;background:rgba(7,11,20,.6)">×</button>
+    <div class="it-hero" id="itHero"></div>
+    <div class="it-body">
+      <div class="pk-meta"><span id="itMeta"></span></div>
+      <h3 id="itTitle" style="font-size:1.75rem"></h3>
+      <div class="it-facts" id="itFacts"></div>
+      <div class="pk-inc" id="itHigh"></div>
+
+      <p class="it-h">Day-by-day itinerary</p>
+      <div class="timeline" id="itDays"></div>
+
+      <p class="it-h">Where you'll stay</p>
+      <div class="seg" id="tierSeg" style="margin-bottom:12px"></div>
+      <div class="glass" style="padding:4px 8px"><table class="hotel-table" id="itHotels"></table></div>
+
+      <p class="it-h">Price &amp; payment</p>
+      <div class="pay-box glass" id="itPay"></div>
+      <p class="note" id="itNotes"></p>
+
+      <p class="it-h">Inclusions &amp; exclusions</p>
+      <div class="cols2">
+        <ul class="inc"><li>Hotels as per the selected category</li><li>Meals as per plan / itinerary</li><li>Private airport pick-up &amp; drop</li><li>Sightseeing &amp; transfers on SIC/Private basis as listed</li><li>Applicable hotel taxes &amp; service charges</li><li>24×7 customer support</li></ul>
+        <ul class="exc"><li>Flights (quoted separately)</li><li>GST 5% &amp; TCS as per Govt. of India</li><li>Visa fee &amp; travel insurance (unless listed)</li><li>Tips, porterage &amp; personal expenses</li><li>Early check-in / late check-out</li><li>Festive &amp; peak season supplements</li></ul>
+      </div>
+
+      <div class="modal-actions"><a class="btn btn-wa" id="itWa" target="_blank" rel="noopener"><svg class="wa-icon"><use href="#wa"/></svg> Confirm via WhatsApp</a><a href="#quote" class="btn btn-gold" data-close>Request Custom Quote ✦</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Business config (moves to data.js in the final build) ---------- */
+const BUSINESS={brand:"Travel Guru Raipur",whatsapp:"919584297000",advanceRate:.5,fullPayBelowPP:25000,balanceDaysBefore:21};
+/* Indicative rates, base INR. Final build: edit in data.js */
+const RATES={INR:{s:"₹",r:1,l:"en-IN"},USD:{s:"$",r:.012,l:"en-US"},EUR:{s:"€",r:.0103,l:"de-DE"},GBP:{s:"£",r:.0089,l:"en-GB"},AUD:{s:"A$",r:.0182,l:"en-AU"}};
+const IMG=id=>`https://images.unsplash.com/${id}?w=900&q=70&auto=format&fit=crop`;
+
+const SERVICES=[
+ ["♡","Curated Tours & Honeymoons","Handcrafted itineraries with private transfers and hand-picked hotels.",["Day-by-day custom plans","Couple & family packages","Romantic add-ons"],"Tour Package"],
+ ["✈","Flights & Air Concierge","Domestic and international ticketing across 450+ airlines from Raipur.",["Group & corporate fares","Seat selection","Baggage assistance"],"Flights"],
+ ["⌂","Hotels & Boutique Resorts","Deluxe and superior options in every city, quoted side by side.",["Breakfast included","Family & triple rooms","Upgrade requests"],"Hotels"],
+ ["⇶","Scenic Rail & Passes","Eurail, Swiss Travel Pass, Japan Rail and Indian rail ticketing.",["Glacier Express","JR Shinkansen","Domestic ticketing"],"Trains"],
+ ["⚓","Ocean & River Cruises","Balcony staterooms with leading cruise lines.",["Royal Caribbean, MSC, Costa","Cordelia from India","Shore excursions"],"Cruises"],
+ ["¤","Forex Services","Multi-currency travel cards and cash via RBI-authorised partners.",["USD, EUR, GBP, AED, SGD, THB","Contactless cards","Doorstep cash delivery"],"Forex Card/Cash"],
+ ["▣","Passport & Visa","Tourist and business visas, e-visas, VFS appointments and OTB.",["Dubai, Thailand, Vietnam e-visas","Schengen, US, UK, Canada","Document scrutiny"],"Visa/Passport"]];
+
+/* tags: P=Private S=Sharing T=Tickets L=Lunch F=Optional flight */
+const TAG={P:["chip-n","Private"],S:["chip-n","Sharing"],T:["chip-em","Tickets incl."],L:["chip-em","Lunch"],F:["chip-gold","Optional flight"]};
+const PACKAGES=[
+{id:"vn",title:"Vietnam Grand Discovery",route:"2N Hanoi · 2N Da Nang · 2N Phu Quoc · 1N Ho Chi Minh City",nights:"7N / 8D",cats:["couples","cultural","islands"],img:"photo-1528127269322-539801943592",
+ pax:2,paxLabel:"2 adults",showPP:true,meals:"Breakfast",stars:"Superior",
+ highlights:["Halong Bay cruise","Hoi An lanterns","Golden Bridge","Phu Quoc 4 islands","VinWonders"],
+ tiers:[{name:"Superior",total:120000,hotels:[["Hanoi (2N)","Classy Holiday Hotel & Spa","Classic Double"],["Da Nang (2N)","Grand Ocean Luxury / Sunny Ocean","Partial Ocean View"],["Phu Quoc (2N)","AVS Hotel Phu Quoc","Deluxe City View"],["Ho Chi Minh (1N)","Ramana Hotel Saigon","Superior Double"]]}],
+ flights:"Internal flights optional: Hanoi→Da Nang ₹8,000, Da Nang→Phu Quoc ₹10,500, Phu Quoc→HCMC ₹6,000 per person (20 kg). International flights quoted separately.",
+ notes:"Hotel-only option: ₹47,000 for 2 with breakfast. Compulsory guide & driver tips in Vietnam: USD 5–6 per person per day (1–4 guests), payable in cash.",
+ days:[
+  ["Arrive Hanoi · Old Quarter & Train Street",false,[["Airport pick-up & transfer to hotel","P"],["Half-day city tour: Hoan Kiem Lake, Ngoc Son Temple, The Huc Bridge, Quan Thanh Temple and the famous Train Street","P"]]],
+  ["Halong Bay day cruise",true,[["Deluxe cruise with local lunch: Surprising Cave, Titop Island and kayaking","SL"]]],
+  ["Fly to Da Nang · Hoi An by lantern light",true,[["Hanoi → Da Nang flight with airport transfers","FP"],["Hoi An Ancient Town with basket boat ride and lantern release","P"]]],
+  ["Ba Na Hills & Golden Bridge",true,[["Cable car, French Village and Fantasy Park","ST"]]],
+  ["Fly to Phu Quoc · Grand World",false,[["Da Nang → Phu Quoc flight with airport transfers","FP"],["Grand World with Teddy Bear Museum and gondola ride","PT"]]],
+  ["Four-island speedboat & cable car",true,[["Gam Ghi, May Rut, Buom and Thom islands with local lunch","SL"]]],
+  ["VinWonders · Fly to Ho Chi Minh City",false,[["VinWonders Phu Quoc tickets","PT"],["Phu Quoc → HCMC flight with airport transfers","FP"]]],
+  ["Saigon city tour · Departure",false,[["Reunification Palace, Notre Dame Cathedral and War Remnants Museum","P"],["Transfer to SGN airport","P"]]]]},
+
+{id:"my",title:"Malaysia Family Escape",route:"3N Langkawi · 3N Kuala Lumpur",nights:"6N / 7D",cats:["family","islands"],img:"photo-1596422846543-75c6fc197f07",
+ pax:4,paxLabel:"3 adults + 1 child (10 yrs)",showPP:false,meals:"Breakfast",stars:"3★ / 4★",
+ highlights:["Sunset dinner cruise","SkyCab & SkyBridge","Genting cable car","Fireflies tour","KL Tower"],
+ tiers:[{name:"Deluxe",total:195000,hotels:[["Langkawi (3N)","Dayang Bay Resort","Family Room"],["Kuala Lumpur (3N)","Verdant Hill Hotel","Family Villa"]]},
+        {name:"Premium",total:212000,hotels:[["Langkawi (3N)","The Serangoon House Little India","Royal Classic Double + Bunk Beds"],["Kuala Lumpur (3N)","Ramada Suites by Wyndham","Family Studio"]]}],
+ flights:"Flights Raipur → Langkawi, Langkawi → KL and KL → Raipur approx. ₹1,90,000 for the family (dynamic fare, quoted separately).",
+ notes:"",
+ days:[
+  ["Arrive Langkawi · Sunset dinner cruise",true,[["Airport transfer to hotel","P"],["Sunset dinner cruise from 4:00 PM","P"]]],
+  ["SkyCab adventure",true,[["Half-day SkyCab tour: SkyDome, SkyRex, 3D Art Museum, SkyBridge and SkyGlide","PT"]]],
+  ["Crocodile Adventureland",false,[["Half-day tour with Snack Bite combo ticket","PT"]]],
+  ["Fly to Kuala Lumpur · Leisure",false,[["Hotel → Langkawi airport, KL airport → hotel","P"]]],
+  ["Genting Highlands & Batu Caves",true,[["Full day with two-way cable car, Batu Caves en route","PT"]]],
+  ["Fireflies tour",false,[["Half-day evening fireflies tour","P"]]],
+  ["KL city tour · Departure",false,[["City tour with KL Tower Observation Deck ticket","PT"],["Transfer to KUL airport","P"]]]]},
+
+{id:"th",title:"Phuket & Krabi Island Hopper",route:"3N Phuket · 2N Krabi",nights:"5N / 6D",cats:["islands","group","couples"],img:"photo-1552465011-b4e21bf6e79a",
+ pax:3,paxLabel:"3 adults (triple sharing)",showPP:true,meals:"Breakfast",stars:"4★",
+ highlights:["Phi Phi Island","Rafting & ATV","Big Buddha","Krabi 4 islands"],
+ tiers:[{name:"Deluxe",total:129000,hotels:[["Phuket (3N)","Casa Del M Resort","Family Room"],["Krabi (2N)","Ananta Burin Resort","Pool View"]]},
+        {name:"Premium",total:141000,hotels:[["Phuket (3N)","Fishermen's Harbour","Deluxe Family"],["Krabi (2N)","Bluesotel Krabi Aonang Beach","Superior"]]}],
+ flights:"Round-trip flights Raipur → Phuket / Krabi → Raipur approx. ₹47,000 per person, quoted separately.",
+ notes:"National park fees included for Phi Phi and Krabi island tours.",
+ days:[
+  ["Arrive Phuket · Dolphin show",false,[["Airport transfer to hotel","P"],["Phuket Dolphin Show, regular seat","PT"]]],
+  ["Phi Phi Island by speedboat",true,[["Full-day Phi Phi tour with lunch, national park fee included","SL"]]],
+  ["Jungle adventure day",false,[["5 km rafting, 30-min ATV, 30-min elephant trekking and Monkey Cave","SL"]]],
+  ["Big Buddha · Transfer to Krabi",false,[["Half-day Phuket city tour with Big Buddha, then drive to Krabi","P"]]],
+  ["Krabi Four Islands",true,[["Long-tail boat tour with lunch, national park fee included","SL"]]],
+  ["Departure",false,[["Hotel → Krabi airport","P"]]]]},
+
+{id:"ae",title:"Dubai & Abu Dhabi Highlights",route:"4N Dubai · 2N Abu Dhabi",nights:"6N / 7D",cats:["couples","family","cultural"],img:"photo-1512453979798-5ea266f8880c",
+ pax:2,paxLabel:"2 adults",showPP:true,meals:"Breakfast",stars:"3★ / 4★",
+ highlights:["Burj Khalifa 124th floor","Desert safari","Global Village","Yas Island 2 parks"],
+ tiers:[{name:"Deluxe (Silver)",total:160000,hotels:[["Dubai (4N)","Citymax Bur Dubai / Admiral Plaza / Gateway Hotel",""],["Abu Dhabi (2N)","City Seasons Al Hamra",""]]},
+        {name:"Superior (Gold)",total:190000,hotels:[["Dubai (4N)","Royal Ascot / Majestic City Retreat / Omega / Grand Excelsior",""],["Abu Dhabi (2N)","Ramada by Wyndham Downtown or similar",""]]}],
+ flights:"Round-trip flights approx. ₹91,000 for 2 and UAE e-visa ₹16,000 for 2, quoted separately.",
+ notes:"Payable at hotel: Tourism Dirham fee AED 10 (3★) / 15 (4★) / 20 (5★) per room per night, plus a refundable security deposit (approx. AED 100–500). Send passport scans and white-background photo 15 days before travel for the e-visa.",
+ days:[
+  ["Arrive Dubai",false,[["Airport pick-up & transfer to hotel","P"]]],
+  ["Dubai city tour & Burj Khalifa",true,[["City tour followed by At the Top, 124th floor (non-prime time)","PT"]]],
+  ["AYA Universe & desert safari",true,[["AYA Universe tickets with two-way transfers","PT"],["Deluxe desert safari: dune bashing, belly dance and BBQ dinner","PT"]]],
+  ["Miracle Garden & Global Village",false,[["Tickets with three-way transfers","PT"]]],
+  ["Drive to Abu Dhabi",false,[["Abu Dhabi city tour en route (without Grand Mosque)","P"]]],
+  ["Yas Island theme parks · Day 1",true,[["Choose from Ferrari World, Warner Bros. World, Yas Waterworld or SeaWorld","T"]]],
+  ["Yas Island · Day 2 · Departure",false,[["Second park day with transfers","T"],["Evening transfer to AUH airport","P"]]]]},
+
+{id:"pt",title:"Pattaya & Bangkok Getaway",route:"4N Pattaya · 1N Bangkok",nights:"5N / 6D",cats:["group","islands"],img:"photo-1508009603885-50cf7c579365",
+ pax:4,paxLabel:"4 adults (2 rooms)",showPP:true,meals:"Breakfast",stars:"4★",
+ highlights:["Alcazar Show","Coral Island","Yacht party","Safari World"],
+ tiers:[{name:"Deluxe",total:132000,hotels:[["Pattaya (4N)","Silvertone Hotel / Sunbeam Hotel","Superior Dbl/Twin"],["Bangkok (1N)","Pannarai Hotel Bangkok","Superior Dbl/Twin"]]},
+        {name:"Superior",total:148000,hotels:[["Pattaya (4N)","LK Miracle Suite / Signature Pattaya","Superior Dbl/Twin"],["Bangkok (1N)","Century Park Bangkok","Deluxe Dbl/Twin"]]}],
+ flights:"Round-trip IndiGo flights Raipur ⇄ Bangkok via Mumbai approx. ₹39,500 per person, quoted separately.",
+ notes:"",
+ days:[
+  ["Arrive Bangkok · Alcazar Show",false,[["Suvarnabhumi airport → Pattaya hotel","P"],["Alcazar Show, normal seat","PT"]]],
+  ["Coral Island by speedboat",true,[["Half-day tour with lunch","SL"]]],
+  ["Nong Nooch Village",false,[["Village show tickets with lunch","PT"]]],
+  ["Ocean Marina yacht party",true,[["Shared yacht: starters, 2-hour free flow of drinks, Thai dancers","S"]]],
+  ["Safari World · Transfer to Bangkok",true,[["Safari World & Marine Park with lunch en route to Bangkok","PTL"]]],
+  ["Departure",false,[["Hotel → Suvarnabhumi airport","P"]]]]}];
+
+const CAT_LABEL={couples:"Couples",islands:"Islands",family:"Family",group:"Group",cultural:"Culture"};
+let cur="INR",cat="all",activePk=null,activeTier=0;
+const $=s=>document.querySelector(s);
+const fmt=inr=>{const c=RATES[cur];return c.s+new Intl.NumberFormat(c.l,{maximumFractionDigits:0}).format(Math.round(inr*c.r));};
+const priceSpan=inr=>`<span class="price-inr" data-inr="${inr}">${fmt(inr)}</span>`;
+const waLink=msg=>`https://wa.me/${BUSINESS.whatsapp}?text=${encodeURIComponent(msg)}`;
+
+/* Payment policy from Travel Guru terms */
+function paymentPlan(total,pax){
+  const pp=total/pax;
+  if(pp<BUSINESS.fullPayBelowPP) return {now:total,later:0,rule:"Below ₹25,000 per person: 100% payable at booking."};
+  const now=Math.round(total*BUSINESS.advanceRate);
+  return {now,later:total-now,rule:`₹25,000+ per person: 50% advance at booking, balance ${BUSINESS.balanceDaysBefore} days before departure. Bookings within 21 days of departure: 100% at booking.`};
+}
+
+/* ---------- Render ---------- */
+$("#svcGrid").innerHTML=SERVICES.map(([i,t,d,b,q])=>`<article class="service glass lift reveal"><div class="s-icon">${i}</div><h3>${t}</h3><p>${d}</p><ul>${b.map(x=>`<li>${x}</li>`).join("")}</ul><button class="enquire" data-svc="${q}">Enquire →</button></article>`).join("");
+$("#svcTiles").innerHTML=SERVICES.map(s=>s[4]).map((q,i)=>`<label class="tile"><input type="checkbox" value="${q}" ${i<2?"checked":""}><span>${q}</span></label>`).join("");
+$("#date").min=new Date(Date.now()+864e5).toISOString().slice(0,10);
+
+function cardPrice(p){
+  const t=p.tiers[0].total;
+  return p.showPP?`<small>from</small><span class="price gold-text">${priceSpan(t/p.pax)}</span><small>/ person</small>`
+                 :`<small>from</small><span class="price gold-text">${priceSpan(t)}</span><small>${p.paxLabel}</small>`;
+}
+function renderPk(){
+  const list=cat==="all"?PACKAGES:PACKAGES.filter(p=>p.cats.includes(cat));
+  $("#pkGrid").innerHTML=list.length?list.map(p=>`<article class="pk glass lift"><div class="pk-img"><img src="${IMG(p.img)}" alt="${p.title}" loading="lazy" onerror="this.remove()"></div><div class="pk-body"><div class="pk-meta"><span>${p.cats.map(c=>CAT_LABEL[c]).join(" · ")}</span><span>${p.nights}</span></div><h3>${p.title}</h3><p style="font-size:.8125rem;margin-top:6px">${p.route}</p><div class="pk-inc">${p.highlights.slice(0,3).map(x=>`<span class="chip chip-em">✓ ${x}</span>`).join("")}</div><div class="pk-price">${cardPrice(p)}</div><p class="note" style="margin:-10px 0 16px">Land package · ${p.stars} · ${p.meals} · flights extra</p><div class="pk-actions"><button class="btn btn-outline" data-itin="${p.id}">View Itinerary</button><button class="btn btn-gold" data-itin="${p.id}" data-jump="pay">Book Now ✦</button></div></div></article>`).join(""):`<p style="grid-column:1/-1;text-align:center">No journeys here yet. <a href="#quote" class="gold-text">Ask us to craft one →</a></p>`;
+}
+renderPk();
+
+function renderTier(){
+  const p=activePk,t=p.tiers[activeTier],plan=paymentPlan(t.total,p.pax);
+  $("#tierSeg").innerHTML=p.tiers.map((x,i)=>`<button class="${i===activeTier?"active":""}" data-tier="${i}">${x.name}</button>`).join("");
+  $("#itHotels").innerHTML=`<tr><th>City</th><th>Hotel</th><th>Room</th></tr>`+t.hotels.map(h=>`<tr><td>${h[0]}</td><td><b>${h[1]}</b></td><td>${h[2]||"—"}</td></tr>`).join("");
+  $("#itPay").innerHTML=`
+    <div class="pay-row"><span>${t.name} land package · ${p.paxLabel}</span><span>${priceSpan(t.total)}</span></div>
+    ${p.showPP?`<div class="pay-row"><span>Per person</span><span>${priceSpan(t.total/p.pax)}</span></div>`:""}
+    <div class="pay-row total"><span>Pay at booking${plan.later?" (50% advance)":""}</span><span class="gold-text">${priceSpan(plan.now)}</span></div>
+    ${plan.later?`<div class="pay-row"><span>Balance, ${BUSINESS.balanceDaysBefore} days before departure</span><span>${priceSpan(plan.later)}</span></div>`:""}
+    <p class="note">${plan.rule} GST 5% &amp; TCS extra. Price valid 24 hours, subject to availability.</p>
+    <p class="note">✈ ${p.flights}</p>`;
+  $("#itWa").href=waLink(`Hello ${BUSINESS.brand}! I'd like to book "${p.title}" (${p.nights}, ${p.route}) with ${t.name} hotels for ${p.paxLabel}. Please share availability and the final quote.`);
+}
+function openItinerary(id,jump){
+  const p=PACKAGES.find(x=>x.id===id);activePk=p;activeTier=0;
+  $("#itHero").style.backgroundImage=`url(${IMG(p.img)})`;
+  $("#itMeta").textContent=`${p.cats.map(c=>CAT_LABEL[c]).join(" · ")} · ${p.nights}`;
+  $("#itTitle").textContent=p.title;
+  $("#itFacts").innerHTML=[["Route",p.route],["Travellers",p.paxLabel],["Hotels",p.stars],["Meals",p.meals]].map(([k,v])=>`<div>${k}<b>${v}</b></div>`).join("");
+  $("#itHigh").innerHTML=p.highlights.map(x=>`<span class="chip chip-gold">★ ${x}</span>`).join("");
+  $("#itDays").innerHTML=p.days.map(([title,ms,items],i)=>`<div class="tl-item"><h4><small>Day ${i+1}</small> ${title} ${ms?'<span class="chip chip-gold">★ Highlight</span>':""}</h4><ul>${items.map(([txt,tags])=>`<li>${txt}${[...tags].map(k=>`<span class="chip ${TAG[k][0]}">${TAG[k][1]}</span>`).join("")}</li>`).join("")}</ul></div>`).join("");
+  $("#itNotes").textContent=p.notes;
+  renderTier();openModal("itinModal");
+  if(jump==="pay")setTimeout(()=>$("#itPay").scrollIntoView({behavior:"smooth",block:"center"}),380);
+}
+
+/* ---------- Events ---------- */
+$("#filters").onclick=e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll("#filters button").forEach(x=>x.classList.toggle("active",x===b));cat=b.dataset.cat;renderPk();};
+$("#currency").onclick=e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll("#currency button").forEach(x=>x.classList.toggle("active",x===b));cur=b.dataset.cur;
+  document.querySelectorAll(".price-inr").forEach(el=>{el.classList.add("fade");setTimeout(()=>{el.textContent=fmt(+el.dataset.inr);el.classList.remove("fade");},150);});};
+
+let lastFocus;
+function openModal(id){lastFocus=document.activeElement;const m=$("#"+id);m.classList.add("open");document.body.style.overflow="hidden";m.querySelector(".modal-box").scrollTop=0;m.querySelector(".modal-close").focus();}
+function closeModal(){document.querySelectorAll(".modal.open").forEach(m=>m.classList.remove("open"));document.body.style.overflow="";lastFocus&&lastFocus.focus();}
+document.addEventListener("click",e=>{
+  const o=e.target.closest("[data-open]");if(o)openModal(o.dataset.open);
+  if(e.target.closest("[data-close]")||e.target.classList.contains("modal"))closeModal();
+  const it=e.target.closest("[data-itin]");if(it)openItinerary(it.dataset.itin,it.dataset.jump);
+  const tr=e.target.closest("[data-tier]");if(tr){activeTier=+tr.dataset.tier;renderTier();}
+  const en=e.target.closest("[data-svc]");if(en){const cb=document.querySelector(`#svcTiles input[value="${en.dataset.svc}"]`);if(cb)cb.checked=true;$("#quote").scrollIntoView();}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+addEventListener("scroll",()=>$("#hdr").classList.toggle("scrolled",scrollY>40),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

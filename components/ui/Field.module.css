@@ -1,0 +1,115 @@
+/*
+ * Form fields (design 3.5, Req 3.13).
+ * Markup: <div className={f.field}>
+ *           <label className={f.label} htmlFor="x">Name <span className={f.required}>*</span></label>
+ *           <input id="x" className={f.input} aria-invalid="true" aria-describedby="x-error" />
+ *           <p id="x-error" className={f.error}>Message</p>
+ *         </div>
+ * Error state: aria-invalid="true" on the control (or the f.invalid class).
+ */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.label {
+  color: var(--text-hi);
+  font-family: var(--font-body-stack);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.required {
+  color: var(--gold-2);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  background-color: var(--bg-2);
+  color: var(--text-hi);
+  font-family: var(--font-body-stack);
+  font-size: 1rem;
+  line-height: 1.4;
+  transition:
+    border-color 200ms var(--ease),
+    box-shadow 200ms var(--ease);
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.select {
+  appearance: none;
+  padding-right: 48px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--gold-2) 50%),
+    linear-gradient(135deg, var(--gold-2) 50%, transparent 50%);
+  background-position:
+    calc(100% - 24px) 50%,
+    calc(100% - 18px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-lo);
+  opacity: 1;
+}
+
+.input:focus-visible,
+.select:focus-visible,
+.textarea:focus-visible {
+  /* Transparent outline keeps a visible indicator in forced-colors mode. */
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  border-color: var(--gold-2);
+  box-shadow: 0 0 0 2px var(--gold-a35);
+}
+
+.input:disabled,
+.select:disabled,
+.textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.invalid,
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.error {
+  margin: 4px 0 0;
+  color: var(--danger);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.hint {
+  margin: 0;
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .select,
+  .textarea {
+    transition: none;
+  }
+}

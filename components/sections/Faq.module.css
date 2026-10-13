@@ -1,0 +1,80 @@
+/* Operations FAQ shell + <details> fallback (prototype .faq, max-width 820px).
+   Rows carry bottom borders only; the list has no top border. */
+
+.narrow {
+  max-width: 820px;
+}
+
+.item {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 48px;
+  padding: 22px 0;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: 1.1875rem;
+  font-weight: 400;
+  list-style: none;
+  cursor: pointer;
+  transition: color var(--dur-hover) var(--ease);
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+/* "+" stays a plus; it rotates 45deg to an "x" when the item is open. */
+.summary::after {
+  content: "+";
+  flex: none;
+  color: var(--gold-2);
+  font-family: var(--font-body-stack);
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: transform 300ms var(--ease);
+}
+
+.item[open] > .summary::after {
+  transform: rotate(45deg);
+}
+
+.summary:hover {
+  color: var(--gold-1);
+}
+
+.summary:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 4px;
+}
+
+.answer {
+  padding-bottom: 22px;
+  color: var(--text-md);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.answer p {
+  margin: 0;
+}
+
+.answer p + p {
+  margin-top: 8px;
+}
+
+.answer a {
+  color: var(--gold-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary,
+  .summary::after {
+    transition: none;
+  }
+}

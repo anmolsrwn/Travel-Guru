@@ -1,0 +1,238 @@
+/* Booking voucher modal (design wireframe, Req 14.9, 14.10, 24.1). */
+
+.received {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  color: var(--emerald);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--emerald);
+  font-size: 0.9375rem;
+}
+
+.title {
+  margin: 0 0 var(--space-4);
+  font-size: 1.5rem;
+  color: var(--text-hi);
+}
+
+.refBox {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border: 1px dashed var(--gold-2);
+  border-radius: var(--r-md);
+  background-color: var(--gold-a06);
+  text-align: center;
+}
+
+.refLabel {
+  color: var(--text-lo);
+  font-size: 0.875rem;
+}
+
+.ref {
+  background-image: var(--gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: var(--gold-2);
+  -webkit-text-fill-color: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  user-select: all;
+}
+
+.rows {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+
+@media (min-width: 640px) {
+  .row {
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+.row dt {
+  color: var(--text-lo);
+  font-size: 0.875rem;
+}
+
+.row dd {
+  margin: 0;
+  color: var(--text-hi);
+  overflow-wrap: anywhere;
+}
+
+.block {
+  display: block;
+}
+
+.status {
+  display: inline-block;
+  padding: 2px var(--space-3);
+  border: 1px solid var(--gold-2);
+  border-radius: var(--r-pill);
+  color: var(--gold-2);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.amounts {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: var(--glass);
+}
+
+.amountRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: var(--text-md);
+}
+
+.amountRow dt {
+  min-width: 0;
+}
+
+.amountRow dd {
+  margin: 0;
+  color: var(--text-hi);
+  text-align: right;
+}
+
+.amountStrong {
+  color: var(--text-hi);
+  font-weight: 700;
+}
+
+.advance {
+  color: var(--gold-1);
+}
+
+.fine {
+  margin: var(--space-2) 0 var(--space-4);
+  color: var(--text-lo);
+  font-size: 0.875rem;
+}
+
+.notice {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--emerald);
+  border-radius: var(--r-sm);
+  background-color: var(--bg-2);
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.notice strong {
+  color: var(--text-hi);
+}
+
+.contact {
+  margin: 0 0 var(--space-5);
+}
+
+.contactTitle {
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+  color: var(--text-hi);
+}
+
+.contactList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.terms {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.link {
+  color: var(--gold-1);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.actions > * {
+  flex: 1 1 auto;
+}
+
+/* Print: the page behind is hidden by the global print rules (body.no-scroll); here the
+   voucher itself becomes plain black-on-white and loses its scroll box, close and buttons. */
+@media print {
+  .voucher {
+    max-height: none !important;
+    max-width: none !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    animation: none !important;
+  }
+
+  .voucher,
+  .voucher * {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border-color: #000 !important;
+  }
+
+  .voucher > button,
+  .actions {
+    display: none !important;
+  }
+
+  .link {
+    text-decoration: none;
+  }
+}

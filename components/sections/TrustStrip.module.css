@@ -1,0 +1,42 @@
+/* Trust strip (prototype-visual-parity Req 7.9, 7.10): --bg-1 fill comes from section--alt;
+   2x2 on mobile, four columns from 640px. Items are free text (OI-2), so no numeral styling. */
+
+.strip {
+  padding-block: 40px;
+  border-block: 1px solid var(--glass-border);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--space-5) var(--space-4);
+}
+
+.item {
+  text-align: center;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-hi);
+}
+
+.star {
+  color: var(--gold-2);
+}
+
+.tick {
+  color: var(--emerald);
+}
+
+@media (min-width: 640px) {
+  .list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .item + .item {
+    border-left: 1px solid var(--glass-border);
+    padding-left: var(--space-5);
+  }
+}

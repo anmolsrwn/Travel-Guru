@@ -1,0 +1,165 @@
+/* Curated Collections shell + static fallback cards (prototype .pk-*, Req 9.5-9.8, 17.5). */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+}
+
+/* Liftable glass card (prototype .pk.glass.lift). */
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card:hover,
+.card:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--glass-border-hi);
+  box-shadow: var(--shadow-card);
+}
+
+.media {
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, var(--bg-2), var(--bg-1));
+  overflow: hidden;
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease);
+}
+
+.card:hover .media img {
+  transform: scale(1.05);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 24px;
+}
+
+.meta {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 2px;
+  color: var(--gold-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.meta span:last-child {
+  color: var(--text-lo);
+}
+
+.title {
+  margin: 0;
+}
+
+.facts {
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+/* Included items as gold chips (prototype .pk-inc .chip-gold). */
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.highlights li {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--gold-a30);
+  border-radius: var(--r-pill);
+  background: var(--gold-a12);
+  color: var(--gold-1);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.priceLine {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 8px 0 0;
+}
+
+.from,
+.pp {
+  color: var(--text-lo);
+  font-size: 0.75rem;
+}
+
+.land,
+.extras {
+  margin: 0;
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+}
+
+.body > a:last-child {
+  margin-top: auto;
+}
+
+.empty {
+  text-align: center;
+}
+
+.empty a {
+  color: var(--gold-1);
+}
+
+.note {
+  margin: 32px 0 0;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+
+  .media img {
+    transition: none;
+  }
+
+  .card:hover .media img {
+    transform: none;
+  }
+}

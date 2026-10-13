@@ -1,0 +1,187 @@
+/* Modal shell (design 3.5 "Modal", Req 24.1, 3.10). 350ms open/close using --ease;
+   reduced motion disables the motion (global rule + explicit override below). */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000; /* above the fixed header, floating WhatsApp and sticky bar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5, 24px);
+  background: rgba(229, 219, 200, 0.90);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  overscroll-behavior: contain;
+}
+
+.backdrop[data-state="opening"] {
+  animation: backdropIn var(--dur-modal) var(--ease) both;
+}
+
+.backdrop[data-state="closing"] {
+  animation: backdropOut var(--dur-modal) var(--ease) both;
+}
+
+.dialog {
+  position: relative;
+  width: 100%;
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg-1);
+  color: var(--text-hi);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-7, 36px);
+}
+
+.dialog:focus {
+  outline: none;
+}
+
+.md {
+  max-width: 760px;
+}
+
+.lg {
+  max-width: 860px;
+}
+
+.dialog[data-state="opening"] {
+  animation: dialogIn var(--dur-modal) var(--ease) both;
+}
+
+.dialog[data-state="closing"] {
+  animation: dialogOut var(--dur-modal) var(--ease) both;
+}
+
+.close {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: calc(-1 * var(--space-3, 12px)) calc(-1 * var(--space-3, 12px)) var(--space-2, 8px) var(--space-4, 16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  background: var(--bg-2);
+  color: var(--text-hi);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+
+.close:hover {
+  border-color: var(--gold-2);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes backdropOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dialogOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+/* Mobile: bottom sheet sliding up from the bottom edge (Req 24.1, design DD6). */
+@media (max-width: 639px) {
+  .backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .dialog,
+  .md,
+  .lg {
+    max-width: none;
+    width: 100%;
+    height: auto;
+    max-height: 92dvh;
+    border: 1px solid var(--glass-border);
+    border-bottom: 0;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    padding: var(--space-5, 24px) var(--space-4, 16px);
+    padding-bottom: calc(var(--space-5, 24px) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .close {
+    margin: 0 0 var(--space-2, 8px) var(--space-4, 16px);
+  }
+
+  .dialog[data-state="opening"] {
+    animation-name: sheetIn;
+  }
+
+  .dialog[data-state="closing"] {
+    animation-name: sheetOut;
+  }
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes sheetOut {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .dialog {
+    animation: none !important;
+  }
+}

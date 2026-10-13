@@ -1,0 +1,38 @@
+/* Final CTA band (prototype .cta-band): centered, gold-tinted 1px borders top and bottom
+   and a soft radial gold glow. */
+
+.band {
+  border-block: 1px solid var(--gold-a35);
+  background: radial-gradient(ellipse at center, var(--gold-a08), transparent 70%);
+}
+
+.inner {
+  text-align: center;
+}
+
+.title {
+  max-width: 700px;
+  margin: 0 auto var(--space-6);
+}
+
+.ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ctas > * {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .ctas {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ctas > * {
+    width: auto;
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "travel-agency-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Travel Guru Raipur website built with Next.js (App Router) and Supabase",
+  "type": "module",
+  "engines": {
+    "node": ">=21"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "seed": "node --env-file=.env.local scripts/seed.js"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.3",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.0",
+    "fast-check": "4.10.2"
+  }
+}

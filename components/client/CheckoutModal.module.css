@@ -1,0 +1,268 @@
+/* Checkout modal content (design "Booking checkout modal" wireframe, Req 12, 13, 14). Shell styles live in Modal.module.css. */
+
+.title {
+  clear: both;
+  margin-bottom: var(--space-4);
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+  line-height: 1.2;
+}
+
+/* Tabs: pill group, active tab uses the blue gradient like the segmented control. */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  background-color: var(--bg-2);
+}
+
+.tab {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-md);
+  font-family: var(--font-body-stack);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color var(--dur-hover) var(--ease),
+    background-color var(--dur-hover) var(--ease);
+}
+
+.tab:hover {
+  color: var(--text-hi);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--gold-grad);
+  color: var(--bg-0);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.panel {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-5);
+  align-items: start;
+}
+
+.range {
+  color: var(--text-lo);
+  font-weight: 500;
+}
+
+.childNote {
+  align-self: end;
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.inlineLink {
+  color: var(--gold-1);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.inlineLink:focus-visible,
+.termsLink:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Summary / breakdown box. */
+.summary {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: var(--glass);
+}
+
+.rows {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-4);
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.row dt {
+  display: flex;
+  flex-direction: column;
+}
+
+.row dd {
+  margin: 0;
+  color: var(--text-hi);
+  font-weight: 600;
+  text-align: right;
+}
+
+.rowNote {
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.rowStrong {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--glass-border);
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+/* Advance amount in gold gradient text (Req 13.10). Solid gold-2 where background-clip:text is unsupported. */
+.advance {
+  color: var(--gold-2);
+  font-family: var(--font-heading-stack);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .advance {
+    background-image: var(--gold-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.fine {
+  margin: var(--space-3) 0 0;
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+}
+
+.policy,
+.demo {
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.875rem;
+}
+
+.demo {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  background: var(--gold-a08);
+  color: var(--text-hi);
+}
+
+.indicative {
+  margin: calc(-1 * var(--space-3)) 0 0;
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+}
+
+.guest {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-5);
+}
+
+.guest > :first-child {
+  grid-column: 1 / -1;
+}
+
+.agree {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  color: var(--text-md);
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--gold-2);
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.checkbox[aria-invalid="true"] {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+}
+
+.termsLink {
+  color: var(--gold-1);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.alert:empty {
+  display: none;
+}
+
+.submitBlock {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+}
+
+.dueLine {
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--glass-border);
+}
+
+@media (max-width: 639px) {
+  .pair,
+  .guest {
+    grid-template-columns: 1fr;
+  }
+
+  .actions > * {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

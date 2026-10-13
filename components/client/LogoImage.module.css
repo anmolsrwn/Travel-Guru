@@ -1,0 +1,37 @@
+/* Brand_Logo and the CSS Logo_Mark fallback (requirements glossary, Req 3.2, 33.2). */
+
+.logo {
+  display: block;
+  flex: none;
+  width: auto;
+  height: var(--logo-size, auto);
+  object-fit: contain;
+}
+
+/* Circle with a --gold-2 ring and a --gold-1 inner hairline. */
+.mark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--logo-size, 48px);
+  height: var(--logo-size, 48px);
+  border: 2px solid var(--gold-2);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--gold-1);
+  background-color: var(--bg-1);
+}
+
+/* "TG" in --gold-grad gradient text. */
+.initials {
+  font-family: var(--font-heading-stack);
+  font-size: calc(var(--logo-size, 48px) * 0.38);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background-image: var(--gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,156 @@
+/* Quote Engine shell (design section 8, Req 24.1, 24.3): 5/7 split on desktop,
+   left panel reduced to the guarantee badge above the form on mobile. */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 48px;
+    align-items: start;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.title {
+  margin: 0;
+}
+
+/* Gold guarantee box (prototype .guarantee). Element-qualified so it wins over the
+   shared Badge rules whatever the stylesheet order (DD3). Text wraps on narrow screens. */
+p.guarantee {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  padding: 16px 24px;
+  border: 1px solid var(--gold-a40);
+  border-radius: var(--r-md);
+  background-color: var(--gold-a08);
+  color: var(--gold-1);
+  font-size: 0.9375rem;
+  white-space: normal;
+}
+
+/* Shimmer sweep every 6s (same keyframes shape as the hero badge). */
+p.guarantee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(252, 229, 156, 0.25), transparent);
+  transform: translateX(-150%);
+  animation: guaranteeShimmer 6s var(--ease) infinite;
+  pointer-events: none;
+}
+
+@keyframes guaranteeShimmer {
+  0%,
+  80% {
+    transform: translateX(-150%);
+  }
+
+  100% {
+    transform: translateX(325%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  p.guarantee::after {
+    animation: none;
+  }
+}
+
+/* Perks: emerald check circle + high-contrast text (prototype .perks). */
+.benefits {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.benefits li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-hi);
+}
+
+.benefits li::before {
+  content: "✓";
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--emerald);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.chat {
+  margin: 0;
+  color: var(--text-md);
+}
+
+.chat a,
+.contacts a {
+  color: var(--gold-1);
+}
+
+/* Mobile: only the guarantee badge stays in the left panel. */
+@media (max-width: 639px) {
+  .extra,
+  .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+.formCol {
+  min-width: 0;
+}
+
+.noscript {
+  padding: 24px;
+}
+
+.noscriptTitle {
+  margin: 0 0 12px;
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+.contacts {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.address {
+  color: var(--text-lo);
+  font-size: 0.8125rem;
+  font-style: normal;
+}

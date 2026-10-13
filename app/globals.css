@@ -1,0 +1,529 @@
+/*
+ * app/globals.css — Travel Guru Raipur design system (the only global stylesheet).
+ * Components consume these tokens from their own *.module.css files.
+ *
+ * TOKENS (:root)
+ *   Canvas      --bg-0 #070b14, --bg-1 #0d1424, --bg-2 #141d33, --glass,
+ *               --glass-border rgba(252,229,156,.14), --glass-border-hi, --hairline, --hairline-soft
+ *   Gold        --gold-1 #fce59c, --gold-2 #d4af37,
+ *               --gold-grad (135deg, #fce59c to #d4af37: accent words, prices, primary buttons,
+ *               active segments, avatars, step numerals),
+ *               --gold-a06 --gold-a08 --gold-a10 --gold-a12 --gold-a30 --gold-a35 --gold-a40
+ *               (translucent --gold-2 tints for fills, borders and rings)
+ *   Status      --emerald --emerald-soft (verified / included / success only) --whatsapp --danger
+ *   Text        --text-hi --text-md --text-lo (#8a93ab) --on-cta (text on gold / WhatsApp fills)
+ *   Services    --svc-blue --svc-orange --svc-purple --svc-red --svc-green --svc-teal --svc-violet --svc-pink
+ *               (names kept for lib/data.js; every value is the gold-2 treatment)
+ *   Radius      --r-sm --r-md --r-lg --r-pill
+ *   Shadows     --shadow-card --shadow-gold
+ *   Spacing     --space-1 (4px) --space-2 (8) --space-3 (12) --space-4 (16) --space-5 (24)
+ *               --space-6 (32) --space-7 (48) --space-8 (64) --space-9 (96) --space-10 (128)
+ *   Layout      --container-max --container-pad --section-pad --header-h --sticky-bar-h
+ *   Type        Heading_Font = Playfair Display (--font-heading), Body_Font = Plus Jakarta Sans
+ *               (--font-body), both set by next/font in app/layout.js;
+ *               --font-heading-stack / --font-body-stack add the fallbacks
+ *               --fs-display --fs-h2 --fs-h3 --fs-eyebrow --fs-body --fs-small --fs-button --fs-price
+ *   Motion      --ease --dur-hover (200ms) --dur-fade (150ms) --dur-modal (350ms) --dur-reveal (600ms)
+ *   Focus       --focus-ring
+ *
+ * GLOBAL CLASSES
+ *   .container        centered, max-width 1200px, 24px side padding (16px < 640px)
+ *   .section          vertical padding 96px desktop / 64px tablet / 48px mobile
+ *   .section--alt     .section on the --bg-1 alternating background
+ *   .section-head     centered heading block (eyebrow + H2 + lead), bottom gap 56px, lead max 620px
+ *   .eyebrow          0.75rem uppercase, 0.24em tracking, --gold-2, 32px x 1px --gold-2 line before
+ *   .gradient-text    --gold-grad text (accent words; italic Heading_Font inside h1/h2/h3)
+ *   .price            Heading_Font 1.75rem 700 in --gold-grad text
+ *   .display          hero H1 type scale
+ *   .lead             larger body paragraph
+ *   .caption          small caption text in --text-lo
+ *   .glass            glass surface (solid --bg-1 fallback without backdrop-filter)
+ *   .sr-only / .visually-hidden   hidden visually, kept for assistive technology
+ *   .skip-link        visible-on-focus "skip to content" link
+ *   .no-scroll        on <body> while a modal is open (scroll lock)
+ *   .reveal           scroll-reveal wrapper. Server markup is fully visible; the client
+ *                     Reveal component adds .is-pending (opacity 0, +24px) only when
+ *                     IntersectionObserver exists and motion is allowed, then swaps it for
+ *                     .is-revealed once. Without JS / IO the content simply stays visible.
+ *   :focus-visible    2px solid --gold-2 outline on every interactive element
+ *
+ * Breakpoints: mobile < 640px, tablet 640–1023px, desktop >= 1024px (container capped at 1200px).
+ */
+
+:root {
+  /* Canvas — warm cream (deeper, not bright white) */
+  --bg-0: #efe8d8;
+  --bg-1: #e5dbc8;
+  --bg-2: #d8ccb4;
+  --glass: rgba(235, 225, 200, 0.65);
+  --glass-border: rgba(106, 143, 74, 0.25);
+  --glass-border-hi: rgba(106, 143, 74, 0.50);
+  --hairline: rgba(90, 110, 55, 0.18);
+  --hairline-soft: rgba(90, 110, 55, 0.10);
+
+  /* Pista (pistachio) accent — primary interactive colour */
+  --gold-1: #8fad6a;          /* light pista — links, hover */
+  --gold-2: #5a7d3a;          /* deep pista — borders, eyebrow, labels */
+  --gold-grad: linear-gradient(135deg, #c9b86a 0%, #c9972a 100%); /* gold gradient for CTAs / prices */
+  --gold-a06: rgba(106, 143, 74, 0.06);
+  --gold-a08: rgba(106, 143, 74, 0.08);
+  --gold-a10: rgba(106, 143, 74, 0.10);
+  --gold-a12: rgba(106, 143, 74, 0.12);
+  --gold-a30: rgba(106, 143, 74, 0.30);
+  --gold-a35: rgba(106, 143, 74, 0.35);
+  --gold-a40: rgba(106, 143, 74, 0.40);
+
+  /* Status */
+  --emerald: #3d9e6a;
+  --emerald-soft: #7ecba0;
+  --whatsapp: #25D366;
+  --danger: #c0504a;
+
+  /* Text — dark olive-brown on cream */
+  --text-hi: #1e2410;          /* deep olive charcoal */
+  --text-md: #3d4a22;          /* medium olive green-brown */
+  --text-lo: #7a8c5a;          /* muted pista */
+  --on-cta: #faf6ee;           /* cream text on pista / gold buttons */
+
+  /* Service accents — deep pista */
+  --svc-blue: #5a7d3a;
+  --svc-orange: #5a7d3a;
+  --svc-purple: #5a7d3a;
+  --svc-red: #5a7d3a;
+  --svc-green: #5a7d3a;
+  --svc-teal: #5a7d3a;
+  --svc-violet: #5a7d3a;
+  --svc-pink: #5a7d3a;
+
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 10px 30px -10px rgba(60, 80, 30, 0.18);
+  --shadow-gold: 0 8px 28px -8px rgba(201, 151, 42, 0.40);
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Layout (mobile-first; overridden at 640px and 1024px) */
+  --container-max: 1200px;
+  --container-pad: var(--space-4);
+  --section-pad: var(--space-7);
+  --header-h: 72px;
+  --sticky-bar-h: 64px; /* MobileStickyBar height (< 640px), excluding the safe-area inset */
+
+  /* Typography (font families come from next/font CSS variables) */
+  --font-heading-stack: var(--font-heading, "Playfair Display"), Georgia, serif;
+  --font-body-stack: var(--font-body, "Plus Jakarta Sans"), system-ui, sans-serif;
+  --fs-display: clamp(2.5rem, 6vw, 4.75rem);
+  --fs-h2: clamp(2rem, 4vw, 3rem);
+  --fs-h3: 1.375rem;
+  --fs-eyebrow: 0.75rem;
+  --fs-body: 1rem;
+  --fs-small: 0.8125rem;
+  --fs-button: 0.9375rem;
+  --fs-price: 1.75rem;
+  --lh-body: 1.7;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fade: 150ms;
+  --dur-hover: 200ms;
+  --dur-modal: 350ms;
+  --dur-reveal: 600ms;
+
+  /* Focus */
+  --focus-ring: 2px solid var(--gold-2);
+
+  color-scheme: light;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --container-pad: var(--space-5);
+    --section-pad: var(--space-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-pad: var(--space-9);
+  }
+}
+
+/* ---------- Reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-0);
+  color: var(--text-md);
+  font-family: var(--font-body-stack);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Reserve room for the MobileStickyBar so the footer is never covered (Req 23.5). */
+@media (max-width: 639.98px) {
+  body {
+    padding-bottom: calc(var(--sticky-bar-h) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: var(--gold-1);
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease);
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+::selection {
+  background: var(--gold-a35);
+  color: var(--text-hi);
+}
+
+/* ---------- Typography ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading-stack);
+  font-weight: 600;
+  color: var(--text-hi);
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: var(--fs-display);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+}
+
+h3 {
+  font-size: var(--fs-h3);
+}
+
+.display {
+  font-family: var(--font-heading-stack);
+  font-size: var(--fs-display);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-hi);
+}
+
+.lead {
+  font-size: 1.125rem;
+  color: var(--text-md);
+}
+
+.caption,
+small {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-lo);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body-stack);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: var(--space-4);
+}
+
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: 32px;
+  height: 1px;
+  background: var(--gold-2);
+}
+
+.gradient-text,
+.price {
+  background: var(--gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-2); /* fallback when background-clip:text is unsupported */
+}
+
+/* Accent word inside a heading: italic Heading_Font. The inline padding (offset by the
+   negative margin) stops background-clip:text clipping the italic overhang. */
+h1 .gradient-text,
+h2 .gradient-text,
+h3 .gradient-text {
+  font-style: italic;
+  padding-inline-end: 0.06em;
+  margin-inline-end: -0.06em;
+}
+
+.price {
+  font-family: var(--font-heading-stack);
+  font-size: var(--fs-price);
+  font-weight: 700;
+  line-height: 1.2;
+  transition: opacity var(--dur-fade) var(--ease);
+}
+
+/* ---------- Layout ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.section {
+  padding-block: var(--section-pad);
+  position: relative;
+}
+
+.section--alt {
+  background: var(--bg-1);
+}
+
+.section-head {
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.section-head .eyebrow {
+  justify-content: center;
+}
+
+.section-head p {
+  max-width: 620px;
+  margin: var(--space-4) auto 0;
+}
+
+/* ---------- Glass surface ---------- */
+
+.glass {
+  background: var(--bg-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  transition:
+    transform 300ms var(--ease),
+    border-color 300ms var(--ease),
+    box-shadow 300ms var(--ease);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+}
+
+/* ---------- Accessibility ---------- */
+
+.sr-only,
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 1000;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--r-pill);
+  background: var(--bg-2);
+  color: var(--text-hi);
+  transform: translateY(-200%);
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Print while a modal is open (Voucher "Print", Req 14.10): only the modal content is printed.
+   ModalProvider adds .no-scroll to <body> for the whole open session, so this is scoped to it. */
+@media print {
+  body.no-scroll {
+    position: static !important;
+    top: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  body.no-scroll > :not(#modal-root) {
+    display: none !important;
+  }
+
+  body.no-scroll #modal-root > div {
+    position: static !important;
+    display: block !important;
+    padding: 0 !important;
+    background: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    animation: none !important;
+  }
+}
+
+/* ---------- Scroll reveal ---------- */
+
+.reveal {
+  transition:
+    opacity var(--dur-reveal) var(--ease),
+    transform var(--dur-reveal) var(--ease);
+}
+
+.reveal.is-pending {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal.is-pending,
+  .reveal.is-revealed {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

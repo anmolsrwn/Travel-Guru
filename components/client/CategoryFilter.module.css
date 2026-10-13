@@ -1,0 +1,120 @@
+/* Category tabs, currency switcher and card actions (design section 5, Req 8.11, 10.7, 25.7, 25.8). */
+
+.root {
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* Mobile: one non-wrapping row that scrolls inside itself (Req 8.11, 24.6). */
+.tabsScroller {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabsScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.tablist {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  padding: 4px;
+  margin: 2px; /* room for the focus outline inside the scroller */
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-pill);
+  background-color: var(--bg-2);
+}
+
+.tab {
+  flex: none;
+  min-height: 40px;
+  padding: 8px 18px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-md);
+  font-family: var(--font-body-stack);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 200ms cubic-bezier(.2, .7, .2, 1),
+    background-color 200ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.tab:hover {
+  color: var(--text-hi);
+}
+
+.tab[aria-selected="true"] {
+  background-color: var(--gold-2);
+  background-image: var(--gold-grad);
+  color: var(--bg-0);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: -2px;
+}
+
+.currency {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.currency > [role="radiogroup"] {
+  justify-content: center;
+  max-width: 100%;
+}
+
+.currencyLabel {
+  color: var(--text-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.currencyNote {
+  margin: 0;
+  text-align: center;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.actions > button {
+  flex: 1 1 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

@@ -1,0 +1,191 @@
+/* Hero (prototype-visual-parity Req 7.4-7.8, 7.10, 17.5). */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  padding-block: calc(var(--header-h) + var(--space-9)) var(--space-9);
+  background: var(--bg-0);
+}
+
+/* Full-bleed photo with Ken Burns zoom. If the image fails, --bg-0 shows through. */
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-color: var(--bg-0);
+  background-image: var(--hero-image);
+  background-size: cover;
+  background-position: center right;
+  transform-origin: center;
+  animation: kenburns 20s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Cream-pista overlay: warm cream fade from left plus bottom fade. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(239, 232, 216, 0.94) 0%,
+      rgba(229, 219, 200, 0.80) 50%,
+      rgba(229, 219, 200, 0.42) 100%
+    ),
+    linear-gradient(0deg, rgba(229, 219, 200, 0.97) 0%, transparent 40%);
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.12);
+  }
+}
+
+.inner {
+  position: relative;
+  text-align: left;
+}
+
+.title {
+  max-width: 640px;
+  margin-top: var(--space-3);
+}
+
+/* "not by algorithms." on its own line */
+.line {
+  display: block;
+}
+
+.copy.copy {
+  max-width: 480px;
+  margin: 20px 0 32px;
+  font-size: 1rem;
+  color: var(--text-md);
+  line-height: 1.6;
+}
+
+.ctas {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0;
+}
+
+/* Gold guarantee badge — compact pill inline. Doubled selector (DD3). */
+.badge.badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 420px;
+  margin-top: 28px;
+  padding: 14px 20px;
+  overflow: hidden;
+  background: var(--gold-a08);
+  border: 1px solid var(--gold-a40);
+  border-radius: var(--r-md);
+  color: var(--gold-1);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.badge.badge strong {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--gold-1);
+}
+
+.badge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(252, 229, 156, 0.25), transparent);
+  transform: translateX(-150%);
+  animation: shimmer 6s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%,
+  80% {
+    transform: translateX(-150%);
+  }
+
+  100% {
+    transform: translateX(325%);
+  }
+}
+
+.badgeIcon {
+  flex: none;
+  font-size: 1.25rem;
+  color: var(--gold-1);
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin-top: 24px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-md);
+}
+
+.star {
+  color: var(--gold-2);
+  letter-spacing: 1px;
+}
+
+.tick {
+  color: var(--emerald);
+}
+
+/* Desktop: lighter right edge to reveal photo. */
+@media (min-width: 1024px) {
+  .overlay {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(239, 232, 216, 0.94) 0%,
+        rgba(229, 219, 200, 0.62) 50%,
+        rgba(229, 219, 200, 0.20) 100%
+      ),
+      linear-gradient(0deg, rgba(229, 219, 200, 0.97) 0%, transparent 40%);
+  }
+}
+
+/* Mobile: stack CTAs */
+@media (max-width: 639px) {
+  .ctas > * {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg,
+  .badge::after {
+    animation: none;
+  }
+
+  .badge::after {
+    display: none;
+  }
+}

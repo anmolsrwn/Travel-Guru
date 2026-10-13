@@ -1,0 +1,127 @@
+/* Popular Destinations shell + static fallback grids (same card, chip and tile styling as
+   Collections, Req 9.8, 17.5). */
+
+.group + .group {
+  margin-top: 48px;
+}
+
+.groupTitle {
+  margin: 0 0 24px;
+}
+
+/* Mobile: single horizontal scroll-snap row confined to the grid.
+   Top padding leaves room for the hover lift inside the scroll container. */
+.grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 80%;
+  gap: 16px;
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+}
+
+.grid > li {
+  scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    gap: 28px;
+  }
+
+  .grid3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Liftable glass tile (prototype .pk.glass.lift). */
+.tile {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tile:hover,
+.tile:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--glass-border-hi);
+  box-shadow: var(--shadow-card);
+}
+
+.media {
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, var(--bg-2), var(--bg-1));
+  overflow: hidden;
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease);
+}
+
+.tile:hover .media img {
+  transform: scale(1.05);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.name {
+  margin: 0;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile:hover,
+  .tile:focus-within {
+    transform: none;
+  }
+
+  .media img {
+    transition: none;
+  }
+
+  .tile:hover .media img {
+    transform: none;
+  }
+}

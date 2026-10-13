@@ -1,0 +1,80 @@
+/* Terms & Policies shell + static panels (design section 12, max-width 920px). */
+
+.narrow {
+  max-width: 920px;
+}
+
+.toc ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.toc a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  color: var(--text-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  border-color: var(--gold-2);
+  color: var(--gold-1);
+}
+
+.toc a:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.panel {
+  padding: 24px 0;
+  border-top: 1px solid var(--glass-border);
+  scroll-margin-top: 96px;
+}
+
+.panelTitle {
+  margin: 0 0 16px;
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+
+.subTitle {
+  margin: 0 0 8px;
+  color: var(--text-hi);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.columns {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding-left: 24px;
+  color: var(--text-md);
+  line-height: 1.7;
+}
+
+.columns .list {
+  margin-top: 0;
+}

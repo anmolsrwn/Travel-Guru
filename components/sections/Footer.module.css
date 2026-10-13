@@ -1,0 +1,153 @@
+/* Footer (Req 12.6–12.9). Mobile-first: one column, two from 640px, 2fr 1fr 1fr 1.4fr from 1024px. */
+
+.footer {
+  background: var(--bg-0);
+  padding-block: var(--space-7) var(--space-6);
+  color: var(--text-md);
+  overflow-x: clip;
+}
+
+.inner {
+  min-width: 0;
+}
+
+/* Brand, services, company, contact: stacked in DOM order on mobile. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .columns {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 40px;
+  }
+}
+
+.brandCol,
+.col {
+  min-width: 0;
+}
+
+.brandName {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-heading-stack);
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-hi);
+}
+
+.tagline {
+  margin: var(--space-1) 0 0;
+}
+
+.rating {
+  margin: var(--space-3) 0 0;
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+.rating > span[aria-hidden="true"] {
+  color: var(--gold-2);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heading {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-body-stack);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list a,
+.legal a {
+  color: var(--text-md);
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease);
+}
+
+.list a:hover,
+.legal a:hover {
+  color: var(--gold-1);
+}
+
+.list a:focus-visible,
+.legal a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.breakable {
+  overflow-wrap: anywhere;
+}
+
+.whatsapp {
+  font-weight: 600;
+}
+
+.list a.whatsapp {
+  color: var(--whatsapp);
+}
+
+.address {
+  margin-top: var(--space-7);
+  font-style: normal;
+  overflow-wrap: anywhere;
+}
+
+.motto {
+  margin: var(--space-4) 0 0;
+  font-family: var(--font-heading-stack);
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-align: center;
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--glass-border);
+  font-size: var(--fs-small);
+  color: var(--text-lo);
+}
+
+.bottom p {
+  margin: 0;
+}
+
+.legal {
+  display: flex;
+  gap: var(--space-4);
+}

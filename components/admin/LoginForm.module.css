@@ -1,0 +1,35 @@
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 48px 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-md, 16px);
+  background-color: var(--bg-1, var(--bg-2));
+}
+
+.title {
+  margin: 0 0 24px;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notice {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 600;
+}

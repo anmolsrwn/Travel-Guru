@@ -1,0 +1,117 @@
+/* Floating WhatsApp (design 3.5, Req 23.1, 23.2, 23.5). */
+
+.fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 95; /* above the sticky bar (90), below the header (100) and modals (1000) */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--whatsapp);
+  color: #fff; /* icon-only: white glyph, accessible name via aria-label */
+  box-shadow: 0 10px 30px -6px rgba(37, 211, 102, 0.6);
+  text-decoration: none;
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+.fab:hover {
+  transform: translateY(-2px);
+}
+
+.fab:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 3px;
+}
+
+/* Pulsing ring, every 2s. */
+.fab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--whatsapp);
+  pointer-events: none;
+  animation: pulse 2s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.glyph {
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+}
+
+/* Tooltip to the left; shown only while hovered or focused (Req 23.2). */
+.tooltip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  color: var(--text-hi);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(8px, -50%);
+  transition:
+    opacity 250ms var(--ease),
+    transform 250ms var(--ease),
+    visibility 0s linear 250ms;
+}
+
+.fab:hover .tooltip,
+.fab:focus-visible .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+  transition:
+    opacity 250ms var(--ease),
+    transform 250ms var(--ease),
+    visibility 0s linear 0s;
+}
+
+/* Hidden below 640px (tooltip hidden; FAB sits above sticky bar). */
+@media (max-width: 639.98px) {
+  .fab {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab,
+  .tooltip,
+  .fab:hover .tooltip,
+  .fab:focus-visible .tooltip {
+    transition: none;
+  }
+
+  .fab:hover {
+    transform: none;
+  }
+
+  .fab::before {
+    animation: none;
+    opacity: 0;
+  }
+}

@@ -1,0 +1,165 @@
+/* QuoteForm (design wireframe 8, Req 24.1, 24.2): fields 1 column below 640px,
+   2 columns from 640px. Tiles, fields, steppers and buttons come from components/ui. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 24px;
+  border-radius: var(--r-lg);
+}
+
+@media (min-width: 640px) {
+  .form {
+    padding: 36px;
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Step label (prototype .step-label): small gold uppercase caption in the body font. */
+.stepTitle {
+  margin: 0;
+  color: var(--gold-2);
+  font-family: var(--font-body-stack);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.stepTitle:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 4px;
+  border-radius: var(--r-sm);
+}
+
+/* The step number sits inside .stepTitle and inherits its look. */
+.stepNo {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tiles,
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.grid {
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .tiles,
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Full-width rows inside the 2-column grid. */
+.wide,
+.counts {
+  grid-column: 1 / -1;
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+}
+
+.optional {
+  color: var(--text-lo);
+  font-weight: 500;
+}
+
+/* Honeypot: off-screen, not display:none (some bots skip hidden inputs). */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.summary {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Submit failure (429 / 5xx / network / timeout) with the WhatsApp fallback. */
+.submitError {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--danger);
+  border-radius: var(--r-sm);
+  background-color: rgba(248, 113, 113, 0.08);
+}
+
+.submitErrorText {
+  margin: 0;
+  color: var(--text-hi);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Long CTA labels wrap on narrow screens instead of overflowing. */
+.wrap {
+  white-space: normal;
+}
+
+.or {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  color: var(--text-lo);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.or::before,
+.or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--hairline);
+}
+
+.privacy {
+  margin: 0;
+  color: var(--text-lo);
+  font-size: 0.75rem;
+  text-align: center;
+}

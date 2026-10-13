@@ -1,0 +1,156 @@
+/*
+ * Service icon and service checkbox tile (design: Shared UI modules; prototype .s-icon and .tile).
+ * Icon:  <span className={`${s.iconCircle} ${s.svcBlue}`} aria-hidden="true"><svg className={s.glyph} .../></span>
+ * Tile:  <label className={s.tile}>
+ *          <input type="checkbox" className={s.tileInput} />
+ *          <span className={s.tileBody}>
+ *            <span className={`${s.iconCircle} ${s.svcBlue}`} aria-hidden="true">…</span>
+ *            <span className={s.tileLabel}>Flights</span>
+ *            <span className={s.check} aria-hidden="true" />
+ *          </span>
+ *        </label>
+ *
+ * The class name `iconCircle` is kept for the JSX, but the shape is the prototype's
+ * 52px rounded square (DD8). The per-accent classes only set --svc-accent (DD9);
+ * the fill no longer depends on them.
+ */
+
+.iconCircle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid var(--gold-a30);
+  background-color: var(--gold-a10);
+  color: var(--gold-1);
+}
+
+.glyph {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.svcBlue { --svc-accent: var(--svc-blue); }
+.svcOrange { --svc-accent: var(--svc-orange); }
+.svcPurple { --svc-accent: var(--svc-purple); }
+.svcRed { --svc-accent: var(--svc-red); }
+.svcGreen { --svc-accent: var(--svc-green); }
+.svcTeal { --svc-accent: var(--svc-teal); }
+.svcViolet { --svc-accent: var(--svc-violet); }
+.svcPink { --svc-accent: var(--svc-pink); }
+
+/* Checkbox tile */
+.tile {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+/* Real checkbox, visually hidden but focusable and announced. */
+.tileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tileBody {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  background-color: var(--bg-2);
+  color: var(--text-md);
+  transition:
+    border-color 200ms var(--ease),
+    background-color 200ms var(--ease),
+    color 200ms var(--ease);
+}
+
+.tileBody .iconCircle {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.tileLabel {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 16px square mark with a 4px radius; empty until checked. */
+.check {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--text-lo);
+  border-radius: 4px;
+  transition:
+    border-color 200ms var(--ease),
+    background 200ms var(--ease);
+}
+
+/* Tick drawn with two borders, in --bg-0 on the gold fill. */
+.check::after {
+  content: "";
+  width: 4px;
+  height: 8px;
+  margin-top: -2px;
+  border: solid var(--bg-0);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.tile:hover .tileBody {
+  border-color: var(--gold-a40);
+}
+
+.tileInput:checked + .tileBody {
+  border-color: var(--gold-2);
+  background-color: var(--gold-a10);
+  color: var(--text-hi);
+}
+
+.tileInput:checked + .tileBody .check {
+  border-color: transparent;
+  background: var(--gold-grad);
+}
+
+.tileInput:checked + .tileBody .check::after {
+  opacity: 1;
+}
+
+.tileInput:focus-visible + .tileBody {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.tileInput:disabled + .tileBody {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tileBody,
+  .check {
+    transition: none;
+  }
+}

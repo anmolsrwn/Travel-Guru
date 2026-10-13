@@ -1,0 +1,84 @@
+/*
+ * Stepper [ − ] n [ + ] around a native number input (design 3.5, Req 3.13).
+ * Markup: <div className={st.stepper}>
+ *           <button type="button" className={st.button} aria-label="Decrease adults">−</button>
+ *           <input type="number" min="1" max="20" className={st.input} id="adults" />
+ *           <button type="button" className={st.button} aria-label="Increase adults">+</button>
+ *         </div>
+ */
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  background-color: var(--bg-2);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--gold-2);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--gold-1);
+  font-family: var(--font-body-stack);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 200ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--gold-a10);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.input {
+  width: 48px;
+  min-height: 40px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--text-hi);
+  font-family: var(--font-body-stack);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 0;
+  border-radius: var(--r-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

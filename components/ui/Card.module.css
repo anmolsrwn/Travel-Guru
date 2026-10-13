@@ -1,0 +1,46 @@
+/*
+ * Glass card (prototype .glass, .lift).
+ * Usage: className={card.glass} or `${card.glass} ${card.interactive}` for hover lift.
+ */
+
+.glass {
+  position: relative;
+  background-color: var(--bg-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  transition:
+    transform 300ms var(--ease),
+    border-color 300ms var(--ease),
+    box-shadow 300ms var(--ease);
+}
+
+/* Only use the translucent fill where the blur is supported; otherwise solid --bg-1 stays. */
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: var(--glass);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+}
+
+.padded {
+  padding: 24px;
+}
+
+.interactive:hover,
+.interactive:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--glass-border-hi);
+  box-shadow: var(--shadow-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass {
+    transition: none;
+  }
+
+  .interactive:hover,
+  .interactive:focus-within {
+    transform: none;
+  }
+}
