@@ -545,7 +545,7 @@ export function QuoteForm() {
         </p>
         <button type="button" className={`${btn.btn} ${btn.whatsapp} ${btn.block} ${s.wrap}`} onClick={handleWhatsApp}>
           <WhatsAppIcon className={btn.icon} />
-          {`Instant Quote via WhatsApp (<${BUSINESS.whatsappResponseMins} min)`}
+          {`Instant Quote via WhatsApp`}
         </button>
         <p className={s.privacy}>
           <span aria-hidden="true">🔒</span> We never share your details.

@@ -21,18 +21,19 @@
 .brand {
   background-color: var(--gold-a12);
   border-color: var(--gold-a30);
-  color: var(--gold-1);
+  color: var(--gold-2);
 }
 
 /* Emerald: Verified, Trusted, included. */
 .emerald {
-  border-color: rgba(16, 185, 129, 0.3);
-  background-color: rgba(16, 185, 129, 0.12);
-  color: var(--emerald-soft);
+  border-color: rgba(61, 158, 106, 0.35);
+  background-color: rgba(61, 158, 106, 0.12);
+  color: var(--emerald);
 }
 
 /* Neutral: tags, "Priced separately". */
 .neutral {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--gold-a06);
+  border-color: var(--hairline);
   color: var(--text-md);
 }

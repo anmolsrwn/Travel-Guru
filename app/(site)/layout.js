@@ -6,7 +6,6 @@
 // floating bars stay direct children of <body>, siblings of #modal-root
 // (rendered by app/layout.js) — ModalProvider marks exactly those siblings inert.
 import Footer from "@/components/sections/Footer";
-import { CurrencyProvider } from "@/components/client/CurrencyProvider";
 import { ModalProvider } from "@/components/client/ModalProvider";
 import { QuoteIntentProvider } from "@/components/client/QuoteIntentProvider";
 import Header from "@/components/client/Header";
@@ -15,17 +14,14 @@ import MobileStickyBar from "@/components/client/MobileStickyBar";
 
 export default function SiteLayout({ children }) {
   return (
-    <CurrencyProvider>
-      <ModalProvider>
-        <QuoteIntentProvider>
-          <Header />
-          {children}
-          {/* Footer sits outside <main id="main"> (rendered by app/(site)/page.js). */}
-          <Footer />
-          <FloatingWhatsApp />
-          <MobileStickyBar />
-        </QuoteIntentProvider>
-      </ModalProvider>
-    </CurrencyProvider>
+    <ModalProvider>
+      <QuoteIntentProvider>
+        <Header />
+        {children}
+        <Footer />
+        <FloatingWhatsApp />
+        <MobileStickyBar />
+      </QuoteIntentProvider>
+    </ModalProvider>
   );
 }

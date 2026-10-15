@@ -20,13 +20,13 @@
   background-color: var(--bg-0);
   background-image: var(--hero-image);
   background-size: cover;
-  background-position: center right;
+  background-position: center center;
   transform-origin: center;
   animation: kenburns 20s ease-in-out infinite alternate;
   will-change: transform;
 }
 
-/* Cream-pista overlay: warm cream fade from left plus bottom fade. */
+/* Cream-pista overlay: warm left fade so dark text stays readable, photo peeks through on right. */
 .overlay {
   position: absolute;
   inset: 0;
@@ -34,11 +34,11 @@
   background:
     linear-gradient(
       90deg,
-      rgba(239, 232, 216, 0.94) 0%,
-      rgba(229, 219, 200, 0.80) 50%,
-      rgba(229, 219, 200, 0.42) 100%
+      rgba(239, 232, 216, 0.96) 0%,
+      rgba(239, 232, 216, 0.82) 45%,
+      rgba(239, 232, 216, 0.40) 100%
     ),
-    linear-gradient(0deg, rgba(229, 219, 200, 0.97) 0%, transparent 40%);
+    linear-gradient(0deg, rgba(229, 219, 200, 0.98) 0%, transparent 38%);
 }
 
 @keyframes kenburns {
@@ -59,6 +59,7 @@
 .title {
   max-width: 640px;
   margin-top: var(--space-3);
+  color: var(--text-hi);
 }
 
 /* "not by algorithms." on its own line */
@@ -82,7 +83,7 @@
   margin-top: 0;
 }
 
-/* Gold guarantee badge — compact pill inline. Doubled selector (DD3). */
+/* Pista guarantee badge. Doubled selector (DD3). */
 .badge.badge {
   position: relative;
   display: inline-flex;
@@ -95,7 +96,7 @@
   background: var(--gold-a08);
   border: 1px solid var(--gold-a40);
   border-radius: var(--r-md);
-  color: var(--gold-1);
+  color: var(--gold-2);
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
@@ -105,7 +106,7 @@
   display: block;
   font-weight: 700;
   font-size: 0.9375rem;
-  color: var(--gold-1);
+  color: var(--text-hi);
 }
 
 .badge::after {
@@ -115,7 +116,7 @@
   left: 0;
   width: 40%;
   height: 100%;
-  background: linear-gradient(100deg, transparent, rgba(252, 229, 156, 0.25), transparent);
+  background: linear-gradient(100deg, transparent, rgba(106, 143, 74, 0.15), transparent);
   transform: translateX(-150%);
   animation: shimmer 6s infinite;
   pointer-events: none;
@@ -135,7 +136,7 @@
 .badgeIcon {
   flex: none;
   font-size: 1.25rem;
-  color: var(--gold-1);
+  color: var(--gold-2);
 }
 
 .trust {
@@ -157,17 +158,17 @@
   color: var(--emerald);
 }
 
-/* Desktop: lighter right edge to reveal photo. */
+/* Desktop: let more photo show through on the right. */
 @media (min-width: 1024px) {
   .overlay {
     background:
       linear-gradient(
         90deg,
-        rgba(239, 232, 216, 0.94) 0%,
-        rgba(229, 219, 200, 0.62) 50%,
-        rgba(229, 219, 200, 0.20) 100%
+        rgba(239, 232, 216, 0.96) 0%,
+        rgba(239, 232, 216, 0.70) 45%,
+        rgba(239, 232, 216, 0.18) 100%
       ),
-      linear-gradient(0deg, rgba(229, 219, 200, 0.97) 0%, transparent 40%);
+      linear-gradient(0deg, rgba(229, 219, 200, 0.98) 0%, transparent 38%);
   }
 }
 

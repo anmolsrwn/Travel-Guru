@@ -9,10 +9,10 @@ import card from "@/components/ui/Card.module.css";
 import s from "./QuoteSection.module.css";
 
 const BENEFITS = [
-  "Free, no-obligation quote",
-  "Real human consultant",
-  "Deluxe / Superior / Premium hotel options",
-  `Quotes valid for ${BUSINESS.quoteValidityHours} hours`,
+  "No consultation fees, zero obligation",
+  "A real consultant in Raipur, not a bot",
+  "Private airport pick-up & drop on every package",
+  "Partner B2B net fares on flights & hotels",
 ];
 
 const WHATSAPP_GREETING = `Hi ${BUSINESS.brandName}, I would like a travel quotation.`;
@@ -51,13 +51,13 @@ export default function QuoteSection({ children }) {
     <section id="quote" className="section section--alt" aria-labelledby="quote-title">
       <div className={`container ${s.split}`}>
         <div className={s.panel}>
-          <p className={`eyebrow ${s.extra}`}>Zero-obligation quote</p>
+          <p className={`eyebrow ${s.extra}`}>Zero-Obligation Quote</p>
           <h2 id="quote-title" className={s.title}>
             Tell us your dream trip. <span className="gradient-text">We&apos;ll do the rest.</span>
           </h2>
           <p className={`${badge.badge} ${badge.brand} ${s.guarantee}`}>
             <span aria-hidden="true">⚡</span>
-            {`Guaranteed Call Back & Custom Quotation Within ${BUSINESS.callbackHours} Hours`}
+            {`Guaranteed Call Back Within ${BUSINESS.callbackHours} Hours & Custom Quotation`}
           </p>
           <ul className={`${s.benefits} ${s.extra}`}>
             {BENEFITS.map((b) => (
@@ -67,9 +67,8 @@ export default function QuoteSection({ children }) {
           <p className={`${s.chat} ${s.extra}`}>
             Prefer chat?{" "}
             <a href={buildWhatsAppUrl(BUSINESS.whatsapp, WHATSAPP_GREETING)} target="_blank" rel="noopener noreferrer">
-              WhatsApp us
+              Message us on WhatsApp.
             </a>
-            {`, we usually reply within ${BUSINESS.whatsappResponseMins} minutes.`}
           </p>
         </div>
 

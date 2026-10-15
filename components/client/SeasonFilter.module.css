@@ -1,0 +1,253 @@
+/* SeasonFilter — month tab filter + seasonal card grid (Requirements 51, 52). */
+
+.root {
+  min-width: 0;
+}
+
+/* Horizontally scrollable tab row — no page overflow on mobile (Req 51.8). */
+.tabsScroller {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 32px;
+}
+
+.tabsScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.tablist {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  padding: 4px;
+  margin: 2px;
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-pill);
+  background-color: var(--bg-2);
+}
+
+.tab {
+  position: relative;
+  flex: none;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-md);
+  font-family: var(--font-body-stack);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 200ms cubic-bezier(.2, .7, .2, 1),
+    background-color 200ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.tab:hover {
+  color: var(--text-hi);
+}
+
+/* Active (selected) tab — blue gradient fill (Req 51.6). */
+.tabActive {
+  background-image: var(--blue-grad, linear-gradient(135deg, #3b82f6, #6366f1));
+  color: #fff;
+}
+
+/* Current-month tab (not active) — subtle emerald tint (Req 51.2). */
+.tabCurrent {
+  color: var(--emerald);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--blue-2, #3b82f6);
+  outline-offset: -2px;
+}
+
+/* Emerald "now" dot indicator (Req 51.2). */
+.nowDot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-left: 5px;
+  border-radius: 50%;
+  background-color: var(--emerald);
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* When the tab is active and current, show a white dot instead. */
+.tabActive .nowDot {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* Card grid — 1 col mobile, 2 col tablet, 3 col desktop (Req 52.4–52.6). */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+}
+
+/* Seasonal package card */
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card:hover,
+.card:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--glass-border-hi);
+  box-shadow: var(--shadow-card);
+}
+
+.media {
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, var(--bg-2), var(--bg-1));
+  overflow: hidden;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease);
+}
+
+.card:hover .img {
+  transform: scale(1.05);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px 24px 24px;
+}
+
+.meta {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  color: var(--gold-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.meta span:last-child {
+  color: var(--text-lo);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.highlights li {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid var(--gold-a30);
+  border-radius: var(--r-pill);
+  background: var(--gold-a12);
+  color: var(--gold-1);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.priceLine {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.from,
+.pp {
+  color: var(--text-lo);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.cta {
+  margin-top: auto;
+  padding-top: 8px;
+  color: var(--gold-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cta:hover {
+  text-decoration: underline;
+}
+
+/* Loading and empty states */
+.loading,
+.empty {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--text-md);
+}
+
+.empty a {
+  color: var(--gold-1);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+
+  .img {
+    transition: none;
+  }
+
+  .card:hover .img {
+    transform: none;
+  }
+
+  .tab {
+    transition: none;
+  }
+}

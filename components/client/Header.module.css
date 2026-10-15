@@ -34,6 +34,7 @@
 .inner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-4);
   height: 100%;
 }
@@ -78,15 +79,14 @@
 /* ---------- Navigation (inline ≥ 640px) ---------- */
 
 .nav {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
 }
 
 .links {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0 var(--space-4);
+  flex-wrap: nowrap;
+  gap: 0 28px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -117,7 +117,6 @@
   flex: none;
   align-items: center;
   gap: var(--space-3);
-  margin-left: auto;
 }
 
 .currency {
@@ -132,7 +131,7 @@
   display: none;
 }
 
-/* Tablet: tighter type so seven links wrap to at most two rows within 72px. */
+/* Tablet: tighter type so all seven links fit on one row within 72px. */
 @media (min-width: 640px) and (max-width: 1199.98px) {
   .inner {
     gap: var(--space-3);

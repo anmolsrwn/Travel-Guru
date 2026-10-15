@@ -47,9 +47,9 @@ export function Hero() {
         <p className={`glass ${styles.badge}`}>
           <span className={styles.badgeIcon} aria-hidden="true">⚡</span>
           <span>
-            <strong>Guaranteed Call Back &amp; Custom Quotation</strong>
+            <strong>Guaranteed Call Back Within {callbackHours} Hours</strong>
             <br />
-            Within {callbackHours} hours. Zero obligation.
+            & Custom Quotation. Zero obligation.
           </span>
         </p>
 

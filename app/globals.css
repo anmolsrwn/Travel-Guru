@@ -3,10 +3,10 @@
  * Components consume these tokens from their own *.module.css files.
  *
  * TOKENS (:root)
- *   Canvas      --bg-0 #070b14, --bg-1 #0d1424, --bg-2 #141d33, --glass,
- *               --glass-border rgba(252,229,156,.14), --glass-border-hi, --hairline, --hairline-soft
- *   Gold        --gold-1 #fce59c, --gold-2 #d4af37,
- *               --gold-grad (135deg, #fce59c to #d4af37: accent words, prices, primary buttons,
+ *   Canvas      --bg-0 #efe8d8, --bg-1 #e5dbc8, --bg-2 #d8ccb4, --glass,
+ *               --glass-border rgba(106,143,74,.25), --glass-border-hi, --hairline, --hairline-soft
+ *   Pista/Gold  --gold-1 #8fad6a (light pista), --gold-2 #5a7d3a (deep pista),
+ *               --gold-grad (135deg, #c9b86a to #c9972a: accent words, prices, primary buttons),
  *               active segments, avatars, step numerals),
  *               --gold-a06 --gold-a08 --gold-a10 --gold-a12 --gold-a30 --gold-a35 --gold-a40
  *               (translucent --gold-2 tints for fills, borders and rings)

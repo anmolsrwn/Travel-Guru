@@ -2,14 +2,17 @@
 // revalidatePath("/") after admin edits (Req 40.1–40.3). Content comes from the
 // published Supabase rows with a per-list static fallback (lib/server/content.js).
 import { preload } from "react-dom";
-import { BUSINESS, PACKAGES, DESTINATIONS } from "@/lib/data";
+import { BUSINESS, PACKAGES, DESTINATIONS, REVIEWS } from "@/lib/data";
 import { loadPublicContent } from "@/lib/server/content";
 import { getPublicClient } from "@/lib/supabase/public";
+import { fetchGoogleReviews } from "@/lib/server/googleReviews";
 import Hero from "@/components/sections/Hero";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Services from "@/components/sections/Services";
 import Collections from "@/components/sections/Collections";
 import CategoryFilter from "@/components/client/CategoryFilter";
+import SeasonalSection from "@/components/sections/SeasonalSection";
+import SeasonFilter from "@/components/client/SeasonFilter";
 import Destinations from "@/components/sections/Destinations";
 import DestinationTiles from "@/components/client/DestinationTiles";
 import HowItWorks from "@/components/sections/HowItWorks";
@@ -40,6 +43,12 @@ export default async function Home() {
     log: logContent,
   });
 
+  // Fetch live Google reviews; fall back to static placeholders if unavailable.
+  const googleData = await fetchGoogleReviews();
+  const reviews = googleData?.reviews?.length ? googleData.reviews : REVIEWS;
+  const liveRating = googleData?.rating ?? null;
+  const liveReviewCount = googleData?.userRatingCount ?? null;
+
   // Header, floating WhatsApp and mobile sticky bar are rendered by the layout.
   // Only plain serialisable data (arrays of plain objects) is passed as props.
   return (
@@ -50,6 +59,9 @@ export default async function Home() {
       <Collections packages={packages}>
         <CategoryFilter packages={packages} />
       </Collections>
+      <SeasonalSection packages={packages}>
+        <SeasonFilter packages={packages} />
+      </SeasonalSection>
       <Destinations destinations={destinations} packages={packages}>
         <DestinationTiles destinations={destinations} packages={packages} />
       </Destinations>
@@ -58,7 +70,7 @@ export default async function Home() {
         <QuoteForm />
       </QuoteSection>
       <Expert />
-      <Reviews />
+      <Reviews reviews={reviews} liveRating={liveRating} liveReviewCount={liveReviewCount} />
       <Faq>
         <FaqAccordion />
       </Faq>

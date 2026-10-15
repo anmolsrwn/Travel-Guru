@@ -12,7 +12,8 @@ export function FinalCta() {
     <section id="final-cta" className={`section ${styles.band}`} aria-labelledby="final-cta-title">
       <Reveal className={`container ${styles.inner}`}>
         <h2 id="final-cta-title" className={styles.title}>
-          Book Your Next Adventure With <span className="gradient-text">{brandName}</span>
+          Your next journey begins with{" "}
+          <em><span className="gradient-text">one conversation.</span></em>
         </h2>
         <div className={styles.ctas}>
           <a href="#quote" className={`${btn.btn} ${btn.primary}`}>

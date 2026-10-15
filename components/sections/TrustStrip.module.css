@@ -1,5 +1,5 @@
 /* Trust strip (prototype-visual-parity Req 7.9, 7.10): --bg-1 fill comes from section--alt;
-   2x2 on mobile, four columns from 640px. Items are free text (OI-2), so no numeral styling. */
+   2x2 on mobile, four columns from 640px. Value in heading font + gold-grad, label small. */
 
 .strip {
   padding-block: 40px;
@@ -14,19 +14,31 @@
 }
 
 .item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   text-align: center;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--text-hi);
 }
 
-.star {
-  color: var(--gold-2);
+.value {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--gold-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.tick {
-  color: var(--emerald);
+.label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-lo);
+  line-height: 1.3;
 }
 
 @media (min-width: 640px) {

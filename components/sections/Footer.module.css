@@ -118,6 +118,22 @@
   color: var(--whatsapp);
 }
 
+.instagram {
+  font-weight: 600;
+}
+
+.list a.instagram {
+  color: #e1306c;
+}
+
+.facebook {
+  font-weight: 600;
+}
+
+.list a.facebook {
+  color: #1877f2;
+}
+
 .address {
   margin-top: var(--space-7);
   font-style: normal;

@@ -103,7 +103,7 @@
   height: 44px;
   border-radius: 50%;
   background: var(--gold-grad);
-  color: var(--bg-0);
+  color: var(--on-cta);
   font-size: 0.875rem;
   font-weight: 700;
 }

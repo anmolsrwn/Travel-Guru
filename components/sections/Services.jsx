@@ -14,7 +14,11 @@ export function Services() {
       <div className="container">
         <Reveal className="section-head">
           <p className="eyebrow">Under One Roof</p>
-          <h2 id="services-title">Complete Travel Solutions Under One Roof</h2>
+          <h2 id="services-title">
+            Seven services.{" "}
+            <em><span className="gradient-text">One</span></em> trusted atelier.
+          </h2>
+          <p className="lead">Every part of your journey handled by a single consultant who knows your plans end to end.</p>
         </Reveal>
 
         <Reveal as="ul" className={styles.grid}>

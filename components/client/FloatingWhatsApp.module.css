@@ -1,10 +1,53 @@
-/* Floating WhatsApp (design 3.5, Req 23.1, 23.2, 23.5). */
+/* Floating WhatsApp (design 3.5, Req 23.1, 23.2, 23.5).
+   Instagram and Facebook icon buttons are stacked vertically above it. */
 
-.fab {
+/* Wrapper that positions the whole stack fixed to the bottom-right. */
+.stack {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 95; /* above the sticky bar (90), below the header (100) and modals (1000) */
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Shared base for the smaller social icon buttons. */
+.socialFab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: #fff;
+  text-decoration: none;
+  transition: transform var(--dur-hover) var(--ease), opacity var(--dur-hover) var(--ease);
+  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.35);
+}
+
+.socialFab:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.socialFab:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 3px;
+}
+
+.instaFab {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+}
+
+.fbFab {
+  background: #1877f2;
+  box-shadow: 0 6px 20px -4px rgba(24, 119, 242, 0.45);
+}
+
+.fab {
+  position: relative; /* needed for tooltip absolute positioning */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -55,6 +98,11 @@
   fill: currentColor;
 }
 
+.socialFab .glyph {
+  width: 22px;
+  height: 22px;
+}
+
 /* Tooltip to the left; shown only while hovered or focused (Req 23.2). */
 .tooltip {
   position: absolute;
@@ -93,20 +141,22 @@
 
 /* Hidden below 640px (tooltip hidden; FAB sits above sticky bar). */
 @media (max-width: 639.98px) {
-  .fab {
+  .stack {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .fab,
+  .socialFab,
   .tooltip,
   .fab:hover .tooltip,
   .fab:focus-visible .tooltip {
     transition: none;
   }
 
-  .fab:hover {
+  .fab:hover,
+  .socialFab:hover {
     transform: none;
   }
 

@@ -13,8 +13,10 @@ export default function Faq({ items = FAQ, children }) {
     <section id="faq" className="section" aria-labelledby="faq-title">
       <div className={`container ${s.narrow}`}>
         <header className="section-head">
-          <p className="eyebrow">Good to know</p>
-          <h2 id="faq-title">Frequently asked questions</h2>
+          <p className="eyebrow">How We Keep Costs Low</p>
+          <h2 id="faq-title">
+            Operations &amp; <em><span className="gradient-text">transparency</span></em>
+          </h2>
         </header>
 
         {hasChildren ? (

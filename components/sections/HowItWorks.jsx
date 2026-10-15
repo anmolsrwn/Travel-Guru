@@ -11,19 +11,19 @@ export function HowItWorks() {
   const steps = [
     {
       title: "Share your wishlist",
-      text: "Tell us where, when and who is travelling, using the quote form or WhatsApp.",
+      text: "Two minutes on our quote form or WhatsApp.",
     },
     {
-      title: `Consultant calls in <${callbackHours}h`,
-      text: `A real travel consultant calls you back within ${callbackHours} hours.`,
+      title: "We call you back",
+      text: `A real consultant within ${callbackHours} hours.`,
     },
     {
-      title: `Receive your custom quote (valid ${quoteValidityHours} hrs)`,
-      text: "Hotel options, inclusions and a clear price, subject to availability.",
+      title: "Receive your quote",
+      text: "Tailored itinerary at B2B net rates.",
     },
     {
-      title: "Confirm with an advance payment",
-      text: `Pay ${advancePct}% to confirm most trips, with a transparent cancellation policy.`,
+      title: `Confirm with ${advancePct}%`,
+      text: "Advance on booking, balance 21 days before departure.",
     },
   ];
 

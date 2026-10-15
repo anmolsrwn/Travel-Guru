@@ -12,7 +12,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { BUSINESS } from "@/lib/data";
 import { LogoImage } from "@/components/client/LogoImage";
-import { CurrencySwitcher } from "@/components/client/CurrencyProvider";
 import btn from "@/components/ui/Button.module.css";
 import styles from "./Header.module.css";
 
@@ -20,11 +19,9 @@ import styles from "./Header.module.css";
 export const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "Collections", href: "#collections" },
-  { label: "Destinations", href: "#destinations" },
   { label: "How it Works", href: "#how-it-works" },
   { label: "Reviews", href: "#reviews" },
   { label: "FAQ", href: "#faq" },
-  { label: "Terms", href: "#terms" },
 ];
 
 export const QUOTE_HREF = "#quote";
@@ -105,7 +102,6 @@ export function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <CurrencySwitcher variant="select" className={styles.currency} />
           <a href={QUOTE_HREF} className={`${btn.btn} ${btn.primary} ${btn.sm} ${styles.cta}`}>
             Get Free Quote <span aria-hidden="true">✦</span>
           </a>

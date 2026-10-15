@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 210" width="200" height="210" role="img" aria-label="Travel Guru Raipur logo">
+  <title>Travel Guru Raipur</title>
+  <defs>
+    <linearGradient id="tGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="40%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="gGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="55%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3730d4"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Dark background circle ── -->
+  <circle cx="100" cy="108" r="94" fill="#060b1c"/>
+
+  <!-- ── White inner hairline ring ── -->
+  <circle cx="100" cy="108" r="93" fill="none" stroke="white" stroke-width="1.2"/>
+
+  <!-- ── Blue outer ring, open at top-right (~315° to ~25°) for airplane gap ── -->
+  <!-- Arc from ~25deg to ~315deg (going clockwise, leaving gap at top-right) -->
+  <path
+    d="M 166.5 49.5 A 90 90 0 1 0 142 24"
+    fill="none"
+    stroke="url(#ringGrad)"
+    stroke-width="6.5"
+    stroke-linecap="round"
+  />
+
+  <!-- ── Airplane at top-right, tilted ~-40deg ── -->
+  <g transform="translate(158,30) rotate(-40)">
+    <!-- fuselage -->
+    <rect x="-13" y="-3.5" width="26" height="7" rx="3.5" fill="#1e1b72"/>
+    <!-- nose cone -->
+    <polygon points="13,-3.5 20,0 13,3.5" fill="#1e1b72"/>
+    <!-- tail fin (vertical) -->
+    <polygon points="-13,-3.5 -9,-13 -5,-3.5" fill="#1e1b72"/>
+    <!-- main wing -->
+    <polygon points="-4,-3.5 -12,-17 8,-3.5" fill="#1e1b72"/>
+    <!-- rear wing -->
+    <polygon points="-8,3.5 -13,10 -4,3.5" fill="#1e1b72"/>
+    <!-- cockpit highlight -->
+    <rect x="4" y="-3" width="5" height="6" rx="2" fill="white" opacity="0.25"/>
+  </g>
+
+  <!-- ══════ T letter ══════ -->
+  <!-- Horizontal crossbar -->
+  <rect x="42" y="58" width="56" height="15" rx="2.5" fill="url(#tGrad)"/>
+  <!-- Vertical stem -->
+  <rect x="56" y="58" width="17" height="58" rx="2.5" fill="url(#tGrad)"/>
+  <!-- Shine (left edge of stem) -->
+  <rect x="57" y="59" width="5" height="56" rx="1.5" fill="white" opacity="0.18"/>
+
+  <!-- ══════ G letter ══════ -->
+  <!--
+    G built as:
+      outer ring arc (annular sector, ~240° sweep)
+      + horizontal crossbar on the right (the "shelf" of the G)
+    Using a thick stroked arc for simplicity, then masking out the inside.
+  -->
+  <!-- Outer thick arc of G (~240 degrees, from ~50deg going clockwise to ~290deg) -->
+  <path
+    d="M 153 76
+       A 34 34 0 1 0 153 140"
+    fill="none"
+    stroke="url(#gGrad)"
+    stroke-width="15"
+    stroke-linecap="butt"
+  />
+  <!-- G crossbar (horizontal shelf) -->
+  <rect x="137" y="101" width="22" height="13" rx="2" fill="url(#gGrad)"/>
+  <!-- dark circle inside G to create the cutout -->
+  <circle cx="142" cy="108" r="20" fill="#060b1c"/>
+
+  <!-- Small airplane inside the G cutout -->
+  <g transform="translate(142,108) rotate(-18)">
+    <rect x="-10" y="-3" width="20" height="6" rx="3" fill="white"/>
+    <polygon points="10,-3 16,0 10,3" fill="white"/>
+    <polygon points="-10,-3 -7,-10 -3,-3" fill="white"/>
+    <polygon points="-4,-3 -11,-13 4,-3" fill="white"/>
+    <polygon points="-6,3 -10,8 -2,3" fill="white"/>
+    <!-- orange motion streak -->
+    <line x1="-9" y1="2.5" x2="5" y2="1" stroke="#f97316" stroke-width="1.5" opacity="0.9"/>
+    <line x1="-11" y1="4" x2="3" y2="2.5" stroke="#f97316" stroke-width="0.8" opacity="0.6"/>
+  </g>
+
+  <!-- ══════ "Travel Guru Raipur" pill ══════ -->
+  <rect x="30" y="155" width="140" height="26" rx="13" fill="white"/>
+  <text
+    x="100" y="172"
+    text-anchor="middle"
+    font-family="'Arial Black', Arial, Helvetica, sans-serif"
+    font-size="12"
+    font-weight="900"
+    fill="#0a0a14"
+    letter-spacing="0.4"
+  >Travel Guru Raipur</text>
+</svg>

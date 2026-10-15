@@ -39,7 +39,7 @@
   border-radius: 50%;
   background: var(--gold-grad);
   box-shadow: 0 0 0 8px var(--ring-bg, var(--bg-0));
-  color: var(--bg-0);
+  color: var(--on-cta);
   font-family: var(--font-heading-stack);
   font-size: 1.375rem;
   font-weight: 700;

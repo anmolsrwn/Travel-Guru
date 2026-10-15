@@ -1,27 +1,17 @@
 // Trust strip (Req 6.1, 6.2, 6.6, 1.8, 32.1). Server Component.
 // Only verifiable claims; every number comes from BUSINESS / SERVICES.
-import { BUSINESS, SERVICES } from "@/lib/data";
+import { BUSINESS } from "@/lib/data";
 import { Reveal } from "@/components/client/Reveal";
 import styles from "./TrustStrip.module.css";
 
 export function TrustStrip() {
-  const { rating, callbackHours } = BUSINESS;
-  const hasCount = Number.isInteger(rating.count);
+  const { callbackHours } = BUSINESS;
 
   const items = [
-    {
-      key: "rating",
-      content: (
-        <>
-          <span className={styles.star} aria-hidden="true">★</span> {rating.score} Rated
-          {hasCount && <> ({rating.count.toLocaleString("en-IN")} reviews)</>} ·{" "}
-          <span className={styles.tick} aria-hidden="true">✓</span> Verified
-        </>
-      ),
-    },
-    { key: "services", content: `${SERVICES.length} Services, 1 Expert` },
-    { key: "callback", content: `${callbackHours}h Call Back Guarantee` },
-    { key: "office", content: "Office at VIP Chowk, Telibandha, Raipur" },
+    { key: "airlines", value: "450+", label: "Global airlines" },
+    { key: "services", value: "7 in 1", label: "Services, one consultant" },
+    { key: "callback", value: `${callbackHours}h`, label: "Call-back guarantee" },
+    { key: "b2b", value: "B2B", label: "Partner net fares" },
   ];
 
   return (
@@ -30,7 +20,8 @@ export function TrustStrip() {
         <ul className={styles.list} role="list">
           {items.map((item) => (
             <li key={item.key} className={styles.item}>
-              {item.content}
+              <b className={styles.value}>{item.value}</b>
+              <span className={styles.label}>{item.label}</span>
             </li>
           ))}
         </ul>

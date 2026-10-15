@@ -1,0 +1,56 @@
+/* SeasonalSection — server shell styles (Requirement 50). */
+
+/* No-JS static fallback grid */
+.fallbackGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .fallbackGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .fallbackGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.fallbackCard {
+  padding: 20px 24px;
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-card);
+  background: var(--bg-2);
+}
+
+.fallbackMeta {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 6px;
+  color: var(--gold-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fallbackMeta span:last-child {
+  color: var(--text-lo);
+}
+
+.fallbackTitle {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.fallbackPrice {
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.875rem;
+}

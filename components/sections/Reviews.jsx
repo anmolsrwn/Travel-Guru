@@ -12,9 +12,9 @@ function formatCount(count) {
   return Number.isInteger(count) && count >= 0 ? count.toLocaleString("en-US") : null;
 }
 
-export function Reviews({ reviews = REVIEWS }) {
-  const score = BUSINESS.rating.score.toFixed(1);
-  const count = formatCount(BUSINESS.rating.count);
+export function Reviews({ reviews = REVIEWS, liveRating = null, liveReviewCount = null }) {
+  const score = (liveRating ?? BUSINESS.rating.score).toFixed(1);
+  const count = formatCount(liveReviewCount ?? BUSINESS.rating.count);
   const badges = [
     { label: "Verified", icon: "✓", tone: badge.emerald },
     { label: `${score} Rated`, icon: "★", tone: badge.brand },
@@ -27,12 +27,14 @@ export function Reviews({ reviews = REVIEWS }) {
       <div className="container">
         <div className="section-head">
           <p className="eyebrow">Verified Traveller Stories</p>
-          <h2 id="reviews-title">What Our Travellers Say</h2>
+          <h2 id="reviews-title">
+            Loved by couples &amp; <em><span className="gradient-text">families</span></em>
+          </h2>
           <p className={styles.rating}>
             <span className={styles.stars} aria-hidden="true">
               ★★★★★
             </span>{" "}
-            <strong>{score}</strong> rated
+            <strong>{score}</strong> / 5 &middot; Verified agency
             {count !== null && <span className={styles.count}> · {count} reviews</span>}
           </p>
         </div>

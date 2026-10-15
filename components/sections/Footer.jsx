@@ -106,6 +106,30 @@ export function Footer() {
                   WhatsApp
                 </a>
               </li>
+              {BUSINESS.instagram && (
+                <li>
+                  <a
+                    href={BUSINESS.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.instagram}
+                  >
+                    Instagram
+                  </a>
+                </li>
+              )}
+              {BUSINESS.facebook && (
+                <li>
+                  <a
+                    href={BUSINESS.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.facebook}
+                  >
+                    Facebook
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

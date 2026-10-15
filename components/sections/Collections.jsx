@@ -68,8 +68,9 @@ export default function Collections({ packages = [], children }) {
         <header className="section-head">
           <p className="eyebrow">Curated Collections</p>
           <h2 id="collections-title">
-            Handcrafted journeys, <span className="gradient-text">priced transparently</span>
+            Handcrafted journeys, <em><span className="gradient-text">priced transparently</span></em>
           </h2>
+          <p className="lead">Land packages from our recent itineraries. Flights from Raipur are quoted separately at live fares.</p>
         </header>
 
         {hasChildren ? (

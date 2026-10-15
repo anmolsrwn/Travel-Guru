@@ -3,9 +3,15 @@
 .logo {
   display: block;
   flex: none;
-  width: auto;
-  height: var(--logo-size, auto);
+  width: var(--logo-size, 48px);
+  height: var(--logo-size, 48px);
   object-fit: contain;
+  border-radius: 50%;
+  /* Double ring: deep pista border → cream gap → subtle shadow */
+  box-shadow:
+    0 0 0 2px var(--gold-2),
+    0 0 0 4px var(--bg-0),
+    0 2px 8px rgba(0, 0, 0, 0.20);
 }
 
 /* Circle with a --gold-2 ring and a --gold-1 inner hairline. */

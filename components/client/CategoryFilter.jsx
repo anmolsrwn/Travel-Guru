@@ -5,10 +5,11 @@
 // section heading and the pricing note (Req 32.4) server-rendered.
 import { useId, useRef, useState } from "react";
 import { CATEGORIES } from "@/lib/data";
-import { filterPackages, fromPriceINR } from "@/lib/logic";
+import { filterPackages, formatPrice, fromPriceINR, isPackageInSeason } from "@/lib/logic";
+import { useLocalTodayISO } from "@/components/client/localToday";
 import { SafeImage } from "@/components/client/SafeImage";
-import { CurrencySwitcher, Price } from "@/components/client/CurrencyProvider";
 import { useModal } from "@/components/client/ModalProvider";
+import { CurrencySwitcher } from "@/components/client/CurrencyProvider";
 import "@/components/client/ItineraryModal"; // side effect: registerModal("itinerary", …)
 import "@/components/client/CheckoutModal"; // side effect: registerModal("checkout", …)
 import btn from "@/components/ui/Button.module.css";
@@ -25,11 +26,13 @@ const EXTRAS_NOTE = {
 
 /**
  * One package card.
- * @param {{ pkg: object, onViewItinerary: (pkg: object, trigger: HTMLElement) => void, onBook: (pkg: object, trigger: HTMLElement) => void }} props
+ * @param {{ pkg: object, currentMonth: number|null, onViewItinerary: (pkg: object, trigger: HTMLElement) => void, onBook: (pkg: object, trigger: HTMLElement) => void }} props
  */
-function PackageCard({ pkg, onViewItinerary, onBook }) {
+function PackageCard({ pkg, currentMonth, onViewItinerary, onBook }) {
   const facts = [pkg.hotelStarRating != null ? `${pkg.hotelStarRating}★` : null, pkg.mealPlan].filter(Boolean);
   const highlights = Array.isArray(pkg.highlights) ? pkg.highlights.slice(0, 2) : [];
+  // Only show badge after hydration (currentMonth non-null) to avoid SSR mismatch (Req 53.5).
+  const inSeason = currentMonth !== null && isPackageInSeason(pkg, currentMonth);
 
   return (
     <li className={`${card.glass} ${shell.card}`}>
@@ -44,6 +47,12 @@ function PackageCard({ pkg, onViewItinerary, onBook }) {
         <h3 className={shell.title}>{pkg.title}</h3>
         {facts.length > 0 ? <p className={shell.facts}>{facts.join(" · ")}</p> : null}
         {pkg.isSample ? <span className={`${badge.badge} ${badge.neutral}`}>Sample itinerary</span> : null}
+        {/* In-Season badge — after isSample chip, before highlights (Req 53.3, 53.7) */}
+        {inSeason ? (
+          <span className={`${badge.badge} ${badge.emerald}`}>
+            <span aria-hidden="true">✓</span> In Season
+          </span>
+        ) : null}
         {highlights.length > 0 ? (
           <ul className={shell.highlights}>
             {highlights.map((h) => (
@@ -53,7 +62,9 @@ function PackageCard({ pkg, onViewItinerary, onBook }) {
         ) : null}
         <p className={shell.priceLine}>
           <span className={shell.from}>from </span>
-          <Price amountINR={fromPriceINR(pkg)} className="price" />
+          <span className="price" data-price-inr={fromPriceINR(pkg)}>
+            {formatPrice(fromPriceINR(pkg), "INR")}
+          </span>
           <span className={shell.pp}> /pp</span>
         </p>
         <p className={shell.land}>land package</p>
@@ -97,6 +108,10 @@ function PackageCard({ pkg, onViewItinerary, onBook }) {
 export function CategoryFilter({ packages = [], onViewItinerary, onBook }) {
   const modal = useModal();
   const [active, setActive] = useState("all");
+
+  // Derive current month for in-season badge (Req 53.1); null before hydration.
+  const isoDate = useLocalTodayISO();
+  const currentMonth = isoDate ? parseInt(isoDate.slice(5, 7), 10) : null;
 
   function viewItinerary(pkg, trigger) {
     if (onViewItinerary) onViewItinerary(pkg);
@@ -165,20 +180,14 @@ export function CategoryFilter({ packages = [], onViewItinerary, onBook }) {
           </div>
         </div>
 
-        <div className={s.currency}>
-          <span className={s.currencyLabel}>Prices in:</span>
-          <CurrencySwitcher variant="segmented" />
-          <p className={`caption ${s.currencyNote}`}>
-            Non-INR prices are indicative conversions based on static rates.
-          </p>
-        </div>
+
       </div>
 
       <div role="tabpanel" id={panelId} aria-labelledby={tabId(active)}>
         {visible.length > 0 ? (
           <ul className={shell.grid}>
             {visible.map((pkg) => (
-              <PackageCard key={pkg.id} pkg={pkg} onViewItinerary={viewItinerary} onBook={book} />
+              <PackageCard key={pkg.id} pkg={pkg} currentMonth={currentMonth} onViewItinerary={viewItinerary} onBook={book} />
             ))}
           </ul>
         ) : (
