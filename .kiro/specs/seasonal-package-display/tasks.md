@@ -13,14 +13,16 @@ All `lib/` modules use relative imports only; no TypeScript; CSS Modules only.
 
 ## Task Dependency Graph
 
+```json
+{
+  "waves": [
+    { "wave": 1, "tasks": ["1"] },
+    { "wave": 2, "tasks": ["2"] },
+    { "wave": 3, "tasks": ["3", "4", "5"] },
+    { "wave": 4, "tasks": ["6"] }
+  ]
+}
 ```
-1 (data) → 2 (logic) → 3 (tests)
-                      → 4 (section shell) → 6.1 (page wiring)
-                      → 5 (SeasonFilter)  → 6.1
-                                          → 6.2 (In Season badge)
-```
-
-Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 both depend on 4/5 being complete.
 
 ## Notes
 
@@ -33,7 +35,7 @@ Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 bo
 
 ## Tasks
 
-- [ ] 1. Extend `lib/data.js` with seasonal data
+- [x] 1. Extend `lib/data.js` with seasonal data
   - Add `seasons` field to each of the 5 `PACKAGES` entries:
     - `bali-6n7d`: `seasons: [10, 11, 12, 1, 2, 3]`
     - `dubai-4n5d`: `seasons: [10, 11, 12, 1, 2, 3, 4]`
@@ -44,21 +46,21 @@ Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 bo
   - Keep `lib/data.js` as pure data only (no functions, no imports, no `new Date()`)
   - _Requirements: 47.1, 47.2, 47.3, 47.4, 47.5, 47.6, 47.7, 47.8_
 
-- [ ] 2. Add pure logic functions and extend validation in `lib/logic.js`
-  - [ ] 2.1 Implement `filterPackagesBySeason(packages, month)`
+- [x] 2. Add pure logic functions and extend validation in `lib/logic.js`
+  - [x] 2.1 Implement `filterPackagesBySeason(packages, month)`
     - Returns a new array of packages whose `seasons` includes `month`
     - Excludes packages with missing, non-array, or empty `seasons`
     - Returns `[]` for invalid months (non-integer, < 1, > 12, null, undefined, NaN)
     - Returns `[]` for non-array `packages` argument
     - Never throws, never mutates inputs
     - _Requirements: 48.1, 48.2, 48.3, 48.4, 48.5, 48.10, 48.11_
-  - [ ] 2.2 Implement `isPackageInSeason(pkg, month)`
+  - [x] 2.2 Implement `isPackageInSeason(pkg, month)`
     - Returns `true` iff `pkg.seasons` is an array containing `month` (integer 1–12)
     - Returns `false` for null/undefined/non-object `pkg`
     - Returns `false` for null/undefined/non-integer/out-of-range `month`
     - Never throws, never mutates inputs
     - _Requirements: 48.1, 48.6, 48.7, 48.8, 48.9, 48.10, 48.11_
-  - [ ] 2.3 Extend `validatePackage` to validate the `seasons` field
+  - [x] 2.3 Extend `validatePackage` to validate the `seasons` field
     - Missing `seasons` (undefined) → valid (backward compatible)
     - Empty array `[]` → valid
     - Array of integers all in [1, 12] with no duplicates → valid
@@ -69,7 +71,7 @@ Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 bo
     - All 5 PACKAGES entries must pass validation after task 1
     - _Requirements: 49.1, 49.2, 49.3, 49.4, 49.5, 49.6, 49.7, 49.8_
 
-- [ ] 3. Write tests in `tests/seasonal.test.js`
+- [x] 3. Write tests in `tests/seasonal.test.js`
   - Uses `node:test` and `fast-check` (already pinned in package.json); imports from `lib/` only
   - Example-based tests:
     - `filterPackagesBySeason([], 10)` → `[]`
@@ -94,7 +96,7 @@ Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 bo
   - Run passes: `npm test` exits with code 0
   - _Requirements: 54.1, 54.2, 54.3, 54.4_
 
-- [ ] 4. Build `SeasonalSection` server component shell
+- [x] 4. Build `SeasonalSection` server component shell
   - Create `components/sections/SeasonalSection.jsx` as a React Server Component (no `'use client'`)
   - Renders `<section id="best-time">` with alternating `--bg-1` background
   - Eyebrow: "Best Time to Travel"
@@ -105,7 +107,7 @@ Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 bo
   - Create `components/sections/SeasonalSection.module.css` with section layout, eyebrow, heading, lead paragraph styles (using existing design tokens)
   - _Requirements: 50.1, 50.2, 50.3, 50.4, 50.5, 50.6, 50.7, 50.8_
 
-- [ ] 5. Build `SeasonFilter` client component and `SeasonalPackageCard`
+- [x] 5. Build `SeasonFilter` client component and `SeasonalPackageCard`
   - Create `components/client/SeasonFilter.jsx` (`'use client'`)
   - Uses `useLocalTodayISO()` from `components/client/localToday.js` (already exists)
   - State: `activeMonth` (integer 1–12 or null); initialises to null, snaps to current month after hydration
@@ -123,14 +125,14 @@ Tasks 4 and 5 can be worked in parallel once task 2 is done. Task 6.1 and 6.2 bo
   - Import `filterPackagesBySeason`, `fromPriceINR` from `@/lib/logic`; `MONTH_NAMES` from `@/lib/data`
   - _Requirements: 51.1, 51.2, 51.3, 51.4, 51.5, 51.6, 51.7, 51.8, 52.1, 52.2, 52.3, 52.4, 52.5, 52.6, 52.7, 52.8_
 
-- [ ] 6. Wire the section into the public page and add the "In Season" badge
-  - [ ] 6.1 Register `SeasonalSection` in `app/(site)/page.js`
+- [x] 6. Wire the section into the public page and add the "In Season" badge
+  - [x] 6.1 Register `SeasonalSection` in `app/(site)/page.js`
     - Import `SeasonalSection` from `@/components/sections/SeasonalSection`
     - Import `SeasonFilter` from `@/components/client/SeasonFilter`
     - Insert `<SeasonalSection packages={packages}><SeasonFilter packages={packages} /></SeasonalSection>` between the `<Collections …/>` and `<Destinations …/>` elements
     - Pass `packages` serialised from the page's `loadPublicContent` result (same prop already passed to Collections)
     - _Requirements: 50.1, 50.8_
-  - [ ] 6.2 Add "In Season" badge to `CategoryFilter`
+  - [x] 6.2 Add "In Season" badge to `CategoryFilter`
     - In `components/client/CategoryFilter.jsx`, call `useLocalTodayISO()` and derive `currentMonth` (`parseInt(isoDate.slice(5,7), 10)` or `null`)
     - For each visible package card, call `isPackageInSeason(pkg, currentMonth)`; when `true` and `currentMonth !== null`, render the `In_Season_Badge`
     - Badge: pill, `rgba(16, 185, 129, 0.15)` fill, `--emerald` text, `1px solid rgba(16, 185, 129, 0.4)` border, `--r-pill`, label `<span aria-hidden="true">✓</span> In Season`

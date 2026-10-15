@@ -1,146 +1,162 @@
-"use client";
+'use client';
 
-// Month tab filter for the "Best Time to Travel" section (Requirement 51, 52).
-// Auto-selects the current calendar month after hydration via useLocalTodayISO().
-import { useId, useRef, useState, useEffect } from "react";
-import { MONTH_NAMES } from "@/lib/data";
-import { filterPackagesBySeason, formatPrice, fromPriceINR } from "@/lib/logic";
-import { useLocalTodayISO } from "@/components/client/localToday";
-import { SafeImage } from "@/components/client/SafeImage";
-import card from "@/components/ui/Card.module.css";
-import s from "./SeasonFilter.module.css";
+// Seasonal carousel — center card fully visible, side cards blurred/dimmed.
+// Auto-advances every 4s. Auto-detects current month.
+import { useState, useEffect } from 'react';
+import { filterPackagesBySeason, fromPriceINR } from '@/lib/logic';
+import { MONTH_NAMES } from '@/lib/data';
+import { useLocalTodayISO } from '@/components/client/localToday';
+import { SafeImage } from '@/components/client/SafeImage';
+import s from './SeasonFilter.module.css';
 
-// Month integers 1–12 aligned with MONTH_NAMES index (MONTH_NAMES[0] = January = month 1).
-const MONTHS = MONTH_NAMES.map((name, i) => ({ month: i + 1, name }));
+const AUTO_INTERVAL = 4000;
+const MAX_CARDS = 3;
 
-const REGION_LABEL = { international: "International", domestic: "Domestic" };
-
-/** One seasonal package card (Req 52). */
-function SeasonCard({ pkg }) {
-  const highlights = Array.isArray(pkg.highlights) ? pkg.highlights.slice(0, 2) : [];
-
-  return (
-    <li className={`${card.glass} ${s.card}`}>
-      <div className={s.media}>
-        <SafeImage src={pkg.image} alt={pkg.title} width={800} height={600} loading="lazy" className={s.img} />
-      </div>
-      <div className={s.body}>
-        <p className={s.meta}>
-          <span>{REGION_LABEL[pkg.region] ?? pkg.region}</span>
-          <span>{`${pkg.nights}N/${pkg.days}D`}</span>
-        </p>
-        <h3 className={s.title}>{pkg.title}</h3>
-        {highlights.length > 0 && (
-          <ul className={s.highlights}>
-            {highlights.map((h) => (
-              <li key={h}>{h}</li>
-            ))}
-          </ul>
-        )}
-        <p className={s.priceLine}>
-          <span className={s.from}>from </span>
-          <span>{formatPrice(fromPriceINR(pkg), "INR")}</span>
-          <span className={s.pp}> /pp</span>
-        </p>
-        {/* Anchor drives visitors to the full Collections section (Req 52.3) */}
-        <a href="#collections" className={s.cta} aria-label={`View ${pkg.title} in full collections`}>
-          View Package →
-        </a>
-      </div>
-    </li>
-  );
-}
-
-/**
- * Month tab filter + seasonal package grid.
- * @param {{ packages?: object[] }} props
- */
 export function SeasonFilter({ packages = [] }) {
   const isoDate = useLocalTodayISO();
-  // Derive current month (1–12) after hydration; null before mount.
   const currentMonth = isoDate ? parseInt(isoDate.slice(5, 7), 10) : null;
+  const monthName = currentMonth ? MONTH_NAMES[currentMonth - 1] : null;
 
-  const [activeMonth, setActiveMonth] = useState(null);
+  const picks = currentMonth
+    ? filterPackagesBySeason(packages, currentMonth).slice(0, MAX_CARDS)
+    : [];
 
-  // Set active month to current month once hydrated (Req 51.3).
+  const [active, setActive] = useState(0);
+  const count = picks.length;
+
+  function prev() { setActive(i => ((i - 1) + count) % count); }
+  function next() { setActive(i => (i + 1) % count); }
+
+  // Auto-advance
   useEffect(() => {
-    if (currentMonth !== null && activeMonth === null) {
-      setActiveMonth(currentMonth);
-    }
-  }, [currentMonth, activeMonth]);
+    if (count < 2) return;
+    const t = setInterval(next, AUTO_INTERVAL);
+    return () => clearInterval(t);
+  }, [active, count]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const tabRefs = useRef([]);
-  const baseId = useId();
-  const tabId = (m) => `${baseId}-tab-${m}`;
-  const panelId = `${baseId}-panel`;
+  useEffect(() => { setActive(0); }, [currentMonth]);
 
-  const visible = activeMonth !== null ? filterPackagesBySeason(packages, activeMonth) : [];
-  const activeIndex = activeMonth !== null ? activeMonth - 1 : -1;
+  if (!currentMonth) {
+    return <p className={s.loading}>Finding the best trips for this season…</p>;
+  }
 
-  // Roving tabindex keyboard nav (Req 51.7).
-  function onKeyDown(event, index) {
-    const last = MONTHS.length - 1;
-    let next = null;
-    if (event.key === "ArrowRight") next = index === last ? 0 : index + 1;
-    else if (event.key === "ArrowLeft") next = index === 0 ? last : index - 1;
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = last;
-    if (next === null) return;
-    event.preventDefault();
-    setActiveMonth(MONTHS[next].month);
-    tabRefs.current[next]?.focus();
+  if (count === 0) {
+    return (
+      <p className={s.empty}>
+        No packages for {monthName} yet.{' '}
+        <a href="#collections">Browse all →</a>
+      </p>
+    );
+  }
+
+  // Build ordered list: prev, active, next (wrapping) with position labels
+  // For N cards we show all, each getting a position relative to active
+  function getPos(i) {
+    let diff = i - active;
+    // Wrap to [-floor(count/2), +floor(count/2)]
+    while (diff > count / 2) diff -= count;
+    while (diff < -count / 2) diff += count;
+    return diff; // -2, -1, 0, +1, +2 …
   }
 
   return (
-    <div className={s.root}>
-      {/* Month tab row (Req 51.1) */}
-      <div className={s.tabsScroller}>
-        <div role="tablist" aria-label="Filter packages by travel month" className={s.tablist}>
-          {MONTHS.map(({ month, name }, index) => {
-            const selected = month === activeMonth;
-            const isCurrent = month === currentMonth;
+    <div className={s.root} aria-label={`Best packages for ${monthName}`}>
+      {/* Season label */}
+      <p className={s.label}>
+        <span className={s.dot} aria-hidden="true" />
+        Best picks for <strong>{monthName}</strong>
+      </p>
+
+      {/* Carousel */}
+      <div className={s.stage}>
+        {count > 1 && (
+          <button type="button" className={`${s.arrow} ${s.arrowLeft}`} onClick={prev} aria-label="Previous package">
+            &#8249;
+          </button>
+        )}
+
+        <div className={s.track}>
+          {picks.map((pkg, i) => {
+            const pos = getPos(i);
+            const isCenter = pos === 0;
+            const isAdjacent = Math.abs(pos) === 1;
+            const isHidden = Math.abs(pos) > 1;
+
             return (
-              <button
-                key={month}
-                ref={(node) => { tabRefs.current[index] = node; }}
-                type="button"
-                role="tab"
-                id={tabId(month)}
-                aria-selected={selected ? "true" : "false"}
-                aria-controls={panelId}
-                tabIndex={selected ? 0 : activeMonth === null ? (index === 0 ? 0 : -1) : -1}
-                className={`${s.tab}${selected ? ` ${s.tabActive}` : ""}${isCurrent && !selected ? ` ${s.tabCurrent}` : ""}`}
-                onClick={() => setActiveMonth(month)}
-                onKeyDown={(e) => onKeyDown(e, index)}
+              <div
+                key={pkg.id}
+                className={s.cardWrap}
+                data-pos={pos}
+                style={{
+                  '--pos': pos,
+                }}
+                aria-hidden={!isCenter ? 'true' : undefined}
               >
-                {name}
-                {/* Current-month indicator dot (Req 51.2) */}
-                {isCurrent && (
-                  <span className={s.nowDot} aria-label="current month" />
-                )}
-              </button>
+                <article
+                  className={[
+                    s.card,
+                    isCenter ? s.cardCenter : '',
+                    isAdjacent ? s.cardSide : '',
+                    isHidden ? s.cardHidden : '',
+                  ].filter(Boolean).join(' ')}
+                  onClick={() => !isCenter && setActive(i)}
+                >
+                  <div className={s.cardImg}>
+                    <SafeImage
+                      src={pkg.image}
+                      alt={pkg.title}
+                      width={560}
+                      height={360}
+                    />
+                  </div>
+                  <div className={s.cardBody}>
+                    <p className={s.cardMeta}>
+                      {pkg.region === 'domestic' ? 'Domestic' : 'International'}&nbsp;&middot;&nbsp;{pkg.nights}N/{pkg.days}D
+                    </p>
+                    <h3 className={s.cardTitle}>{pkg.title}</h3>
+                    {Array.isArray(pkg.highlights) && pkg.highlights.length > 0 && (
+                      <ul className={s.highlights}>
+                        {pkg.highlights.slice(0, 2).map(h => <li key={h}>{h}</li>)}
+                      </ul>
+                    )}
+                    <p className={s.price}>
+                      from&nbsp;<span>&#8377;{fromPriceINR(pkg).toLocaleString('en-IN')}</span>
+                      <span className={s.pp}>&nbsp;/pp</span>
+                    </p>
+                    {isCenter && (
+                      <a href="#collections" className={s.cta}>View Package &#8594;</a>
+                    )}
+                  </div>
+                </article>
+              </div>
             );
           })}
         </div>
-      </div>
 
-      {/* Package grid (Req 51.4–51.5, 52) */}
-      <div role="tabpanel" id={panelId} aria-labelledby={activeMonth !== null ? tabId(activeMonth) : undefined}>
-        {activeMonth === null ? (
-          <p className={s.loading}>Loading best season for you…</p>
-        ) : visible.length > 0 ? (
-          <ul className={s.grid}>
-            {visible.map((pkg) => (
-              <SeasonCard key={pkg.id} pkg={pkg} />
-            ))}
-          </ul>
-        ) : (
-          <p className={s.empty}>
-            No packages curated for {MONTH_NAMES[activeMonth - 1]} yet.{" "}
-            <a href="#collections">Browse all</a>
-          </p>
+        {count > 1 && (
+          <button type="button" className={`${s.arrow} ${s.arrowRight}`} onClick={next} aria-label="Next package">
+            &#8250;
+          </button>
         )}
       </div>
+
+      {/* Dots */}
+      {count > 1 && (
+        <div className={s.dots}>
+          {picks.map((pkg, i) => (
+            <button
+              key={pkg.id}
+              type="button"
+              aria-label={`Go to ${pkg.title}`}
+              aria-current={i === active ? 'true' : undefined}
+              className={`${s.dotBtn} ${i === active ? s.dotActive : ''}`}
+              onClick={() => setActive(i)}
+            />
+          ))}
+        </div>
+      )}
+
+      <a href="#collections" className={s.hint}>See all packages &#8594;</a>
     </div>
   );
 }

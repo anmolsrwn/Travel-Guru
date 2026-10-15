@@ -1,56 +1,42 @@
-/* SeasonalSection — server shell styles (Requirement 50). */
+/* SeasonalSection.module.css */
 
-/* No-JS static fallback grid */
-.fallbackGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
+/* Section uses --bg-1 via the global .section--alt class (already defined in globals.css).
+   The .section class here is for any section-specific overrides only. */
+.section {
+  /* intentionally minimal — section--alt handles bg, global .section handles padding */
+}
+
+.lead {
+  max-width: 640px;
+  color: var(--text-md);
+}
+
+/* No-JS static fallback list */
+.fallbackList {
   list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-@media (min-width: 640px) {
-  .fallbackGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .fallbackGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.fallbackCard {
-  padding: 20px 24px;
-  border: 1px solid var(--hairline-soft);
-  border-radius: var(--r-card);
-  background: var(--bg-2);
-}
-
-.fallbackMeta {
+.fallbackItem {
   display: flex;
   justify-content: space-between;
-  margin: 0 0 6px;
-  color: var(--gold-2);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.fallbackMeta span:last-child {
-  color: var(--text-lo);
+  align-items: center;
+  padding: 16px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
 }
 
 .fallbackTitle {
-  margin: 0 0 8px;
-  font-size: 1rem;
+  color: var(--text-hi);
+  font-weight: 600;
 }
 
 .fallbackPrice {
-  margin: 0;
   color: var(--text-md);
   font-size: 0.875rem;
 }

@@ -37,11 +37,17 @@ export default async function Home() {
   // LCP image (Req 5.9).
   preload(BUSINESS.heroImage, { as: "image", fetchPriority: "high" });
 
-  const { packages, destinations } = await loadPublicContent({
+  const { packages: rawPackages, destinations } = await loadPublicContent({
     client: getPublicClient(), // null when env vars are missing → static catalogue
     fallback: { packages: PACKAGES, destinations: DESTINATIONS },
     log: logContent,
   });
+
+  // Merge static seasons data into packages (DB rows may predate the seasons field).
+  const staticSeasonsMap = new Map(PACKAGES.map(p => [p.id, p.seasons]));
+  const packages = rawPackages.map(pkg =>
+    pkg.seasons ? pkg : { ...pkg, seasons: staticSeasonsMap.get(pkg.id) ?? [] }
+  );
 
   // Fetch live Google reviews; fall back to static placeholders if unavailable.
   const googleData = await fetchGoogleReviews();
@@ -54,14 +60,14 @@ export default async function Home() {
   return (
     <main id="main">
       <Hero />
+      <SeasonalSection packages={packages}>
+        <SeasonFilter packages={packages} />
+      </SeasonalSection>
       <TrustStrip />
       <Services />
       <Collections packages={packages}>
         <CategoryFilter packages={packages} />
       </Collections>
-      <SeasonalSection packages={packages}>
-        <SeasonFilter packages={packages} />
-      </SeasonalSection>
       <Destinations destinations={destinations} packages={packages}>
         <DestinationTiles destinations={destinations} packages={packages} />
       </Destinations>

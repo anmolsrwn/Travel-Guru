@@ -90,6 +90,11 @@ span.photo {
   width: 100%;
 }
 
+/* Social buttons match secondary style but with brand icon accent */
+.socialBtn {
+  gap: 6px;
+}
+
 @media (min-width: 640px) {
   .grid {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);

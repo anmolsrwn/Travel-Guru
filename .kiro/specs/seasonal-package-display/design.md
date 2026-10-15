@@ -643,40 +643,40 @@ No new npm packages. All existing dependencies are re-used:
 
 *For any* array of packages and any valid month (integer 1–12), every package returned by `filterPackagesBySeason` must have that month in its `seasons` array.
 
-**Validates: Requirements TBD**
+**Validates: Requirements 48.2, 48.3**
 
 ### Property 2: Season filter excludes out-of-season packages
 
 *For any* array of packages and any valid month, no package returned by `filterPackagesBySeason` should have a `seasons` array that excludes that month.
 
-**Validates: Requirements TBD**
+**Validates: Requirements 48.2, 48.3**
 
 ### Property 3: isPackageInSeason agrees with filterPackagesBySeason
 
 *For any* array of packages and any valid month, a package appears in `filterPackagesBySeason(packages, month)` if and only if `isPackageInSeason(pkg, month)` returns `true`.
 
-**Validates: Requirements TBD**
+**Validates: Requirements 48.2, 48.6, 48.7**
 
 ### Property 4: Season filter is a subset of all packages
 
 *For any* array of packages and any valid month, the result of `filterPackagesBySeason` is a subset of (and no larger than) the input packages array.
 
-**Validates: Requirements TBD**
+**Validates: Requirements 48.2**
 
 ### Property 5: Season filter preserves input order
 
 *For any* array of packages and any valid month, the packages in the result of `filterPackagesBySeason` appear in the same relative order as they appear in the input.
 
-**Validates: Requirements TBD**
+**Validates: Requirements 48.2**
 
 ### Property 6: Invalid month returns empty / false
 
 *For any* packages array, calling `filterPackagesBySeason` with a non-integer, out-of-range, null, or undefined month must return an empty array; `isPackageInSeason` must return `false`.
 
-**Validates: Requirements TBD**
+**Validates: Requirements 48.4, 48.8**
 
 ### Property 7: All PACKAGES entries are valid after seasons field is added
 
 *For all* entries in the `PACKAGES` constant in `lib/data.js`, `validatePackage(pkg)` must return `{ valid: true }` (i.e., adding the `seasons` field does not break existing validation, and the seasons values are valid month integers).
 
-**Validates: Requirements TBD**
+**Validates: Requirements 47.2, 47.3, 47.4, 47.5, 47.6, 47.7, 49.3, 49.8**

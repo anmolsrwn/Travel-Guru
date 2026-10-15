@@ -1,205 +1,247 @@
-// Seasonal logic tests (Requirement 54): filterPackagesBySeason, isPackageInSeason,
-// and validatePackage seasons validation.
-import { describe, it } from "node:test";
-import assert from "node:assert/strict";
-import fc from "fast-check";
-import { filterPackagesBySeason, isPackageInSeason, validatePackage } from "../lib/logic.js";
-import { PACKAGES } from "../lib/data.js";
+// tests/seasonal.test.js
+// Example-based and property-based tests for seasonal filtering functions.
+// Validates: Requirements 54.1, 54.2, 54.3, 54.4
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { propertyTag, assertProperty, fc } from './helpers.js';
+import { filterPackagesBySeason, isPackageInSeason, validatePackage } from '../lib/logic.js';
+import { PACKAGES } from '../lib/data.js';
 
 // ---------------------------------------------------------------------------
 // Example-based tests
 // ---------------------------------------------------------------------------
 
-describe("filterPackagesBySeason — example-based", () => {
-  it("returns [] for an empty packages array", () => {
-    assert.deepStrictEqual(filterPackagesBySeason([], 10), []);
-  });
-
-  it("returns only packages whose seasons includes 10", () => {
-    const result = filterPackagesBySeason(PACKAGES, 10);
-    const ids = result.map((p) => p.id);
-    // bali, dubai, kerala, vietnam, dubai-abu-dhabi all have 10 in seasons
-    assert.ok(ids.includes("bali-6n7d"));
-    assert.ok(ids.includes("dubai-4n5d"));
-    assert.ok(ids.includes("kerala-5n6d"));
-    assert.ok(ids.includes("vietnam-7n8d"));
-    // Every returned package must have 10 in its seasons
-    for (const pkg of result) {
-      assert.ok(pkg.seasons.includes(10), `${pkg.id} should have 10 in seasons`);
-    }
-  });
-
-  it("returns [] for month 6 (no original 5 packages have 6)", () => {
-    // Only filter the original 5 packages
-    const original5 = PACKAGES.filter((p) =>
-      ["bali-6n7d", "dubai-4n5d", "singapore-4n5d", "kerala-5n6d", "vietnam-7n8d"].includes(p.id),
-    );
-    const result = filterPackagesBySeason(original5, 6);
-    assert.deepStrictEqual(result, []);
-  });
-
-  it("excludes packages with seasons: []", () => {
-    const pkgs = [{ id: "empty-season", seasons: [] }];
-    assert.deepStrictEqual(filterPackagesBySeason(pkgs, 1), []);
-  });
-
-  it("excludes packages with no seasons field", () => {
-    const pkgs = [{ id: "no-season" }];
-    assert.deepStrictEqual(filterPackagesBySeason(pkgs, 1), []);
-  });
-
-  it("returns [] for month 0 (invalid)", () => {
-    assert.deepStrictEqual(filterPackagesBySeason(PACKAGES, 0), []);
-  });
-
-  it("returns [] for month 13 (invalid)", () => {
-    assert.deepStrictEqual(filterPackagesBySeason(PACKAGES, 13), []);
-  });
-
-  it("returns [] for month null", () => {
-    assert.deepStrictEqual(filterPackagesBySeason(PACKAGES, null), []);
-  });
-
-  it("returns [] for month undefined", () => {
-    assert.deepStrictEqual(filterPackagesBySeason(PACKAGES, undefined), []);
-  });
+test('filterPackagesBySeason([], 10) returns []', () => {
+  assert.deepEqual(filterPackagesBySeason([], 10), []);
 });
 
-describe("isPackageInSeason — example-based", () => {
-  it("returns true when month is in the seasons array", () => {
-    assert.strictEqual(isPackageInSeason({ seasons: [10, 11, 12, 1, 2, 3] }, 10), true);
-  });
+test('filterPackagesBySeason(PACKAGES, 10) returns bali, dubai, kerala, vietnam in input order', () => {
+  const result = filterPackagesBySeason(PACKAGES, 10);
+  assert.equal(result.length, 4);
+  assert.equal(result[0].id, 'bali-6n7d');
+  assert.equal(result[1].id, 'dubai-4n5d');
+  assert.equal(result[2].id, 'kerala-5n6d');
+  assert.equal(result[3].id, 'vietnam-7n8d');
+});
 
-  it("returns false when month is not in the seasons array", () => {
-    assert.strictEqual(isPackageInSeason({ seasons: [10, 11, 12, 1, 2, 3] }, 6), false);
-  });
+test('filterPackagesBySeason(PACKAGES, 6) returns [] (no package has 6 in its seasons)', () => {
+  assert.deepEqual(filterPackagesBySeason(PACKAGES, 6), []);
+});
 
-  it("returns false for null pkg", () => {
-    assert.strictEqual(isPackageInSeason(null, 10), false);
-  });
+test('package with seasons: [] is excluded for any month', () => {
+  const pkgs = [{ id: 'empty-seasons', seasons: [] }];
+  for (let m = 1; m <= 12; m++) {
+    assert.deepEqual(filterPackagesBySeason(pkgs, m), []);
+  }
+});
 
-  it("returns false for null month", () => {
-    assert.strictEqual(isPackageInSeason({ seasons: [10] }, null), false);
-  });
+test('package with no seasons field is excluded for any month', () => {
+  const pkgs = [{ id: 'no-seasons' }];
+  for (let m = 1; m <= 12; m++) {
+    assert.deepEqual(filterPackagesBySeason(pkgs, m), []);
+  }
+});
 
-  it("returns false for pkg without seasons field", () => {
-    assert.strictEqual(isPackageInSeason({}, 10), false);
-  });
+test('filterPackagesBySeason(PACKAGES, 0) returns [] (month 0 is invalid)', () => {
+  assert.deepEqual(filterPackagesBySeason(PACKAGES, 0), []);
+});
+
+test('filterPackagesBySeason(PACKAGES, 13) returns [] (month 13 is invalid)', () => {
+  assert.deepEqual(filterPackagesBySeason(PACKAGES, 13), []);
+});
+
+test('filterPackagesBySeason(PACKAGES, null) returns []', () => {
+  assert.deepEqual(filterPackagesBySeason(PACKAGES, null), []);
+});
+
+test('filterPackagesBySeason(PACKAGES, undefined) returns []', () => {
+  assert.deepEqual(filterPackagesBySeason(PACKAGES, undefined), []);
+});
+
+test('isPackageInSeason({ seasons: [10, 11, 12, 1, 2, 3] }, 10) returns true', () => {
+  assert.equal(isPackageInSeason({ seasons: [10, 11, 12, 1, 2, 3] }, 10), true);
+});
+
+test('isPackageInSeason({ seasons: [10, 11, 12, 1, 2, 3] }, 6) returns false', () => {
+  assert.equal(isPackageInSeason({ seasons: [10, 11, 12, 1, 2, 3] }, 6), false);
+});
+
+test('isPackageInSeason(null, 10) returns false', () => {
+  assert.equal(isPackageInSeason(null, 10), false);
+});
+
+test('isPackageInSeason({ seasons: [10] }, null) returns false', () => {
+  assert.equal(isPackageInSeason({ seasons: [10] }, null), false);
+});
+
+test('isPackageInSeason({}, 10) returns false (no seasons field)', () => {
+  assert.equal(isPackageInSeason({}, 10), false);
 });
 
 // ---------------------------------------------------------------------------
-// Property-based tests (≥ 100 runs each)
+// Property-based tests
 // ---------------------------------------------------------------------------
 
-// Arbitrary: a package with a valid integer seasons array
-const arbSeasons = fc.array(fc.integer({ min: 1, max: 12 }), { minLength: 0, maxLength: 12 }).map((arr) => [
-  ...new Set(arr),
-]);
-const arbPkg = fc.record({
-  id: fc.string(),
-  seasons: arbSeasons,
+/** A package with a valid seasons array (integers 1–12, possibly empty). */
+const seasonalPkgArb = fc.record({
+  id: fc.string({ minLength: 1, maxLength: 20 }),
+  seasons: fc.array(fc.integer({ min: 1, max: 12 }), { maxLength: 12 }),
 });
-const arbPkgArray = fc.array(arbPkg, { minLength: 0, maxLength: 20 });
-const arbMonth = fc.integer({ min: 1, max: 12 });
 
-describe("filterPackagesBySeason — property-based", () => {
-  it("P1: every result has seasons.includes(month)", () => {
-    fc.assert(
-      fc.property(arbPkgArray, arbMonth, (packages, month) => {
-        const result = filterPackagesBySeason(packages, month);
-        for (const pkg of result) {
-          assert.ok(pkg.seasons.includes(month));
-        }
-      }),
-      { numRuns: 100 },
-    );
-  });
+const validMonthArb = fc.integer({ min: 1, max: 12 });
 
-  it("P2: no excluded package has seasons.includes(month)", () => {
-    fc.assert(
-      fc.property(arbPkgArray, arbMonth, (packages, month) => {
+/**
+ * Validates: Requirements S2.2, S2.3
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(1, 'Season filter only returns in-season packages'), () => {
+  assertProperty(
+    fc.property(
+      fc.array(seasonalPkgArb, { maxLength: 20 }),
+      validMonthArb,
+      (packages, month) => {
         const result = filterPackagesBySeason(packages, month);
+        return result.every((pkg) => pkg.seasons.includes(month));
+      },
+    ),
+  );
+});
+
+/**
+ * Validates: Requirements S2.2, S2.3
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(2, 'Season filter excludes out-of-season packages'), () => {
+  assertProperty(
+    fc.property(
+      fc.array(seasonalPkgArb, { maxLength: 20 }),
+      validMonthArb,
+      (packages, month) => {
+        const result = filterPackagesBySeason(packages, month);
+        // No result element should have a seasons array that does not contain month
+        return !result.some((pkg) => !pkg.seasons.includes(month));
+      },
+    ),
+  );
+});
+
+/**
+ * Validates: Requirements S2.2, S2.6, S2.7
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(3, 'isPackageInSeason agrees with filterPackagesBySeason'), () => {
+  assertProperty(
+    fc.property(
+      fc.array(seasonalPkgArb, { maxLength: 20 }),
+      validMonthArb,
+      (packages, month) => {
+        const result = filterPackagesBySeason(packages, month);
+        // Every package in the result must have isPackageInSeason === true
+        const allInResultAreInSeason = result.every((pkg) => isPackageInSeason(pkg, month));
+        // Every package NOT in the result must have isPackageInSeason === false
         const resultSet = new Set(result);
-        for (const pkg of packages) {
-          if (!resultSet.has(pkg) && Array.isArray(pkg.seasons) && pkg.seasons.length > 0) {
-            assert.ok(!pkg.seasons.includes(month));
-          }
-        }
-      }),
-      { numRuns: 100 },
-    );
-  });
+        const allOutOfResultAreNotInSeason = packages
+          .filter((pkg) => !resultSet.has(pkg))
+          .every((pkg) => !isPackageInSeason(pkg, month));
+        return allInResultAreInSeason && allOutOfResultAreNotInSeason;
+      },
+    ),
+  );
+});
 
-  it("P3: isPackageInSeason agrees with filterPackagesBySeason membership", () => {
-    fc.assert(
-      fc.property(arbPkgArray, arbMonth, (packages, month) => {
+/**
+ * Validates: Requirements S2.2
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(4, 'Season filter result is a subset of input'), () => {
+  assertProperty(
+    fc.property(
+      fc.array(seasonalPkgArb, { maxLength: 20 }),
+      validMonthArb,
+      (packages, month) => {
         const result = filterPackagesBySeason(packages, month);
-        const resultSet = new Set(result);
-        for (const pkg of packages) {
-          const inFilter = resultSet.has(pkg);
-          const inSeason = isPackageInSeason(pkg, month);
-          // If included in filter result, must be in season (note: filter excludes empty/missing seasons)
-          if (inFilter) assert.ok(inSeason);
-          // If in season and has non-empty seasons array, must be in filter
-          if (inSeason && Array.isArray(pkg.seasons) && pkg.seasons.length > 0) assert.ok(inFilter);
-        }
-      }),
-      { numRuns: 100 },
-    );
-  });
+        // Every element in result is present in the input (by reference)
+        const allPresent = result.every((pkg) => packages.includes(pkg));
+        // Result length is no greater than input length
+        const lengthOk = result.length <= packages.length;
+        return allPresent && lengthOk;
+      },
+    ),
+  );
+});
 
-  it("P4: result is a subset of input (length ≤ input, no new packages)", () => {
-    fc.assert(
-      fc.property(arbPkgArray, arbMonth, (packages, month) => {
+/**
+ * Validates: Requirements S2.2
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(5, 'Season filter preserves input order'), () => {
+  assertProperty(
+    fc.property(
+      fc.array(seasonalPkgArb, { maxLength: 20 }),
+      validMonthArb,
+      (packages, month) => {
         const result = filterPackagesBySeason(packages, month);
-        assert.ok(result.length <= packages.length);
-        for (const pkg of result) {
-          assert.ok(packages.includes(pkg));
-        }
-      }),
-      { numRuns: 100 },
-    );
-  });
-
-  it("P5: result preserves relative input order", () => {
-    fc.assert(
-      fc.property(arbPkgArray, arbMonth, (packages, month) => {
-        const result = filterPackagesBySeason(packages, month);
+        // The result elements must appear in the same relative order as in packages
         let lastIndex = -1;
         for (const pkg of result) {
           const idx = packages.indexOf(pkg);
-          assert.ok(idx > lastIndex);
+          if (idx <= lastIndex) return false;
           lastIndex = idx;
         }
-      }),
-      { numRuns: 100 },
-    );
-  });
+        return true;
+      },
+    ),
+  );
+});
 
-  it("P6: invalid months return [] / false", () => {
-    const arbInvalidMonth = fc.oneof(
-      fc.constant(null),
-      fc.constant(undefined),
-      fc.double().filter((n) => !Number.isInteger(n)),
-      fc.integer({ max: 0 }),
-      fc.integer({ min: 13 }),
-    );
-    fc.assert(
-      fc.property(arbPkgArray, arbInvalidMonth, (packages, month) => {
-        assert.deepStrictEqual(filterPackagesBySeason(packages, month), []);
-        for (const pkg of packages) {
-          assert.strictEqual(isPackageInSeason(pkg, month), false);
-        }
-      }),
-      { numRuns: 100 },
-    );
-  });
+/**
+ * Validates: Requirements S2.4, S2.8
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(6, 'Invalid month returns empty / false'), () => {
+  // Out-of-range integers: < 1 or > 12
+  const outOfRangeIntArb = fc.oneof(
+    fc.integer({ min: -1000, max: 0 }),
+    fc.integer({ min: 13, max: 1000 }),
+  );
+  // Non-integer numbers (finite and non-finite)
+  const nonIntNumberArb = fc.oneof(
+    fc.double({ noNaN: true, noDefaultInfinity: false }).filter((n) => !Number.isInteger(n)),
+    fc.constant(NaN),
+    fc.constant(Infinity),
+    fc.constant(-Infinity),
+  );
+  // Null and undefined
+  const nullishArb = fc.constantFrom(null, undefined);
 
-  it("P7: all PACKAGES entries pass validatePackage after seasons added", () => {
-    for (const pkg of PACKAGES) {
-      const result = validatePackage(pkg);
-      assert.deepStrictEqual(result.errors, {}, `${pkg.id} failed validation: ${JSON.stringify(result.errors)}`);
-      assert.strictEqual(result.valid, true);
-    }
-  });
+  const invalidMonthArb = fc.oneof(outOfRangeIntArb, nonIntNumberArb, nullishArb);
+
+  assertProperty(
+    fc.property(
+      fc.array(seasonalPkgArb, { maxLength: 10 }),
+      seasonalPkgArb,
+      invalidMonthArb,
+      (packages, pkg, month) => {
+        const filterResult = filterPackagesBySeason(packages, month);
+        const inSeasonResult = isPackageInSeason(pkg, month);
+        return filterResult.length === 0 && inSeasonResult === false;
+      },
+    ),
+  );
+});
+
+/**
+ * Validates: Requirements S1.2–S1.7, S3.3, S3.8
+ * **Validates: Requirements 54.3**
+ */
+test(propertyTag(7, 'All PACKAGES entries pass validatePackage'), () => {
+  // This is a deterministic check over a fixed array, run as a property for consistency
+  assertProperty(
+    fc.property(fc.constant(PACKAGES), (packages) => {
+      return packages.every((pkg) => {
+        const r = validatePackage(pkg);
+        return r.valid === true;
+      });
+    }),
+  );
 });
