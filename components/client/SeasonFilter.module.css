@@ -142,7 +142,7 @@
 /* Card itself */
 .card {
   width: 100%;
-  background: var(--bg-1);
+  background: var(--bg-0);
   border: 1px solid var(--glass-border);
   border-radius: var(--r-md);
   overflow: hidden;
@@ -151,8 +151,17 @@
   flex-direction: column;
 }
 
+/* Use translucent glass fill where backdrop-filter is supported */
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .card {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+}
+
 .cardCenter {
-  box-shadow: 0 20px 60px -10px rgba(60, 80, 30, 0.28);
+  box-shadow: 0 20px 60px -10px rgba(106, 143, 74, 0.25);
   border-color: var(--glass-border-hi);
 }
 
