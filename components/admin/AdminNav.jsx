@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import s from "./AdminShell.module.css";
 
 const LINKS = [
-  { href: "/admin", label: "Leads" },
+  { href: "/admin", label: "Quotations" },
   { href: "/admin/bookings", label: "Bookings" },
   { href: "/admin/packages", label: "Packages" },
   { href: "/admin/destinations", label: "Destinations" },

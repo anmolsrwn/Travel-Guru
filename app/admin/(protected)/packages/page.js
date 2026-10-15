@@ -7,7 +7,8 @@ import { fromPriceINR, formatPrice } from "@/lib/logic";
 import { BUSINESS } from "@/lib/data";
 import t from "@/components/ui/DataTable.module.css";
 import btn from "@/components/ui/Button.module.css";
-import s from "@/components/admin/PackageForm.module.css";
+import PageHeader from "@/components/admin/PageHeader";
+import s from "@/components/admin/AdminPage.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -44,21 +45,25 @@ export default async function PackagesPage() {
 
   return (
     <>
-      <div className={s.head}>
-        <h1 className={s.title}>Packages</h1>
+      <PageHeader
+        eyebrow="Catalogue"
+        title="Packages"
+        subtitle={error || !rows ? undefined : `${rows.length} package${rows.length === 1 ? "" : "s"}, published or not.`}
+      >
         <Link href="/admin/packages/new" className={`${btn.btn} ${btn.primary} ${btn.sm}`}>
           New package
         </Link>
-      </div>
+      </PageHeader>
 
       {error ? (
-        <p className={s.error} role="alert">
+        <p className={s.alert} role="alert">
           Could not load packages. Try again.
         </p>
       ) : !rows || rows.length === 0 ? (
-        <p className={s.muted}>No packages yet.</p>
+        <p className={s.empty}>No packages yet.</p>
       ) : (
-        <div className={`${t.wrap} ${s.scroll}`}>
+        <div className={s.card}>
+        <div className={` `}>
           <table className={t.table}>
             <caption className={t.caption}>All packages ({rows.length})</caption>
             <thead>
@@ -72,7 +77,7 @@ export default async function PackagesPage() {
                 <th scope="col">Published</th>
                 <th scope="col">Updated</th>
                 <th scope="col">
-                  <span className={s.srOnly}>Actions</span>
+                  <span className="sr-only">Actions</span>
                 </th>
               </tr>
             </thead>
@@ -91,11 +96,13 @@ export default async function PackagesPage() {
                   <td data-label="From" className={t.num}>
                     {fromPrice(row)}
                   </td>
-                  <td data-label="Published">{row.is_published ? "Yes" : "No"}</td>
+                  <td data-label="Published">
+                    <span className={row.is_published ? `${s.pill} ${s.pillOn}` : s.pill}>{row.is_published ? "Published" : "Draft"}</span>
+                  </td>
                   <td data-label="Updated">{formatUpdated(row.updated_at)}</td>
                   <td data-label="Actions">
-                    <Link href={`/admin/packages/${encodeURIComponent(row.id)}`} className={s.link}>
-                      Edit<span className={s.srOnly}> {row.title}</span>
+                    <Link href={`/admin/packages/${encodeURIComponent(row.id)}`} className={s.rowLink}>
+                      Edit<span className="sr-only"> {row.title}</span>
                     </Link>
                   </td>
                 </tr>
@@ -103,6 +110,7 @@ export default async function PackagesPage() {
             </tbody>
           </table>
         </div>
+      </div>
       )}
     </>
   );

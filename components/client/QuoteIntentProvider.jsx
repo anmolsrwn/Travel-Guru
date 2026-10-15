@@ -5,8 +5,13 @@
 //
 //   const { intent, enquireService, quoteDestination, consumeIntent } = useQuoteIntent();
 //
-//   enquireService(quoteOption)  scroll to #quote, then publish
-//                                { type: "service", value: quoteOption, nonce }
+//   enquireService(quoteOption, forexDetails?)
+//                                scroll to #quote (or navigate to /quote when the form is not
+//                                on the current page), then publish
+//                                { type: "service", value: quoteOption, forex?, nonce }
+//                                `forexDetails` is optional ({ direction, currency, amount });
+//                                when it is an object it is published as `forex`, otherwise
+//                                the `forex` key is omitted.
 //   quoteDestination(name)       scroll to #quote, then publish
 //                                { type: "destination", value: name,
 //                                  service: DESTINATION_QUOTE_SERVICE, nonce }
@@ -15,7 +20,10 @@
 //
 // Consumer contract (QuoteForm, task 13.9): in an effect keyed on `intent?.nonce`,
 //   - "service":     check `value` (never uncheck; keep other checked services) and
-//                    clear the `services` error + aria-invalid (Req 7.5–7.7)
+//                    clear the `services` error + aria-invalid (Req 7.5–7.7).
+//                    If `forex` is present ({ direction, currency, amount }, values
+//                    unvalidated), also prefill the forex fields from it (forex-counter
+//                    spec, Req 3.10, 5.1); intents without `forex` behave as before.
 //   - "destination": set the destinations field to `value` (replace), check `service`
 //                    while keeping the others, clear `services` and `destinations`
 //                    errors (Req 35.4)
@@ -27,6 +35,7 @@
 // (without a second scroll) to an element marked `data-quote-focus` inside #quote if
 // present, otherwise to the section heading #quote-title (made focusable with tabindex=-1).
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { DESTINATION_QUOTE_SERVICE } from "@/lib/data";
 
 export const QUOTE_SECTION_ID = "quote";
@@ -36,14 +45,16 @@ function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
 }
 
-/** Scroll #quote under the header and move focus into it. No-op on the server. */
+export const QUOTE_PATH = "/quote";
+
+/**
+ * Scroll #quote under the header and move focus into it. Returns false when the quote form
+ * is not on the current page (it lives on /quote), so the caller can navigate there instead.
+ */
 export function scrollToQuote() {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") return false;
   const section = document.getElementById(QUOTE_SECTION_ID);
-  if (!section) {
-    window.location.hash = QUOTE_SECTION_ID; // section not mounted: plain anchor fallback
-    return;
-  }
+  if (!section) return false;
   section.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
 
   const target = section.querySelector("[data-quote-focus]") ?? document.getElementById(QUOTE_HEADING_ID);
@@ -51,6 +62,7 @@ export function scrollToQuote() {
     if (!target.matches("a[href], button, input, select, textarea, [tabindex]")) target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
   }
+  return true;
 }
 
 const QuoteIntentContext = createContext(null);
@@ -60,16 +72,29 @@ export function QuoteIntentProvider({ children }) {
   const [intent, setIntent] = useState(null);
   const nonceRef = useRef(0);
 
-  const publish = useCallback((next) => {
-    nonceRef.current += 1;
-    setIntent({ ...next, nonce: nonceRef.current });
-    scrollToQuote();
-  }, []);
+  const router = useRouter();
+
+  // The intent lives in this provider (shared by every public page). When the form is on
+  // another page we navigate to /quote and QuoteForm applies the intent once it mounts.
+  const publish = useCallback(
+    (next) => {
+      nonceRef.current += 1;
+      setIntent({ ...next, nonce: nonceRef.current });
+      if (!scrollToQuote()) router.push(QUOTE_PATH);
+    },
+    [router],
+  );
 
   const enquireService = useCallback(
-    (quoteOption) => {
+    (quoteOption, forexDetails) => {
       if (typeof quoteOption !== "string" || quoteOption === "") return;
-      publish({ type: "service", value: quoteOption });
+      const next = { type: "service", value: quoteOption };
+      // Optional forex prefill; anything that is not a plain object is ignored.
+      if (forexDetails !== null && typeof forexDetails === "object" && !Array.isArray(forexDetails)) {
+        const { direction, currency, amount } = forexDetails;
+        next.forex = { direction, currency, amount };
+      }
+      publish(next);
     },
     [publish],
   );
@@ -96,9 +121,11 @@ export function QuoteIntentProvider({ children }) {
 
 /**
  * @returns {{
- *   intent: null | { type: "service", value: string, nonce: number }
+ *   intent: null | { type: "service", value: string,
+ *                    forex?: { direction: string, currency: string, amount: number }, nonce: number }
  *                | { type: "destination", value: string, service: string, nonce: number },
- *   enquireService: (quoteOption: string) => void,
+ *   enquireService: (quoteOption: string,
+ *                    forexDetails?: { direction: string, currency: string, amount: number }) => void,
  *   quoteDestination: (name: string) => void,
  *   consumeIntent: (nonce?: number) => void,
  * }}

@@ -10,7 +10,7 @@ import s from "./Faq.module.css";
 export default function Faq({ items = FAQ, children }) {
   const hasChildren = children != null && children !== false;
   return (
-    <section id="faq" className="section" aria-labelledby="faq-title">
+    <section id="faq" className="section section--alt" aria-labelledby="faq-title">
       <div className={`container ${s.narrow}`}>
         <header className="section-head">
           <p className="eyebrow">How We Keep Costs Low</p>

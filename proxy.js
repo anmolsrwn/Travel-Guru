@@ -47,12 +47,13 @@ export async function proxy(request) {
     },
   });
 
-  // Do not run code between createServerClient and getUser(): getUser()
-  // validates the token with Supabase Auth and triggers the cookie refresh.
+  // Do not run code between createServerClient and getClaims(): it refreshes an expired
+  // session (cookie refresh) and verifies the JWT signature locally, so there is no Auth
+  // server round trip on every /admin request. Pages and actions re-check on the server.
   let user = null;
   try {
-    const { data } = await supabase.auth.getUser();
-    user = data?.user ?? null;
+    const { data } = await supabase.auth.getClaims();
+    user = data?.claims?.sub ? data.claims : null;
   } catch {
     user = null;
   }

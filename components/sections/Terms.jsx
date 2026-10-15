@@ -113,7 +113,7 @@ export function TermsPanelBody({ id, policies = POLICIES, paymentPolicy = BUSINE
 export default function Terms({ policies = POLICIES, paymentPolicy = BUSINESS.paymentPolicy, children }) {
   const hasChildren = children != null && children !== false;
   return (
-    <section id="terms" className="section section--alt" aria-labelledby="terms-title">
+    <section id="terms" className="section" aria-labelledby="terms-title">
       <div className={`container ${s.narrow}`}>
         <header className="section-head">
           <p className="eyebrow">Terms &amp; Policies</p>

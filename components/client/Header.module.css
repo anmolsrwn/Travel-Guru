@@ -25,7 +25,7 @@
 }
 
 .scrolled::before {
-  background: rgba(239, 232, 216, 0.96);
+  background: rgba(7, 11, 20, 0.90);
   border-bottom-color: var(--glass-border);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -61,7 +61,7 @@
 .brandName {
   font-family: var(--font-heading-stack);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-hi);
@@ -70,7 +70,8 @@
 
 .tagline {
   font-size: 0.6875rem;
-  color: var(--text-lo);
+  font-weight: 600;
+  color: var(--text-md);
   text-transform: uppercase;
   letter-spacing: 0.2em;
   white-space: nowrap;
@@ -323,7 +324,7 @@
     left: 0;
     z-index: 1;
     display: block;
-    background: rgba(239, 232, 216, 0.70);
+    background: rgba(7, 11, 20, 0.70);
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--dur-modal) var(--ease);

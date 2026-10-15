@@ -4,7 +4,7 @@
 // Session_Client, so RLS (admin UPDATE on `status` only) applies as well.
 // Only `status` is ever written. Only async functions are exported ('use server' rule).
 import { revalidatePath } from "next/cache";
-import { getAdminSession } from "@/lib/server/admin-session";
+import { getVerifiedAdminSession } from "@/lib/server/admin-session";
 import { runAdminMutation } from "@/lib/server/admin";
 import { BOOKING_STATUSES } from "@/lib/data";
 
@@ -32,7 +32,7 @@ export async function updateBookingStatus(_prevState, formData) {
   const id = typeof rawId === "string" ? rawId : "";
   const status = typeof rawStatus === "string" ? rawStatus : "";
 
-  const session = await getAdminSession();
+  const session = await getVerifiedAdminSession();
   if (session.status === "not-configured") return { ok: false, message: MESSAGES.notConfigured };
 
   const result = await runAdminMutation({

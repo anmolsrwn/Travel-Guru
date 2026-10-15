@@ -49,7 +49,7 @@ p.guarantee::after {
   bottom: 0;
   left: 0;
   width: 40%;
-  background: linear-gradient(100deg, transparent, rgba(252, 229, 156, 0.25), transparent);
+  background: linear-gradient(100deg, transparent, rgba(252, 229, 156, 0.18), transparent);
   transform: translateX(-150%);
   animation: guaranteeShimmer 6s var(--ease) infinite;
   pointer-events: none;

@@ -4,6 +4,7 @@
 // Mounted as `children` of the Collections Server Component shell, which keeps the
 // section heading and the pricing note (Req 32.4) server-rendered.
 import { useId, useRef, useState } from "react";
+import Link from "next/link";
 import { CATEGORIES } from "@/lib/data";
 import { filterPackages, formatPrice, fromPriceINR, isPackageInSeason } from "@/lib/logic";
 import { useLocalTodayISO } from "@/components/client/localToday";
@@ -192,7 +193,7 @@ export function CategoryFilter({ packages = [], onViewItinerary, onBook }) {
           </ul>
         ) : (
           <p className={shell.empty}>
-            No journeys here yet. <a href="#quote">Ask us to craft one →</a>
+            No journeys here yet. <Link href="/quote">Ask us to craft one →</Link>
           </p>
         )}
       </div>

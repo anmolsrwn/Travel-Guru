@@ -5,6 +5,7 @@ import { formatPrice } from "@/lib/logic";
 import { BOOKING_STATUSES } from "@/lib/data";
 import BookingStatusSelect from "@/components/admin/BookingStatusSelect";
 import t from "@/components/ui/DataTable.module.css";
+import a from "./AdminPage.module.css";
 
 const IST = new Intl.DateTimeFormat("en-IN", {
   timeZone: "Asia/Kolkata",
@@ -33,9 +34,10 @@ const RULE_LABELS = {
 /** @param {{ rows: Array<Record<string, any>> }} props */
 export default function BookingsTable({ rows }) {
   return (
-    <div className={t.wrap} style={{ overflowX: "auto" }}>
+    <div className={a.card}>
+    <div className={`${t.wrap} ${a.scroll}`}>
       <table className={t.table}>
-        <caption className={t.caption}>Booking requests, newest first</caption>
+        <caption className="sr-only">Booking requests, newest first</caption>
         <thead>
           <tr>
             <th scope="col">Reference</th>
@@ -90,6 +92,7 @@ export default function BookingsTable({ rows }) {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

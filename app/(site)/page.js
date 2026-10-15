@@ -2,22 +2,18 @@
 // revalidatePath("/") after admin edits (Req 40.1–40.3). Content comes from the
 // published Supabase rows with a per-list static fallback (lib/server/content.js).
 import { preload } from "react-dom";
-import { BUSINESS, PACKAGES, DESTINATIONS, REVIEWS } from "@/lib/data";
-import { loadPublicContent } from "@/lib/server/content";
-import { getPublicClient } from "@/lib/supabase/public";
+import { BUSINESS, REVIEWS } from "@/lib/data";
+import { loadSiteContent } from "@/lib/server/siteContent";
 import { fetchGoogleReviews } from "@/lib/server/googleReviews";
 import Hero from "@/components/sections/Hero";
-import TrustStrip from "@/components/sections/TrustStrip";
-import Services from "@/components/sections/Services";
-import Collections from "@/components/sections/Collections";
-import CategoryFilter from "@/components/client/CategoryFilter";
 import SeasonalSection from "@/components/sections/SeasonalSection";
 import SeasonFilter from "@/components/client/SeasonFilter";
+import ExploreLinks from "@/components/sections/ExploreLinks";
+import TrustStrip from "@/components/sections/TrustStrip";
+import Services from "@/components/sections/Services";
 import Destinations from "@/components/sections/Destinations";
 import DestinationTiles from "@/components/client/DestinationTiles";
 import HowItWorks from "@/components/sections/HowItWorks";
-import QuoteSection from "@/components/sections/QuoteSection";
-import QuoteForm from "@/components/client/QuoteForm";
 import Expert from "@/components/sections/Expert";
 import Reviews from "@/components/sections/Reviews";
 import Faq from "@/components/sections/Faq";
@@ -28,27 +24,12 @@ import FinalCta from "@/components/sections/FinalCta";
 
 export const revalidate = 300;
 
-// Logs carry only event names, collection names, error codes and record ids (no PII).
-function logContent(event, meta) {
-  console.warn(event, meta);
-}
-
 export default async function Home() {
   // LCP image (Req 5.9).
   preload(BUSINESS.heroImage, { as: "image", fetchPriority: "high" });
 
-  const { packages: rawPackages, destinations } = await loadPublicContent({
-    client: getPublicClient(), // null when env vars are missing → static catalogue
-    fallback: { packages: PACKAGES, destinations: DESTINATIONS },
-    log: logContent,
-  });
-
-  // Merge static seasons data into packages (DB rows may predate the seasons field).
-  const staticSeasonsMap = new Map(PACKAGES.map(p => [p.id, p.seasons]));
-  const packages = rawPackages.map(pkg =>
-    pkg.seasons ? pkg : { ...pkg, seasons: staticSeasonsMap.get(pkg.id) ?? [] }
-  );
-
+  // Handcrafted trips, forex and the quote form live on /trips, /forex and /quote.
+  const { packages, destinations } = await loadSiteContent();
   // Fetch live Google reviews; fall back to static placeholders if unavailable.
   const googleData = await fetchGoogleReviews();
   const reviews = googleData?.reviews?.length ? googleData.reviews : REVIEWS;
@@ -59,22 +40,20 @@ export default async function Home() {
   // Only plain serialisable data (arrays of plain objects) is passed as props.
   return (
     <main id="main">
+      {/* Story order: hook → proof → gateway → what we do → where → when → how → who →
+          reviews → answers → policies → act. Section backgrounds alternate plain / alt
+          (--bg-1) so each block reads as its own band. */}
       <Hero />
       <SeasonalSection packages={packages}>
         <SeasonFilter packages={packages} />
       </SeasonalSection>
       <TrustStrip />
+      <ExploreLinks />
       <Services />
-      <Collections packages={packages}>
-        <CategoryFilter packages={packages} />
-      </Collections>
       <Destinations destinations={destinations} packages={packages}>
         <DestinationTiles destinations={destinations} packages={packages} />
       </Destinations>
       <HowItWorks />
-      <QuoteSection>
-        <QuoteForm />
-      </QuoteSection>
       <Expert />
       <Reviews reviews={reviews} liveRating={liveRating} liveReviewCount={liveReviewCount} />
       <Faq>

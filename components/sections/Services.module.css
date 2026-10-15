@@ -1,5 +1,5 @@
 /* Services grid (prototype-visual-parity Req 8.1-8.5): 1 col < 640px, 2 cols 640-1023px,
-   4 cols (4 + 4) >= 1024px. */
+   3 cols (3 x 3 for the 9 cards) >= 1024px. */
 
 .grid {
   display: grid;
@@ -18,7 +18,7 @@
 
 @media (min-width: 1024px) {
   .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -84,4 +84,16 @@
 
 .enquire:hover {
   color: var(--gold-2);
+}
+
+/* Cards with more than one action (forex): pins the group to the card bottom. */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: auto;
+}
+
+.actions .enquire {
+  margin-top: 0;
 }

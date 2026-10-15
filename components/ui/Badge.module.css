@@ -26,8 +26,8 @@
 
 /* Emerald: Verified, Trusted, included. */
 .emerald {
-  border-color: rgba(61, 158, 106, 0.35);
-  background-color: rgba(61, 158, 106, 0.12);
+  border-color: rgba(16, 185, 129, 0.30);
+  background-color: rgba(16, 185, 129, 0.12);
   color: var(--emerald);
 }
 

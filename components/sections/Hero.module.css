@@ -26,7 +26,7 @@
   will-change: transform;
 }
 
-/* Cream-pista overlay: warm left fade so dark text stays readable, photo peeks through on right. */
+/* Navy overlay: left fade so light text stays readable, photo peeks through on right. */
 .overlay {
   position: absolute;
   inset: 0;
@@ -34,11 +34,11 @@
   background:
     linear-gradient(
       90deg,
-      rgba(239, 232, 216, 0.96) 0%,
-      rgba(239, 232, 216, 0.82) 45%,
-      rgba(239, 232, 216, 0.40) 100%
+      rgba(7, 11, 20, 0.96) 0%,
+      rgba(7, 11, 20, 0.82) 45%,
+      rgba(7, 11, 20, 0.40) 100%
     ),
-    linear-gradient(0deg, rgba(229, 219, 200, 0.98) 0%, transparent 38%);
+    linear-gradient(0deg, rgba(13, 20, 36, 0.98) 0%, transparent 38%);
 }
 
 @keyframes kenburns {
@@ -83,7 +83,7 @@
   margin-top: 0;
 }
 
-/* Pista guarantee badge. Doubled selector (DD3). */
+/* Gold guarantee badge. Doubled selector (DD3). */
 .badge.badge {
   position: relative;
   display: inline-flex;
@@ -116,7 +116,7 @@
   left: 0;
   width: 40%;
   height: 100%;
-  background: linear-gradient(100deg, transparent, rgba(106, 143, 74, 0.15), transparent);
+  background: linear-gradient(100deg, transparent, rgba(252, 229, 156, 0.18), transparent);
   transform: translateX(-150%);
   animation: shimmer 6s infinite;
   pointer-events: none;
@@ -164,11 +164,11 @@
     background:
       linear-gradient(
         90deg,
-        rgba(239, 232, 216, 0.96) 0%,
-        rgba(239, 232, 216, 0.70) 45%,
-        rgba(239, 232, 216, 0.18) 100%
+        rgba(7, 11, 20, 0.96) 0%,
+        rgba(7, 11, 20, 0.70) 45%,
+        rgba(7, 11, 20, 0.18) 100%
       ),
-      linear-gradient(0deg, rgba(229, 219, 200, 0.98) 0%, transparent 38%);
+      linear-gradient(0deg, rgba(13, 20, 36, 0.98) 0%, transparent 38%);
   }
 }
 

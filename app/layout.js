@@ -31,7 +31,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 // Title, description, icons, Open Graph and metadataBase (Req 33.3).
 export const metadata = buildMetadata(BUSINESS);
-// lib/seo.js is frozen and still returns #070a1a; match the new --bg-0 here.
+// lib/seo.js is frozen and still returns #070a1a; match --bg-0 here.
 export const viewport = { ...buildViewport(), themeColor: "#070b14" };
 
 export default function RootLayout({ children }) {

@@ -4,6 +4,10 @@
 import Link from "next/link";
 import { getAdminSession } from "@/lib/server/admin-session";
 import BookingsTable from "@/components/admin/BookingsTable";
+import PageHeader from "@/components/admin/PageHeader";
+import ExportPanel from "@/components/admin/ExportPanel";
+import btn from "@/components/ui/Button.module.css";
+import s from "@/components/admin/AdminPage.module.css";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Bookings" };
@@ -60,19 +64,41 @@ export default async function AdminBookingsPage({ searchParams }) {
 
   return (
     <>
-      <h1>Bookings</h1>
+      <PageHeader
+        eyebrow="Reservations"
+        title="Bookings"
+        subtitle={`Booking requests, newest first. Times are shown in IST.${error ? "" : ` ${total} total.`}`}
+      />
+      <ExportPanel type="bookings" />
       {error ? (
-        <p role="alert">Could not load bookings. Try again later.</p>
+        <p className={s.alert} role="alert">
+          Could not load bookings. Try again later.
+        </p>
       ) : rows.length === 0 ? (
-        <p>{page > 1 ? "No bookings on this page." : "No booking requests yet."}</p>
+        <p className={s.empty}>{page > 1 ? "No bookings on this page." : "No booking requests yet."}</p>
       ) : (
         <BookingsTable rows={rows} />
       )}
       {(hasPrev || hasNext) && (
-        <nav aria-label="Bookings pages">
-          {hasPrev && <Link href={`/admin/bookings?page=${page - 1}`}>Previous page</Link>}
-          {hasPrev && hasNext && " · "}
-          {hasNext && <Link href={`/admin/bookings?page=${page + 1}`}>Next page</Link>}
+        <nav className={s.pager} aria-label="Bookings pages">
+          <p className={s.pagerText}>
+            Page {page} of {Math.max(1, Math.ceil(total / PAGE_SIZE))}
+          </p>
+          <div className={s.pagerLinks}>
+            {hasPrev && (
+              <Link
+                href={page - 1 === 1 ? "/admin/bookings" : `/admin/bookings?page=${page - 1}`}
+                className={`${btn.btn} ${btn.secondary} ${btn.sm}`}
+              >
+                Previous
+              </Link>
+            )}
+            {hasNext && (
+              <Link href={`/admin/bookings?page=${page + 1}`} className={`${btn.btn} ${btn.secondary} ${btn.sm}`}>
+                Next
+              </Link>
+            )}
+          </div>
         </nav>
       )}
     </>

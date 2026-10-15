@@ -5,7 +5,8 @@ import { getAdminSession } from "@/lib/server/admin-session";
 import { BUSINESS } from "@/lib/data";
 import t from "@/components/ui/DataTable.module.css";
 import btn from "@/components/ui/Button.module.css";
-import s from "@/components/admin/PackageForm.module.css";
+import PageHeader from "@/components/admin/PageHeader";
+import s from "@/components/admin/AdminPage.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -32,21 +33,25 @@ export default async function DestinationsPage() {
 
   return (
     <>
-      <div className={s.head}>
-        <h1 className={s.title}>Destinations</h1>
+      <PageHeader
+        eyebrow="Catalogue"
+        title="Destinations"
+        subtitle={error || !rows ? undefined : `${rows.length} destination${rows.length === 1 ? "" : "s"}, published or not.`}
+      >
         <Link href="/admin/destinations/new" className={`${btn.btn} ${btn.primary} ${btn.sm}`}>
           New destination
         </Link>
-      </div>
+      </PageHeader>
 
       {error ? (
-        <p className={s.error} role="alert">
+        <p className={s.alert} role="alert">
           Could not load destinations. Try again.
         </p>
       ) : !rows || rows.length === 0 ? (
-        <p className={s.muted}>No destinations yet.</p>
+        <p className={s.empty}>No destinations yet.</p>
       ) : (
-        <div className={`${t.wrap} ${s.scroll}`}>
+        <div className={s.card}>
+        <div className={` `}>
           <table className={t.table}>
             <caption className={t.caption}>All destinations ({rows.length})</caption>
             <thead>
@@ -59,7 +64,7 @@ export default async function DestinationsPage() {
                 <th scope="col">Published</th>
                 <th scope="col">Updated</th>
                 <th scope="col">
-                  <span className={s.srOnly}>Actions</span>
+                  <span className="sr-only">Actions</span>
                 </th>
               </tr>
             </thead>
@@ -73,11 +78,13 @@ export default async function DestinationsPage() {
                   <td data-label="Name">{row.name}</td>
                   <td data-label="Region">{row.region}</td>
                   <td data-label="Linked package">{row.package_id ? <code>{row.package_id}</code> : "—"}</td>
-                  <td data-label="Published">{row.is_published ? "Yes" : "No"}</td>
+                  <td data-label="Published">
+                    <span className={row.is_published ? `${s.pill} ${s.pillOn}` : s.pill}>{row.is_published ? "Published" : "Draft"}</span>
+                  </td>
                   <td data-label="Updated">{formatUpdated(row.updated_at)}</td>
                   <td data-label="Actions">
-                    <Link href={`/admin/destinations/${encodeURIComponent(row.id)}`} className={s.link}>
-                      Edit<span className={s.srOnly}> {row.name}</span>
+                    <Link href={`/admin/destinations/${encodeURIComponent(row.id)}`} className={s.rowLink}>
+                      Edit<span className="sr-only"> {row.name}</span>
                     </Link>
                   </td>
                 </tr>
@@ -85,6 +92,7 @@ export default async function DestinationsPage() {
             </tbody>
           </table>
         </div>
+      </div>
       )}
     </>
   );

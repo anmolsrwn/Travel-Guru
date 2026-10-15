@@ -1,0 +1,21 @@
+/* Neutral dark theme for the admin area only. The public site keeps its navy palette.
+   Overrides the shared design tokens, so every admin component picks them up. */
+.theme {
+  --bg-0: #0b0b0d;
+  --bg-1: #141417;
+  --bg-2: #1d1d22;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-hi: rgba(255, 255, 255, 0.22);
+  --hairline: rgba(255, 255, 255, 0.09);
+  --hairline-soft: rgba(255, 255, 255, 0.06);
+  --text-hi: #f2f2f5;
+  --text-md: #b0b0bb;
+  --text-lo: #83838f;
+  --on-cta: #0b0b0d;
+
+  min-height: 100vh;
+  background-color: var(--bg-0);
+  color: var(--text-md);
+  color-scheme: dark;
+}

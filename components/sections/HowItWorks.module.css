@@ -17,15 +17,15 @@
   display: none;
   position: absolute;
   top: 28px;
-  left: 12%;
-  right: 12%;
+  left: 28px;
+  right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-2), transparent);
+  background: linear-gradient(90deg, var(--gold-2), transparent);
 }
 
 .step {
   position: relative;
-  text-align: center;
+  text-align: left;
 }
 
 .num {
@@ -35,7 +35,7 @@
   place-items: center;
   width: 56px;
   height: 56px;
-  margin: 0 auto 18px;
+  margin: 0 0 18px;
   border-radius: 50%;
   background: var(--gold-grad);
   box-shadow: 0 0 0 8px var(--ring-bg, var(--bg-0));

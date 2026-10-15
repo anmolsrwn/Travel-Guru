@@ -1,9 +1,9 @@
 "use client";
 
-// "Enquire" link on a Services card (Req 7.3, 7.5). A real `<a href="#quote">` so it
-// works without JavaScript; with JS a plain click scrolls to the quote form and
+// "Enquire" link on a Services card (Req 7.3, 7.5). A real `<a href="/quote">` so it
+// works without JavaScript; with JS a plain click opens the quote form (/quote) and
 // publishes a "service" intent that the QuoteForm applies.
-import { QUOTE_SECTION_ID, useQuoteIntent } from "./QuoteIntentProvider";
+import { QUOTE_PATH, useQuoteIntent } from "./QuoteIntentProvider";
 
 /**
  * @param {object} props
@@ -26,7 +26,7 @@ export function EnquireButton({ quoteOption, label, className, children = "Enqui
 
   return (
     <a
-      href={`#${QUOTE_SECTION_ID}`}
+      href={QUOTE_PATH}
       className={className}
       aria-label={label}
       data-quote-option={quoteOption}

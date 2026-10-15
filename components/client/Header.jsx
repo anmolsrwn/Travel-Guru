@@ -3,8 +3,9 @@
 // Fixed site header (Req 4.1–4.10, 33.1, 33.2, 33.5).
 // - 72px on every viewport, transparent until the page scrolls past 40px, then
 //   --bg-0 at 90% with a backdrop blur (state flips in the same scroll event).
-// - In-page links are plain anchors: `html { scroll-padding-top: var(--header-h);
-//   scroll-behavior: smooth }` in globals.css lands each section below the header.
+// - Home sections are linked as `/#id` (work from every page); /trips, /forex and /quote
+//   are separate pages. `html { scroll-padding-top: var(--header-h) }` in globals.css
+//   lands each section below the header.
 // - < 640px the single <nav> becomes a drawer that slides in from the right
 //   (350ms), toggled by the hamburger (aria-expanded / aria-controls), closed by
 //   any link inside it or Escape (focus returns to the hamburger).
@@ -17,14 +18,14 @@ import styles from "./Header.module.css";
 
 /** Header navigation, in the order of Req 4.1. */
 export const NAV_LINKS = [
-  { label: "Services", href: "#services" },
-  { label: "Collections", href: "#collections" },
-  { label: "How it Works", href: "#how-it-works" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Services", href: "/#services" },
+  { label: "Trips", href: "/trips" },
+  { label: "Forex", href: "/forex" },
+  { label: "Reviews", href: "/#reviews" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
-export const QUOTE_HREF = "#quote";
+export const QUOTE_HREF = "/quote";
 const SCROLL_THRESHOLD = 40;
 const NAV_ID = "site-nav";
 const MOBILE_QUERY = "(max-width: 639.98px)";
@@ -86,25 +87,25 @@ export function Header() {
           <ul className={styles.links}>
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className={styles.link} onClick={close}>
+                <Link href={link.href} className={styles.link} onClick={close}>
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
-          <a
+          <Link
             href={QUOTE_HREF}
             className={`${btn.btn} ${btn.primary} ${btn.block} ${styles.drawerCta}`}
             onClick={close}
           >
             Get Free Quote
-          </a>
+          </Link>
         </nav>
 
         <div className={styles.actions}>
-          <a href={QUOTE_HREF} className={`${btn.btn} ${btn.primary} ${btn.sm} ${styles.cta}`}>
+          <Link href={QUOTE_HREF} className={`${btn.btn} ${btn.primary} ${btn.sm} ${styles.cta}`}>
             Get Free Quote <span aria-hidden="true">✦</span>
-          </a>
+          </Link>
           <button
             ref={toggleRef}
             type="button"

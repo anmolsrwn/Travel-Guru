@@ -88,6 +88,48 @@
   gap: 16px 32px;
 }
 
+/* Forex details (forex-counter Req 5.1): 1 column on mobile, 2 from 640px. */
+.forexFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+}
+
+@media (min-width: 640px) {
+  .forexFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .forexFields > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.radioOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--text-hi);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.radioOption input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--gold-2);
+}
+
 .optional {
   color: var(--text-lo);
   font-weight: 500;

@@ -60,11 +60,62 @@ test("only whitelisted columns are stored; extra keys ignored", async () => {
   const row = deps.db.leads[0];
   assert.deepEqual(Object.keys(row).sort(), [
     "adults", "budget", "callback_deadline", "callback_slot", "child_ages", "children", "departure_city",
-    "departure_date", "destinations", "duration", "email", "full_name", "hotel_category", "meal_plan",
-    "notes", "phone", "services", "ticket_id", "trip_type",
+    "departure_date", "destinations", "duration", "email", "forex_details", "full_name", "hotel_category",
+    "meal_plan", "notes", "phone", "services", "ticket_id", "trip_type",
   ]);
+  assert.equal(row.forex_details, null);
   assert.notEqual(row.ticket_id, "QT-1999-0001");
   assert.equal("status" in row, false);
+});
+
+// --- Forex details ---------------------------------------------------------------------------
+const FOREX_BODY = { ...VALID, services: ["Forex"] };
+
+test("Forex is no longer a quote service option → 400 on services, nothing stored", async () => {
+  const forexDetails = { direction: "buy", currency: "USD", amount: 1000 };
+  const { res, deps } = await run({ rawBody: JSON.stringify({ ...FOREX_BODY, forexDetails }) });
+  assert.equal(res.status, 400);
+  assert.ok(res.body.errors.services);
+  assert.equal(deps.db.leads.length, 0);
+});
+
+test("invalid forex details → 400 with the matching errors key and nothing stored", async () => {
+  const cases = [
+    ["forexDirection", { direction: "swap", currency: "USD", amount: 1000 }],
+    ["forexCurrency", { direction: "buy", currency: "JPY", amount: 1000 }],
+    ["forexAmount", { direction: "buy", currency: "USD", amount: 1 }], // below minimum INR equivalent
+    ["forexAmount", { direction: "sell", currency: "USD", amount: 1e9 }], // above maximum INR equivalent
+    ["forexAmount", { direction: "buy", currency: "USD", amount: "1000" }], // non-numeric
+    ["forexAmount", { direction: "buy", currency: "USD", amount: -5 }],
+  ];
+  for (const [key, forexDetails] of cases) {
+    const { res, deps } = await run({ rawBody: JSON.stringify({ ...FOREX_BODY, forexDetails }) });
+    assert.equal(res.status, 400, JSON.stringify(forexDetails));
+    assert.equal(res.body.error, "validation");
+    assert.ok(res.body.errors[key], `${key} for ${JSON.stringify(forexDetails)}`);
+    assert.equal(deps.db.calls.insertLead.length, 0);
+    assert.equal(deps.db.leads.length, 0);
+  }
+});
+
+test("Forex selected without forexDetails → 400 on all three forex keys, nothing stored", async () => {
+  for (const forexDetails of [undefined, null, "buy", [1]]) {
+    const { res, deps } = await run({ rawBody: JSON.stringify({ ...FOREX_BODY, forexDetails }) });
+    assert.equal(res.status, 400);
+    for (const key of ["forexDirection", "forexCurrency", "forexAmount"]) assert.ok(res.body.errors[key], key);
+    assert.equal(deps.db.leads.length, 0);
+  }
+});
+
+test("forexDetails without the Forex service is ignored and stored as null", async () => {
+  const forexDetails = { direction: "buy", currency: "USD", amount: 1000 };
+  const { res, deps } = await run({ rawBody: JSON.stringify({ ...VALID, forexDetails }) });
+  assert.equal(res.status, 201);
+  assert.equal(deps.db.leads[0].forex_details, null);
+  // Even junk forexDetails must not block a non-forex request.
+  const junk = await run({ rawBody: JSON.stringify({ ...VALID, forexDetails: "junk" }) });
+  assert.equal(junk.res.status, 201);
+  assert.equal(junk.deps.db.leads[0].forex_details, null);
 });
 
 test("cross-origin → 403 before rate limit and db", async () => {

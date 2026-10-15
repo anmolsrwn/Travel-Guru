@@ -1,6 +1,7 @@
 // Curated Collections section shell (Server Component; design section 5, Req 8, 32.4, 27.1).
 // The CategoryFilter client component (task 13.5) mounts as `children`; without children the
 // shell renders every package as a static INR card so the page reads without JavaScript.
+import Link from "next/link";
 import { BUSINESS } from "@/lib/data";
 import { formatPrice, fromPriceINR } from "@/lib/logic";
 import btn from "@/components/ui/Button.module.css";
@@ -49,9 +50,9 @@ function PackageCard({ pkg }) {
         </p>
         <p className={s.land}>land package</p>
         <p className={s.extras}>{EXTRAS_NOTE[pkg.region] ?? EXTRAS_NOTE.international}</p>
-        <a className={`${btn.btn} ${btn.secondary} ${btn.sm}`} href="#quote" aria-label={`Get a quote for ${pkg.title}`}>
+        <Link className={`${btn.btn} ${btn.secondary} ${btn.sm}`} href="/quote" aria-label={`Get a quote for ${pkg.title}`}>
           Get a Quote
-        </a>
+        </Link>
       </div>
     </li>
   );
@@ -83,7 +84,7 @@ export default function Collections({ packages = [], children }) {
           </ul>
         ) : (
           <p className={s.empty}>
-            No journeys here yet. <a href="#quote">Ask us to craft one →</a>
+            No journeys here yet. <Link href="/quote">Ask us to craft one →</Link>
           </p>
         )}
 

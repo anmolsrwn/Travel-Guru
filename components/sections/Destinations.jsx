@@ -2,6 +2,7 @@
 // The DestinationTiles client component (task 13.x) mounts as `children` and renders both
 // grids; without children the shell renders the International and Domestic grids statically,
 // with "Get a Quote" / "View Package" as in-page links so the page works without JavaScript.
+import Link from "next/link";
 import { destinationsByRegion } from "@/lib/logic";
 import btn from "@/components/ui/Button.module.css";
 import card from "@/components/ui/Card.module.css";
@@ -23,17 +24,17 @@ function DestinationTile({ dest, hasPackage }) {
         <h3 className={s.name}>{dest.name}</h3>
         <p className={s.tagline}>{dest.tagline}</p>
         <div className={s.actions}>
-          <a className={`${btn.btn} ${btn.secondary} ${btn.sm}`} href="#quote" aria-label={`Get a Quote for ${dest.name}`}>
+          <Link className={`${btn.btn} ${btn.secondary} ${btn.sm}`} href="/quote" aria-label={`Get a Quote for ${dest.name}`}>
             Get a Quote
-          </a>
+          </Link>
           {hasPackage ? (
-            <a
+            <Link
               className={`${btn.btn} ${btn.primary} ${btn.sm}`}
-              href="#collections"
+              href="/trips"
               aria-label={`View Package for ${dest.name}`}
             >
               View Package
-            </a>
+            </Link>
           ) : null}
         </div>
       </div>
@@ -48,7 +49,7 @@ export default function Destinations({ destinations = [], packages = [], childre
   const hasChildren = children != null && children !== false;
   const packageIds = new Set(packages.map((p) => p.id));
   return (
-    <section id="destinations" className="section section--alt" aria-labelledby="destinations-title">
+    <section id="destinations" className="section" aria-labelledby="destinations-title">
       <div className="container">
         <header className="section-head">
           <p className="eyebrow">Popular Destinations</p>

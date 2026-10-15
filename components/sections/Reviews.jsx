@@ -23,7 +23,7 @@ export function Reviews({ reviews = REVIEWS, liveRating = null, liveReviewCount 
   ];
 
   return (
-    <section id="reviews" className="section section--alt" aria-labelledby="reviews-title">
+    <section id="reviews" className="section" aria-labelledby="reviews-title">
       <div className="container">
         <div className="section-head">
           <p className="eyebrow">Verified Traveller Stories</p>
@@ -40,9 +40,15 @@ export function Reviews({ reviews = REVIEWS, liveRating = null, liveReviewCount 
         </div>
 
         <ul className={styles.track} aria-label="Traveller reviews">
-          {reviews.map((review, i) => (
+          {reviews.map((review, i) => {
+            const stars = Math.min(5, Math.max(0, Math.round(review.rating ?? 5)));
+            return (
             <li key={`${review.name}-${i}`} className={`${card.glass} ${card.padded} ${styles.card}`}>
               <figure className={styles.figure}>
+                <p className={styles.stars} role="img" aria-label={`${stars} out of 5 stars`}>
+                  {"★".repeat(stars)}
+                  {"☆".repeat(5 - stars)}
+                </p>
                 <blockquote className={styles.quote}>
                   <p>{review.quote}</p>
                 </blockquote>
@@ -51,7 +57,8 @@ export function Reviews({ reviews = REVIEWS, liveRating = null, liveReviewCount 
                     {review.name.charAt(0)}
                   </span>
                   <span>
-                    <span className={styles.name}>{review.name}</span>, {review.city}
+                    <span className={styles.name}>{review.name}</span>
+                    {review.city && <>, {review.city}</>}
                   </span>
                 </figcaption>
                 <p className={styles.meta}>
@@ -63,7 +70,8 @@ export function Reviews({ reviews = REVIEWS, liveRating = null, liveReviewCount 
                 {review.isPlaceholder && <p className={styles.sample}>Sample review</p>}
               </figure>
             </li>
-          ))}
+            );
+          })}
         </ul>
 
         <ul className={styles.badges} aria-label="Trust badges">

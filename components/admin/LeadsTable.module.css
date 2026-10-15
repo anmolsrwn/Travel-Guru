@@ -33,6 +33,38 @@
   gap: 4px;
 }
 
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  color: var(--text-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badgeForex {
+  border-color: var(--gold-2);
+  background: var(--gold-2);
+  color: var(--on-cta);
+}
+
+.forexDetails {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-hi);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .pager {
   display: flex;
   flex-wrap: wrap;

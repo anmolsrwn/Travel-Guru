@@ -24,7 +24,44 @@ test('initialQuoteForm: Raipur, 2 adults, 0 children, everything else empty (Req
   for (const k of ['destinations', 'departureDate', 'fullName', 'phone', 'email', 'callbackSlot', 'notes', 'website']) {
     assert.equal(f[k], '', k);
   }
+  assert.equal(f.forexDirection, 'buy');
+  assert.equal(f.forexCurrency, '');
+  assert.equal(f.forexAmount, '');
   assert.notEqual(initialQuoteForm(), f, 'fresh object each call');
+});
+
+test('QUOTE_FIELD_ORDER puts the forex fields right after services', () => {
+  assert.deepEqual(QUOTE_FIELD_ORDER.slice(0, 4), ['services', 'forexDirection', 'forexCurrency', 'forexAmount']);
+});
+
+test('applyQuoteIntent: forex intent fills fields, notes only when empty, clears forex errors', () => {
+  const intent = { type: 'service', value: 'Forex', forex: { direction: 'sell', currency: 'EUR', amount: 250 }, nonce: 3 };
+  const errors = { services: 's', forexDirection: 'd', forexCurrency: 'c', forexAmount: 'a', phone: 'p' };
+  const r = applyQuoteIntent(initialQuoteForm(), errors, intent);
+  assert.ok(!r.form.services.includes('Forex')); // Forex is no longer a quote option
+  assert.equal(r.form.forexDirection, 'sell');
+  assert.equal(r.form.forexCurrency, 'EUR');
+  assert.equal(r.form.forexAmount, '250');
+  assert.equal(r.form.notes, 'Forex: sell 250 EUR');
+  assert.deepEqual(r.errors, { phone: 'p' });
+
+  const typed = applyQuoteIntent({ ...initialQuoteForm(), notes: 'my note' }, {}, intent);
+  assert.equal(typed.form.notes, 'my note');
+
+  const plain = applyQuoteIntent(initialQuoteForm(), {}, { type: 'service', value: 'Forex', nonce: 4 });
+  assert.equal(plain.form.forexAmount, '');
+  assert.equal(plain.form.notes, '');
+});
+
+test('quotePayload: forexDetails only when Forex is selected; flat forex keys never sent', () => {
+  const base = { ...initialQuoteForm(), forexCurrency: 'USD', forexAmount: '1000' };
+  const without = quotePayload(base);
+  assert.ok(!('forexDetails' in without));
+  for (const k of ['forexDirection', 'forexCurrency', 'forexAmount']) assert.ok(!(k in without), k);
+
+  const withFx = quotePayload({ ...base, services: ['Forex'] });
+  assert.deepEqual(withFx.forexDetails, { direction: 'buy', currency: 'USD', amount: 1000 });
+  for (const k of ['forexDirection', 'forexCurrency', 'forexAmount']) assert.ok(!(k in withFx), k);
 });
 
 test('checkService never unchecks; toggleService toggles (Req 7.5, 7.6)', () => {

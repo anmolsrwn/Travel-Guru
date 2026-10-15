@@ -1,0 +1,224 @@
+/* Shared admin page building blocks: page header, table card, pills, pager, states. */
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.headText {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--gold-2);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--text-hi);
+  font-family: var(--font-heading-stack);
+  font-size: clamp(1.625rem, 3vw, 2.125rem);
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--text-md);
+  font-size: 0.9375rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ---------- Table card ---------- */
+
+.card {
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+  box-shadow: var(--shadow-card);
+}
+
+.scroll {
+  overflow: auto;
+  max-height: min(78vh, 960px);
+}
+
+.card table {
+  font-size: 0.875rem;
+}
+
+.card caption {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--text-md);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.card th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 12px 14px;
+  border-bottom: 0;
+  background-color: var(--bg-2);
+  box-shadow: inset 0 -1px 0 var(--gold-a30);
+  color: var(--gold-2);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.card td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--hairline-soft);
+  vertical-align: middle;
+}
+
+.card tbody tr {
+  transition: background-color 150ms var(--ease);
+}
+
+.card tbody tr:hover {
+  background-color: var(--gold-a06);
+}
+
+.card tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.card code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--glass);
+  color: var(--text-hi);
+  font-size: 0.8125rem;
+}
+
+.rowLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--gold-a40);
+  border-radius: var(--r-pill);
+  color: var(--gold-1);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rowLink:hover {
+  background-color: var(--gold-a10);
+  text-decoration: none;
+}
+
+.rowLink:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+/* ---------- Pills ---------- */
+
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  color: var(--text-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pillOn {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--emerald-soft);
+}
+
+/* ---------- Pager ---------- */
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.pagerText {
+  margin: 0;
+  color: var(--text-md);
+  font-size: 0.875rem;
+}
+
+.pagerLinks {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ---------- States ---------- */
+
+.empty {
+  margin: 0;
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--glass-border-hi);
+  border-radius: var(--r-md);
+  background: var(--glass);
+  color: var(--text-md);
+  text-align: center;
+}
+
+.alert {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--danger);
+  border-radius: var(--r-sm);
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+@media (max-width: 639px) {
+  .scroll {
+    max-height: none;
+  }
+
+  .card tr {
+    padding: 14px 16px;
+  }
+
+  .card td {
+    padding: 4px 0;
+  }
+
+  .card tbody tr:hover {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card tbody tr {
+    transition: none;
+  }
+}

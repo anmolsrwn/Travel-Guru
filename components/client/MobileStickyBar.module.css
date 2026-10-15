@@ -18,7 +18,7 @@
     box-sizing: border-box;
     height: calc(var(--sticky-bar-h) + env(safe-area-inset-bottom, 0px));
     padding: var(--space-3) var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
-    background: rgba(239, 232, 216, 0.98);
+    background: rgba(7, 11, 20, 0.96);
     border-top: 1px solid var(--glass-border);
   }
 

@@ -3,6 +3,7 @@
 // Seasonal carousel — center card fully visible, side cards blurred/dimmed.
 // Auto-advances every 4s. Auto-detects current month.
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { filterPackagesBySeason, fromPriceINR } from '@/lib/logic';
 import { MONTH_NAMES } from '@/lib/data';
 import { useLocalTodayISO } from '@/components/client/localToday';
@@ -44,7 +45,7 @@ export function SeasonFilter({ packages = [] }) {
     return (
       <p className={s.empty}>
         No packages for {monthName} yet.{' '}
-        <a href="#collections">Browse all →</a>
+        <Link href="/trips">Browse all →</Link>
       </p>
     );
   }
@@ -124,7 +125,7 @@ export function SeasonFilter({ packages = [] }) {
                       <span className={s.pp}>&nbsp;/pp</span>
                     </p>
                     {isCenter && (
-                      <a href="#collections" className={s.cta}>View Package &#8594;</a>
+                      <Link href="/trips" className={s.cta}>View Package &#8594;</Link>
                     )}
                   </div>
                 </article>
@@ -156,7 +157,7 @@ export function SeasonFilter({ packages = [] }) {
         </div>
       )}
 
-      <a href="#collections" className={s.hint}>See all packages &#8594;</a>
+      <Link href="/trips" className={s.hint}>See all packages &#8594;</Link>
     </div>
   );
 }

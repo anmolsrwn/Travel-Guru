@@ -14,11 +14,14 @@ function displayWebsite(url) {
   return url.replace(/^https?:\/\//i, "").replace(/\/+$/, "");
 }
 
-// In-page links to the home page sections (header-offset scrolling is handled in CSS).
+// Links to home page sections (`/#id`, valid from every page) and to the /trips, /forex and /quote pages.
 const COMPANY_LINKS = [
-  { label: "About", href: "#expert" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Terms & Policies", href: "#terms" },
+  { label: "About", href: "/#expert" },
+  { label: "Handcrafted Trips", href: "/trips" },
+  { label: "Forex Counter", href: "/forex" },
+  { label: "Get a Quote", href: "/quote" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Terms & Policies", href: "/#terms" },
 ];
 
 export function Footer() {
@@ -134,7 +137,12 @@ export function Footer() {
           </div>
         </div>
 
-        <address className={styles.address}>{BUSINESS.address}</address>
+        <address className={styles.address}>
+          <svg className={styles.pin} viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor">
+            <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" />
+          </svg>
+          <span>{BUSINESS.address}</span>
+        </address>
         <p className={`gradient-text ${styles.motto}`}>{BUSINESS.motto}</p>
 
         <div className={styles.bottom}>

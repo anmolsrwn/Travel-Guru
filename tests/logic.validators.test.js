@@ -92,7 +92,7 @@ test("validateQuoteForm: WhatsApp mode is lenient on empty email, date and desti
 
 test("validateQuoteForm: each corruption adds exactly its key", () => {
   const cases = {
-    services: [[], ["Cruise"], "Flights", [...Array(9)].map(() => "Flights")],
+    services: [[], ["Cruise"], "Flights", [...Array(10)].map(() => "Flights")],
     fullName: ["A", " A ", "x".repeat(81), 42],
     phone: ["123", "9".repeat(10) + " ".repeat(11), null],
     adults: [0, 13, 2.5, "2"],
@@ -131,7 +131,7 @@ test("validateQuoteForm: boundary lengths are accepted", () => {
       email: `${"a".repeat(245)}@mail.com`,
       adults: 12,
       children: 8,
-      services: [...Array(8)].map(() => "Hotels"),
+      services: [...Array(7)].map(() => "Hotels"),
     },
     TODAY,
   );

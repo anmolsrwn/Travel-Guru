@@ -24,7 +24,9 @@ import {
   BUDGETS,
   BUSINESS,
   CALLBACK_SLOTS,
+  CURRENCIES,
   DURATIONS,
+  FOREX_CURRENCIES,
   HOTEL_CATEGORIES,
   LIMITS,
   MEAL_PLANS,
@@ -344,6 +346,81 @@ export function QuoteForm() {
           </div>
           {errorText("services")}
         </fieldset>
+
+        {/* Forex details, only while the Forex tile is ticked (forex-counter Req 5.1, 5.2). */}
+        {form.services.includes("Forex") && (
+          <div className={s.forexFields}>
+            <div className={f.field}>
+              <span className={f.label} id="q-forexDirection-label">
+                Direction
+                <span className={f.required} aria-hidden="true">
+                  {" "}
+                  *
+                </span>
+              </span>
+              <div
+                className={s.radioGroup}
+                role="radiogroup"
+                aria-labelledby="q-forexDirection-label"
+                aria-invalid={errors.forexDirection ? "true" : undefined}
+                aria-describedby={errors.forexDirection ? errorId("forexDirection") : undefined}
+              >
+                {[
+                  ["buy", "Buy Foreign Currency"],
+                  ["sell", "Sell Foreign Currency"],
+                ].map(([value, text], i) => (
+                  <label key={value} className={s.radioOption}>
+                    <input
+                      type="radio"
+                      name="forexDirection"
+                      id={i === 0 ? fieldId("forexDirection") : undefined}
+                      value={value}
+                      checked={form.forexDirection === value}
+                      onChange={() => update("forexDirection", value)}
+                    />
+                    <span>{text}</span>
+                  </label>
+                ))}
+              </div>
+              {errorText("forexDirection")}
+            </div>
+
+            <div className={f.field}>
+              {label("forexCurrency", "Currency", { required: true })}
+              <select
+                className={f.select}
+                value={form.forexCurrency}
+                onChange={(e) => update("forexCurrency", e.target.value, ["forexAmount"])}
+                {...a11y("forexCurrency")}
+              >
+                <option value="">Select currency</option>
+                {FOREX_CURRENCIES.map((code) => (
+                  <option key={code} value={code}>
+                    {CURRENCIES[code] ? `${code} (${CURRENCIES[code].symbol})` : code}
+                  </option>
+                ))}
+              </select>
+              {errorText("forexCurrency")}
+            </div>
+
+            <div className={f.field}>
+              {label("forexAmount", form.forexCurrency ? `Amount (${form.forexCurrency})` : "Amount", {
+                required: true,
+              })}
+              <input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.01"
+                className={f.input}
+                value={form.forexAmount}
+                onChange={(e) => update("forexAmount", e.target.value)}
+                {...a11y("forexAmount")}
+              />
+              {errorText("forexAmount")}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Step 2 */}

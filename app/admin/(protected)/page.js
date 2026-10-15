@@ -6,13 +6,15 @@ import Link from "next/link";
 import { getAdminSession } from "@/lib/server/admin-session";
 import LeadsTable from "@/components/admin/LeadsTable";
 import btn from "@/components/ui/Button.module.css";
-import s from "@/components/admin/LeadsTable.module.css";
+import PageHeader from "@/components/admin/PageHeader";
+import ExportPanel from "@/components/admin/ExportPanel";
+import s from "@/components/admin/AdminPage.module.css";
 
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 50;
 const LEAD_COLUMNS =
-  "id, ticket_id, created_at, services, departure_city, destinations, departure_date, adults, children, child_ages, hotel_category, meal_plan, budget, full_name, phone, email, callback_slot, callback_deadline, notes, status";
+  "id, ticket_id, created_at, services, departure_city, destinations, departure_date, adults, children, child_ages, hotel_category, meal_plan, budget, full_name, phone, email, callback_slot, callback_deadline, notes, forex_details, status";
 
 /** `?page=` → positive integer (default 1). */
 function parsePage(raw) {
@@ -43,23 +45,27 @@ export default async function AdminLeadsPage({ searchParams }) {
 
   return (
     <>
-      <h1 className={s.title}>Leads</h1>
-      <p className={s.intro}>Quotation requests, newest first. Times are shown in IST.</p>
+      <PageHeader
+        eyebrow="Enquiries"
+        title="Quotations"
+        subtitle={`Quotation requests, newest first. Times are shown in IST.${error ? "" : ` ${total} total.`}`}
+      />
+      <ExportPanel type="leads" />
 
       {error ? (
         <p className={s.alert} role="alert">
-          Could not load leads. Try again.
+          Could not load quotations. Try again.
         </p>
       ) : leads.length === 0 ? (
-        <p className={s.intro}>{total === 0 ? "No leads yet." : "No leads on this page."}</p>
+        <p className={s.empty}>{total === 0 ? "No quotations yet." : "No quotations on this page."}</p>
       ) : (
         <LeadsTable leads={leads} />
       )}
 
       {!error && total > 0 && (
-        <nav className={s.pager} aria-label="Leads pages">
+        <nav className={s.pager} aria-label="Quotations pages">
           <p className={s.pagerText}>
-            Page {page} of {totalPages} ({total} lead{total === 1 ? "" : "s"})
+            Page {page} of {totalPages} ({total} quotation{total === 1 ? "" : "s"})
           </p>
           <div className={s.pagerLinks}>
             {page > 1 && (

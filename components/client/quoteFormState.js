@@ -6,6 +6,9 @@ import { BUSINESS, QUOTE_SERVICE_OPTIONS } from "../../lib/data.js"; // relative
 /** Fields in form order; used to focus the first invalid field (Req 15.19). */
 export const QUOTE_FIELD_ORDER = [
   "services",
+  "forexDirection",
+  "forexCurrency",
+  "forexAmount",
   "departureCity",
   "destinations",
   "departureDate",
@@ -28,6 +31,9 @@ export const QUOTE_FIELD_ORDER = [
 export function initialQuoteForm() {
   return {
     services: [],
+    forexDirection: "buy", // only used while "Forex" is ticked
+    forexCurrency: "",
+    forexAmount: "", // foreign-currency amount, kept as the raw input string
     departureCity: BUSINESS.originCity.name,
     destinations: "",
     departureDate: "",
@@ -63,7 +69,9 @@ export function toggleService(services, option) {
 
 /**
  * Apply a quote intent (QuoteIntentProvider contract) to the form and errors.
- *   service:     check `value`, clear the services error (Req 7.5–7.7)
+ *   service:     check `value`, clear the services error (Req 7.5–7.7). With `forex`
+ *                { direction, currency, amount } also fills the forex fields, pre-fills
+ *                empty notes and clears the forex errors (forex-counter Req 3.10)
  *   destination: replace destinations with `value`, check `service`, clear the
  *                services and destinations errors (Req 35.4)
  * Unknown intents return the inputs unchanged.
@@ -78,7 +86,21 @@ export function applyQuoteIntent(form, errors, intent) {
   };
 
   if (intent.type === "service") {
-    return { form: { ...form, services: checkService(form.services, intent.value) }, errors: without(["services"]) };
+    const services = checkService(form.services, intent.value);
+    const fx = intent.forex;
+    if (fx && typeof fx === "object") {
+      const next = { ...form, services };
+      if (fx.direction === "buy" || fx.direction === "sell") next.forexDirection = fx.direction;
+      if (typeof fx.currency === "string") next.forexCurrency = fx.currency;
+      if (fx.amount !== undefined && fx.amount !== null) next.forexAmount = String(fx.amount);
+      // Pre-fill a notes line only when the user has not typed anything.
+      if (!String(form.notes ?? "").trim()) {
+        const parts = [next.forexDirection, next.forexAmount, next.forexCurrency].filter((p) => p !== "");
+        next.notes = `Forex: ${parts.join(" ")}`;
+      }
+      return { form: next, errors: without(["services", "forexDirection", "forexCurrency", "forexAmount"]) };
+    }
+    return { form: { ...form, services }, errors: without(["services"]) };
   }
   if (intent.type === "destination") {
     return {
@@ -94,7 +116,12 @@ export function applyQuoteIntent(form, errors, intent) {
  * dropped while children is 0, since that field is hidden (Req 15.3).
  */
 export function quotePayload(form) {
-  return { ...form, childAges: form.children > 0 ? form.childAges : "" };
+  const { forexDirection, forexCurrency, forexAmount, ...rest } = form;
+  const payload = { ...rest, childAges: form.children > 0 ? form.childAges : "" };
+  if (form.services.includes("Forex")) {
+    payload.forexDetails = { direction: forexDirection, currency: forexCurrency, amount: Number(forexAmount) };
+  }
+  return payload;
 }
 
 /** Number input value → integer state; empty or non-numeric input stays "" so validation flags it. */

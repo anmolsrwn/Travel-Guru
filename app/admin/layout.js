@@ -13,6 +13,8 @@
 // The public site chrome (Header, Footer, floating buttons, providers) lives in
 // app/(site)/layout.js, so none of it renders here.
 
+import theme from "@/components/admin/AdminTheme.module.css";
+
 export const metadata = {
   title: "Admin",
   robots: { index: false, follow: false },
@@ -21,5 +23,5 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default function AdminLayout({ children }) {
-  return children;
+  return <div className={theme.theme}>{children}</div>;
 }

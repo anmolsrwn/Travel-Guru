@@ -3,13 +3,13 @@
  * Components consume these tokens from their own *.module.css files.
  *
  * TOKENS (:root)
- *   Canvas      --bg-0 #efe8d8, --bg-1 #e5dbc8, --bg-2 #d8ccb4, --glass,
- *               --glass-border rgba(106,143,74,.25), --glass-border-hi, --hairline, --hairline-soft
- *   Pista/Gold  --gold-1 #8fad6a (light pista), --gold-2 #5a7d3a (deep pista),
- *               --gold-grad (135deg, #c9b86a to #c9972a: accent words, prices, primary buttons),
+ *   Canvas      --bg-0 #070b14, --bg-1 #0d1424, --bg-2 #141d33, --glass,
+ *               --glass-border rgba(252,229,156,.14), --glass-border-hi, --hairline, --hairline-soft
+ *   Gold        --gold-1 #fce59c (light gold), --gold-2 #d4af37 (deep gold),
+ *               --gold-grad (135deg, #fce59c to #d4af37: accent words, prices, primary buttons),
  *               active segments, avatars, step numerals),
  *               --gold-a06 --gold-a08 --gold-a10 --gold-a12 --gold-a30 --gold-a35 --gold-a40
- *               (translucent --gold-2 tints for fills, borders and rings)
+ *               (translucent #d4af37 tints for fills, borders and rings)
  *   Status      --emerald --emerald-soft (verified / included / success only) --whatsapp --danger
  *   Text        --text-hi --text-md --text-lo (#8a93ab) --on-cta (text on gold / WhatsApp fills)
  *   Services    --svc-blue --svc-orange --svc-purple --svc-red --svc-green --svc-teal --svc-violet --svc-pink
@@ -30,7 +30,8 @@
  *   .container        centered, max-width 1200px, 24px side padding (16px < 640px)
  *   .section          vertical padding 96px desktop / 64px tablet / 48px mobile
  *   .section--alt     .section on the --bg-1 alternating background
- *   .section-head     centered heading block (eyebrow + H2 + lead), bottom gap 56px, lead max 620px
+ *   .section-head     left-aligned heading block (eyebrow + H2 + lead), bottom gap 48px, lead max 620px;
+ *                     >= 1024px: heading left, lead right
  *   .eyebrow          0.75rem uppercase, 0.24em tracking, --gold-2, 32px x 1px --gold-2 line before
  *   .gradient-text    --gold-grad text (accent words; italic Heading_Font inside h1/h2/h3)
  *   .price            Heading_Font 1.75rem 700 in --gold-grad text
@@ -51,50 +52,49 @@
  */
 
 :root {
-  /* Canvas — warm cream (deeper, not bright white) */
-  --bg-0: #efe8d8;
-  --bg-1: #e5dbc8;
-  --bg-2: #d8ccb4;
-  --glass: rgba(235, 225, 200, 0.65);
-  --glass-border: rgba(106, 143, 74, 0.25);
-  --glass-border-hi: rgba(106, 143, 74, 0.50);
-  --hairline: rgba(90, 110, 55, 0.18);
-  --hairline-soft: rgba(90, 110, 55, 0.10);
+  /* Canvas — prototype midnight navy */
+  --bg-0: #070b14;
+  --bg-1: #0d1424;
+  --bg-2: #141d33;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(252, 229, 156, 0.14);
+  --glass-border-hi: rgba(252, 229, 156, 0.35);
+  --hairline: rgba(255, 255, 255, 0.08);
+  --hairline-soft: rgba(255, 255, 255, 0.06);
 
-  /* Pista (pistachio) accent — primary interactive colour */
-  --gold-1: #8fad6a;          /* light pista — links, hover */
-  --gold-2: #5a7d3a;          /* deep pista — borders, eyebrow, labels */
-  --gold-grad: linear-gradient(135deg, #c9b86a 0%, #c9972a 100%); /* gold gradient for CTAs / prices */
-  --gold-a06: rgba(106, 143, 74, 0.06);
-  --gold-a08: rgba(106, 143, 74, 0.08);
-  --gold-a10: rgba(106, 143, 74, 0.10);
-  --gold-a12: rgba(106, 143, 74, 0.12);
-  --gold-a30: rgba(106, 143, 74, 0.30);
-  --gold-a35: rgba(106, 143, 74, 0.35);
-  --gold-a40: rgba(106, 143, 74, 0.40);
+  /* Gold accent — primary interactive colour */
+  --gold-1: #fce59c;          /* light gold — links, hover */
+  --gold-2: #d4af37;          /* deep gold — borders, eyebrow, labels */
+  --gold-grad: linear-gradient(135deg, #fce59c 0%, #d4af37 100%); /* gold gradient for CTAs / prices */
+  --gold-a06: rgba(212, 175, 55, 0.06);
+  --gold-a08: rgba(212, 175, 55, 0.08);
+  --gold-a10: rgba(212, 175, 55, 0.10);
+  --gold-a12: rgba(212, 175, 55, 0.12);
+  --gold-a30: rgba(212, 175, 55, 0.30);
+  --gold-a35: rgba(212, 175, 55, 0.35);
+  --gold-a40: rgba(212, 175, 55, 0.40);
 
   /* Status */
-  --emerald: #3d9e6a;
-  --emerald-soft: #7ecba0;
+  --emerald: #10b981;
+  --emerald-soft: #6ee7b7;
   --whatsapp: #25D366;
-  --danger: #c0504a;
+  --danger: #f87171;
 
-  /* Text — dark olive-brown on cream */
-  --text-hi: #1e2410;          /* deep olive charcoal */
-  --text-md: #3d4a22;          /* medium olive green-brown */
-  --text-lo: #7a8c5a;          /* muted pista */
-  --on-cta: #faf6ee;           /* cream text on pista / gold buttons */
+  /* Text — warm ivory on navy */
+  --text-hi: #f5f1e8;
+  --text-md: #b8bfd0;
+  --text-lo: #8a93ab;
+  --on-cta: #070b14;           /* navy text on gold / WhatsApp fills */
 
-  /* Service accents — deep pista */
-  --svc-blue: #5a7d3a;
-  --svc-orange: #5a7d3a;
-  --svc-purple: #5a7d3a;
-  --svc-red: #5a7d3a;
-  --svc-green: #5a7d3a;
-  --svc-teal: #5a7d3a;
-  --svc-violet: #5a7d3a;
-  --svc-pink: #5a7d3a;
-
+  /* Service accents — gold */
+  --svc-blue: #d4af37;
+  --svc-orange: #d4af37;
+  --svc-purple: #d4af37;
+  --svc-red: #d4af37;
+  --svc-green: #d4af37;
+  --svc-teal: #d4af37;
+  --svc-violet: #d4af37;
+  --svc-pink: #d4af37;
   /* Radius */
   --r-sm: 8px;
   --r-md: 16px;
@@ -102,8 +102,8 @@
   --r-pill: 999px;
 
   /* Shadows */
-  --shadow-card: 0 10px 30px -10px rgba(60, 80, 30, 0.18);
-  --shadow-gold: 0 8px 28px -8px rgba(201, 151, 42, 0.40);
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  --shadow-gold: 0 8px 28px -8px rgba(212, 175, 55, 0.45);
 
   /* Spacing scale */
   --space-1: 4px;
@@ -147,7 +147,7 @@
   /* Focus */
   --focus-ring: 2px solid var(--gold-2);
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 @media (min-width: 640px) {
@@ -380,18 +380,42 @@ h3 .gradient-text {
   background: var(--bg-1);
 }
 
+/* Inner pages (/trips, /forex, /quote) have no hero: clear the fixed header. */
+.page-top {
+  padding-top: var(--header-h);
+}
+
+/* Left-aligned, matching the hero. From 1024px the eyebrow + heading sit on the left and the
+   lead paragraph on the right, bottom-aligned with the heading. */
 .section-head {
-  margin: 0 auto 56px;
-  text-align: center;
+  margin: 0 0 var(--space-7);
+  text-align: left;
 }
 
-.section-head .eyebrow {
-  justify-content: center;
-}
-
-.section-head p {
+.section-head p:not(.eyebrow) {
   max-width: 620px;
-  margin: var(--space-4) auto 0;
+  margin: var(--space-4) 0 0;
+}
+
+@media (min-width: 1024px) {
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    column-gap: var(--space-8);
+    align-items: end;
+  }
+
+  .section-head > .eyebrow,
+  .section-head > h2 {
+    grid-column: 1;
+  }
+
+  .section-head p:not(.eyebrow) {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    margin: 0;
+    padding-bottom: 6px;
+  }
 }
 
 /* ---------- Glass surface ---------- */

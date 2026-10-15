@@ -4,6 +4,7 @@
 // body limits and the honeypot inside handleQuote (Requirements 37.1, 39.1, 39.3).
 import { randomInt } from "node:crypto";
 import { handleQuote } from "@/lib/server/quote";
+import { notifyQuote } from "@/lib/server/notify";
 import { createRateLimiter } from "@/lib/server/rate-limit";
 import { API_LIMITS, RATE_LIMITS } from "@/lib/data";
 import { getLeadDb } from "@/lib/supabase/db";
@@ -46,6 +47,7 @@ export async function POST(request) {
       db: getLeadDb(),
       limiter,
       log,
+      notify: (row, ticketId) => notifyQuote(row, ticketId, log),
     });
     return json(res.body, res.status, res.headers);
   } catch {

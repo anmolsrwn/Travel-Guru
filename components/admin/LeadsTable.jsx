@@ -1,12 +1,13 @@
-// Leads table for /admin (Requirement 43.1, 43.2, 43.6). Rendered on the
+// Quotations (leads) table for /admin (Requirement 43.1, 43.2, 43.6). Rendered on the
 // server; only the per-row StatusSelect is a client component. Read-only apart
 // from status: no edit or delete controls.
-import { BUSINESS, LEAD_STATUSES } from "@/lib/data";
-import { buildWhatsAppUrl } from "@/lib/logic";
+import { BUSINESS, CURRENCIES, LEAD_STATUSES } from "@/lib/data";
+import { buildWhatsAppUrl, formatPrice } from "@/lib/logic";
 import { updateLeadStatus } from "@/app/admin/(protected)/leads-actions";
 import StatusSelect from "./StatusSelect";
 import t from "@/components/ui/DataTable.module.css";
 import s from "./LeadsTable.module.css";
+import a from "./AdminPage.module.css";
 
 const dateTime = new Intl.DateTimeFormat("en-IN", {
   timeZone: BUSINESS.timeZone,
@@ -43,9 +44,30 @@ function travellers(lead) {
   return lead.child_ages ? `${adults}, ${kids} (ages ${lead.child_ages})` : `${adults}, ${kids}`;
 }
 
+/**
+ * "Forex: Buy $1,000.00 USD" line from lead.forex_details; null when there is
+ * nothing usable. Tolerates null, missing keys, non-numeric amounts and an
+ * unknown direction. The amount is a foreign-currency amount.
+ */
+function forexSummary(details) {
+  if (!details || typeof details !== "object") return null;
+  const { direction, currency, amount } = details;
+  const dir = direction === "buy" ? "Buy" : direction === "sell" ? "Sell" : "";
+  const code = typeof currency === "string" ? currency : "";
+  const num = typeof amount === "number" && Number.isFinite(amount) && amount >= 0 ? amount : null;
+  let amountText = "";
+  if (num !== null) {
+    amountText =
+      code && Object.hasOwn(CURRENCIES, code) ? formatPrice(num, code) : String(num);
+  }
+  const parts = [dir, amountText, code].filter(Boolean);
+  return parts.length ? `Forex: ${parts.join(" ")}` : null;
+}
+
 export default function LeadsTable({ leads }) {
   return (
-    <div className={`${t.wrap} ${s.scroll}`}>
+    <div className={a.card}>
+    <div className={`${t.wrap} ${a.scroll}`}>
       <table className={`${t.table} ${s.table}`}>
         <caption className="sr-only">Quotation requests, newest first</caption>
         <thead>
@@ -88,7 +110,25 @@ export default function LeadsTable({ leads }) {
                 <td data-label="Email">
                   {lead.email ? <a href={`mailto:${lead.email}`}>{lead.email}</a> : "—"}
                 </td>
-                <td data-label="Services">{(lead.services || []).join(", ") || "—"}</td>
+                <td data-label="Services">
+                  {(lead.services || []).length ? (
+                    <span className={s.badges}>
+                      {lead.services.map((service) => (
+                        <span
+                          key={service}
+                          className={service === "Forex" ? `${s.badge} ${s.badgeForex}` : s.badge}
+                        >
+                          {service}
+                        </span>
+                      ))}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                  {forexSummary(lead.forex_details) && (
+                    <span className={s.forexDetails}>{forexSummary(lead.forex_details)}</span>
+                  )}
+                </td>
                 <td data-label="Destinations">{lead.destinations || "—"}</td>
                 <td data-label="Departure">
                   {[lead.departure_city, lead.departure_date].filter(Boolean).join(", ") || "—"}
@@ -114,6 +154,7 @@ export default function LeadsTable({ leads }) {
           })}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

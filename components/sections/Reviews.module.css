@@ -5,7 +5,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   color: var(--text-hi);
 }
@@ -136,7 +136,7 @@
 .badges {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-3);
   margin: var(--space-7) 0 0;
   padding: 0;

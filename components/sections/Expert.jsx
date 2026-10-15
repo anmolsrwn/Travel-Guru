@@ -31,7 +31,7 @@ export function Expert() {
   const greeting = `Hi ${brandName}, I'd like to talk to your travel expert about planning a trip.`;
 
   return (
-    <section id="expert" className="section" aria-labelledby="expert-title">
+    <section id="expert" className="section section--alt" aria-labelledby="expert-title">
       <div className={`container ${styles.grid}`}>
         <div className={styles.media}>
           <div className={styles.frame}>
@@ -55,6 +55,20 @@ export function Expert() {
           </h2>
           <p className={styles.role}>{expert.role}</p>
           <p className={styles.bio}>{expert.bio}</p>
+          {expert.story?.map((para) => (
+            <p key={para} className={styles.bio}>
+              {para}
+            </p>
+          ))}
+          {expert.highlights?.length > 0 && (
+            <ul className={styles.highlights}>
+              {expert.highlights.map((h) => (
+                <li key={h} className={styles.chip}>
+                  {h}
+                </li>
+              ))}
+            </ul>
+          )}
 
           <div className={styles.actions}>
             <a href={`tel:${phone.tel}`} className={`${btn.btn} ${btn.primary} ${styles.action}`}>

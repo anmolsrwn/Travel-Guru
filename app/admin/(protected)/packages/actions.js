@@ -5,7 +5,7 @@
 // Only async functions are exported ('use server' rule).
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getAdminSession } from "@/lib/server/admin-session";
+import { getVerifiedAdminSession } from "@/lib/server/admin-session";
 import { runAdminMutation } from "@/lib/server/admin";
 import { fieldsFromFormData, readPackageForm } from "@/lib/package-form";
 
@@ -50,7 +50,7 @@ function revalidatePackagePaths(id) {
  * @param {FormData} formData
  */
 export async function savePackage(_prevState, formData) {
-  const session = await getAdminSession();
+  const session = await getVerifiedAdminSession();
   if (session.status === "not-configured") return { ok: false, message: MESSAGES.notConfigured, errors: {} };
 
   // Parsing is pure; runAdminMutation checks the admin before looking at the result.
@@ -92,7 +92,7 @@ export async function savePackage(_prevState, formData) {
  * @param {string} id
  */
 export async function deletePackage(id) {
-  const session = await getAdminSession();
+  const session = await getVerifiedAdminSession();
   if (session.status === "not-configured") return { ok: false, message: MESSAGES.notConfigured };
 
   const result = await runAdminMutation({

@@ -19,7 +19,7 @@ const isoArb = fc.date({ min: new Date('2025-01-01'), max: new Date('2030-12-31'
   .map((d) => d.toISOString().slice(0, 10));
 
 const validFormArb = fc.record({
-  services: fc.subarray(QUOTE_SERVICE_OPTIONS, { minLength: 1, maxLength: 8 }),
+  services: fc.subarray(QUOTE_SERVICE_OPTIONS, { minLength: 1, maxLength: 7 }),
   fullName: fc.stringMatching(/^[A-Za-z ]{2,20}/),
   phone: fc.integer({ min: 10000000, max: 9999999999 }).map((n) => String(n)),
   adults: fc.integer({ min: 1, max: 12 }),

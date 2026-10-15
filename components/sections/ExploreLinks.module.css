@@ -1,0 +1,63 @@
+/* Front-page gateway cards: 1 col < 640px, 3 cols from 768px. */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Doubled selector: overrides padding from the shared Card module. */
+.card.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 32px 28px;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--gold-a30);
+  border-radius: 50%;
+  background: var(--gold-a10);
+  color: var(--gold-2);
+  font-size: 1.25rem;
+}
+
+.title {
+  margin-top: var(--space-4, 16px);
+  font-size: var(--fs-h3);
+}
+
+.text {
+  margin-top: var(--space-3, 12px);
+  color: var(--text-md);
+}
+
+/* margin-top:auto pins the link to the card bottom so the three cards line up. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: auto;
+  padding-top: var(--space-4, 16px);
+  font-weight: 600;
+  color: var(--gold-1);
+}
+
+.link:hover {
+  color: var(--gold-2);
+}

@@ -2,6 +2,7 @@
 // The background photo is a CSS background on a decorative layer, so a failed
 // load simply leaves the --bg-0 fill under the overlay (Req 5.11).
 // The image itself is preloaded by app/(site)/page.js (Req 5.9).
+import Link from "next/link";
 import { BUSINESS } from "@/lib/data";
 import { WhatsAppButton } from "@/components/client/WhatsAppButton";
 import btn from "@/components/ui/Button.module.css";
@@ -35,10 +36,10 @@ export function Hero() {
         </p>
 
         <div className={styles.ctas}>
-          <a href="#quote" className={`${btn.btn} ${btn.primary}`}>
+          <Link href="/quote" className={`${btn.btn} ${btn.primary}`}>
             <span aria-hidden="true">⚡</span>
             Get My Custom Quote
-          </a>
+          </Link>
           <WhatsAppButton message={`Hi ${brandName}, I'd like help planning a trip.`}>
             WhatsApp Us
           </WhatsAppButton>
