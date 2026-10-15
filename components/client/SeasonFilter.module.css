@@ -142,11 +142,11 @@
 /* Card itself */
 .card {
   width: 100%;
-  background: var(--bg-0);
-  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--gold-a30);
   border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 8px 24px -6px rgba(60, 80, 30, 0.12);
   display: flex;
   flex-direction: column;
 }
@@ -154,15 +154,22 @@
 /* Use translucent glass fill where backdrop-filter is supported */
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .card {
-    background: var(--glass);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    backdrop-filter: blur(14px) saturate(140%);
+    background: rgba(255, 255, 255, 0.45);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+    backdrop-filter: blur(18px) saturate(120%);
   }
 }
 
 .cardCenter {
-  box-shadow: 0 20px 60px -10px rgba(106, 143, 74, 0.25);
-  border-color: var(--glass-border-hi);
+  box-shadow: 0 16px 48px -8px rgba(106, 143, 74, 0.22);
+  border-color: var(--gold-a40);
+  background: rgba(255, 255, 255, 0.70);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .cardCenter {
+    background: rgba(255, 255, 255, 0.60);
+  }
 }
 
 .cardSide {
@@ -270,22 +277,24 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--bg-2);
-  border: 1px solid var(--glass-border);
-  color: var(--text-hi);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--gold-a30);
+  color: var(--gold-2);
   font-size: 1.5rem;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 200ms, border-color 200ms;
-  box-shadow: var(--shadow-card);
+  transition: all 200ms ease;
+  box-shadow: 0 4px 12px rgba(60, 80, 30, 0.12);
 }
 
 .arrow:hover {
-  background: var(--gold-a12);
-  border-color: var(--gold-a40);
+  background: var(--gold-2);
+  border-color: var(--gold-2);
+  color: var(--on-cta);
+  transform: translateY(-50%) scale(1.08);
 }
 
 .arrowLeft { left: 0; }
