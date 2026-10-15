@@ -6,8 +6,8 @@
   width: var(--logo-size, 48px);
   height: var(--logo-size, 48px);
   object-fit: contain;
-  border-radius: 50%;
-  /* The logo artwork carries its own blue ring on a transparent background, so no extra ring here. */
+  /* The artwork is a circular badge on a transparent background (the plane sits just outside the
+     ring), so no border-radius clipping and no extra ring here. */
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
 }
 
