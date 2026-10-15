@@ -131,7 +131,7 @@ test("validateQuoteForm: boundary lengths are accepted", () => {
       email: `${"a".repeat(245)}@mail.com`,
       adults: 12,
       children: 8,
-      services: [...Array(7)].map(() => "Hotels"),
+      services: [...Array(6)].map(() => "Hotels"),
     },
     TODAY,
   );

@@ -174,9 +174,10 @@ test('CALLBACK_SLOTS has at least 1 entry with id and label', () => {
 // ---------------------------------------------------------------------------
 // QUOTE_SERVICE_OPTIONS
 // ---------------------------------------------------------------------------
-test('QUOTE_SERVICE_OPTIONS has 7 unique non-empty strings', () => {
-  assert.equal(QUOTE_SERVICE_OPTIONS.length, 7);
-  assert.equal(new Set(QUOTE_SERVICE_OPTIONS).size, 7, 'Must be unique');
+test('QUOTE_SERVICE_OPTIONS has 6 unique non-empty strings', () => {
+  assert.equal(QUOTE_SERVICE_OPTIONS.length, 6);
+  assert.equal(new Set(QUOTE_SERVICE_OPTIONS).size, 6, 'Must be unique');
+  assert.ok(!QUOTE_SERVICE_OPTIONS.includes('Packages'), 'Packages is merged into Holidays');
   assert.ok(!QUOTE_SERVICE_OPTIONS.includes('Forex'), 'Forex is not a quote form option');
   assert.ok(!QUOTE_SERVICE_OPTIONS.includes('Travel Insurance'), 'Travel Insurance is not a quote form option');
   for (const o of QUOTE_SERVICE_OPTIONS) assert.ok(o.trim().length > 0);

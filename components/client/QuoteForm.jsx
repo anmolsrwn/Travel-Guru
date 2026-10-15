@@ -63,7 +63,10 @@ import svc from "@/components/ui/Service.module.css";
 import st from "@/components/ui/Stepper.module.css";
 import s from "./QuoteForm.module.css";
 
-const SERVICE_BY_OPTION = Object.fromEntries(SERVICES.map((service) => [service.quoteOption, service]));
+// First card wins when two cards share a quote option (Holidays and Packages both map to "Holidays").
+const SERVICE_BY_OPTION = Object.fromEntries(
+  [...SERVICES].reverse().map((service) => [service.quoteOption, service]),
+);
 
 const SELECT_OPTIONS = {
   duration: DURATIONS.map((v) => ({ value: v, label: v })),
