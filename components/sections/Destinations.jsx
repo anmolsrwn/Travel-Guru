@@ -43,18 +43,26 @@ function DestinationTile({ dest, hasPackage }) {
 }
 
 /**
- * @param {{ destinations?: object[], packages?: object[], children?: React.ReactNode }} props
+ * @param {{
+ *   destinations?: object[],
+ *   packages?: object[],
+ *   seasonal?: React.ReactNode,
+ *   children?: React.ReactNode
+ * }} props
  */
-export default function Destinations({ destinations = [], packages = [], children }) {
+export default function Destinations({ destinations = [], packages = [], seasonal, children }) {
   const hasChildren = children != null && children !== false;
   const packageIds = new Set(packages.map((p) => p.id));
   return (
     <section id="destinations" className="section" aria-labelledby="destinations-title">
       <div className="container">
         <header className="section-head">
-          <p className="eyebrow">Popular Destinations</p>
-          <h2 id="destinations-title">Plan Your Next Getaway Today</h2>
+          <p className="eyebrow">Plan Your Next Getaway</p>
+          <h2 id="destinations-title">Where would you like to go?</h2>
+          <p className="lead">Pick a destination, or start with what is best this month.</p>
         </header>
+
+        {seasonal ?? null}
 
         {hasChildren
           ? children

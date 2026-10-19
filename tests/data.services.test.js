@@ -43,16 +43,12 @@ test('SERVICES: field shapes and one-to-one quote/accent mapping (Req 7.2)', () 
     assert.ok(Array.isArray(s.bullets) && s.bullets.length >= 1 && s.bullets.length <= 3);
     assert.ok(s.bullets.every(nonEmpty));
     assert.ok(SERVICE_ACCENTS.includes(s.accent));
-    // The Forex card is display-only (it links to the calculator); every other card maps to a quote option.
-    if (s.id !== 'forex') assert.ok(QUOTE_SERVICE_OPTIONS.includes(s.quoteOption));
+    // The quote form now only offers Flights and Train, so other cards need not map to a form option.
+    assert.ok(nonEmpty(s.quoteOption) || s.id === 'forex');
   }
   assert.equal(new Set(SERVICES.map((s) => s.id)).size, 8);
-  // Forex and Travel Insurance are not quote form options, so the remaining card options
-  // are exactly the quote options.
-  assert.deepEqual(
-    [...new Set(SERVICES.filter((s) => s.id !== 'forex').map((s) => s.quoteOption))].sort(),
-    [...QUOTE_SERVICE_OPTIONS].sort()
-  );
+  // Every quote form option is still backed by a service card.
+  for (const o of QUOTE_SERVICE_OPTIONS) assert.ok(SERVICES.some((s) => s.quoteOption === o), o);
   assert.equal(new Set(SERVICES.map((s) => s.accent)).size, 8);
   assert.equal(new Set(SERVICE_ACCENTS).size, 8);
   assert.deepEqual([...SERVICES.map((s) => s.accent)].sort(), [...SERVICE_ACCENTS].sort());

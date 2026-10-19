@@ -80,21 +80,21 @@ test('checkService never unchecks; toggleService toggles (Req 7.5, 7.6)', () => 
 });
 
 test('applyQuoteIntent: service ticks and clears only the services error (Req 7.7)', () => {
-  const form = { ...initialQuoteForm(), services: ['Visa'] };
+  const form = { ...initialQuoteForm(), services: ['Train'] };
   const errors = { services: 'x', phone: 'y' };
   const r = applyQuoteIntent(form, errors, { type: 'service', value: 'Flights', nonce: 1 });
-  assert.deepEqual(r.form.services, ['Flights', 'Visa']);
+  assert.deepEqual(r.form.services, ['Flights', 'Train']);
   assert.deepEqual(r.errors, { phone: 'y' });
 });
 
-test('applyQuoteIntent: destination replaces destinations and ticks Holidays (Req 35.4)', () => {
-  const form = { ...initialQuoteForm(), services: ['Visa'], destinations: 'Goa' };
+test('applyQuoteIntent: destination replaces destinations and keeps existing services (Req 35.4)', () => {
+  const form = { ...initialQuoteForm(), services: ['Train'], destinations: 'Goa' };
   const errors = { services: 'x', destinations: 'z', email: 'e' };
   const r = applyQuoteIntent(form, errors, {
     type: 'destination', value: 'Bali', service: DESTINATION_QUOTE_SERVICE, nonce: 2,
   });
   assert.equal(r.form.destinations, 'Bali');
-  assert.ok(r.form.services.includes('Visa') && r.form.services.includes(DESTINATION_QUOTE_SERVICE));
+  assert.deepEqual(r.form.services, ['Train']); // Holidays is no longer a quote option, so nothing extra is ticked
   assert.deepEqual(r.errors, { email: 'e' });
 });
 

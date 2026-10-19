@@ -2,6 +2,7 @@
 // 14.9, 14.11, 14.12, 14.14, 27.8). No React; DOM-free except postBooking, which takes `fetch`
 // as a parameter so node --test can drive it. Relative imports: also loaded by node --test.
 import { API_LIMITS } from "../../lib/data.js";
+import { sendWeb3Alert } from "./web3Notify.js";
 
 export const BOOKING_ENDPOINT = "/api/booking";
 
@@ -106,7 +107,24 @@ export async function postBooking(data, { fetchImpl = globalThis.fetch, timeoutM
     } catch {
       body = null;
     }
-    return bookingOutcome(res.status, body);
+    const outcome = bookingOutcome(res.status, body);
+    if (outcome.type === "voucher") {
+      sendWeb3Alert(`New booking ${outcome.bookingRef} - ${payload.leadName ?? ""}`, {
+        "Booking ref": outcome.bookingRef,
+        Name: payload.leadName,
+        Phone: payload.phone,
+        Email: payload.email,
+        Package: payload.packageId,
+        Tier: payload.tierId,
+        "Travel date": payload.travelDate,
+        Adults: payload.adults,
+        Children: payload.children,
+        "Total (INR)": outcome.breakdown.total,
+        "Advance (INR)": outcome.breakdown.advance,
+        "Balance (INR)": outcome.breakdown.balance,
+      });
+    }
+    return outcome;
   } catch {
     return { type: "failed" };
   } finally {

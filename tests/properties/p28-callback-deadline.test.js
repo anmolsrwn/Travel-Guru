@@ -13,7 +13,7 @@ test(propertyTag(28, 'Callback deadline offset'), () => {
   // 28a: deadline = now + hours * 3600000 ms
   assertProperty(
     fc.property(
-      fc.date({ min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
+      fc.date({ noInvalidDate: true, min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
       slotIdArb,
       hoursArb,
       (now, slotId, hours) => {
@@ -27,7 +27,7 @@ test(propertyTag(28, 'Callback deadline offset'), () => {
   // 28b: uses BUSINESS.callbackHours when hours omitted
   assertProperty(
     fc.property(
-      fc.date({ min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
+      fc.date({ noInvalidDate: true, min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
       slotIdArb,
       (now, slotId) => {
         const deadline = computeCallbackDeadline(now, slotId);
@@ -40,7 +40,7 @@ test(propertyTag(28, 'Callback deadline offset'), () => {
   // 28c: input `now` is not mutated
   assertProperty(
     fc.property(
-      fc.date({ min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
+      fc.date({ noInvalidDate: true, min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
       slotIdArb,
       (now, slotId) => {
         const originalTime = now.getTime();
@@ -53,7 +53,7 @@ test(propertyTag(28, 'Callback deadline offset'), () => {
   // 28d: result is a Date (not the same object as now)
   assertProperty(
     fc.property(
-      fc.date({ min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
+      fc.date({ noInvalidDate: true, min: new Date('2024-01-01'), max: new Date('2030-12-31') }),
       slotIdArb,
       (now, slotId) => {
         const deadline = computeCallbackDeadline(now, slotId, 24);

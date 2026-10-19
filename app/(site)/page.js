@@ -6,8 +6,7 @@ import { BUSINESS, REVIEWS } from "@/lib/data";
 import { loadSiteContent } from "@/lib/server/siteContent";
 import { fetchGoogleReviews } from "@/lib/server/googleReviews";
 import Hero from "@/components/sections/Hero";
-import SeasonalSection from "@/components/sections/SeasonalSection";
-import SeasonFilter from "@/components/client/SeasonFilter";
+import SeasonRail from "@/components/client/SeasonRail";
 import ExploreLinks from "@/components/sections/ExploreLinks";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Services from "@/components/sections/Services";
@@ -40,17 +39,18 @@ export default async function Home() {
   // Only plain serialisable data (arrays of plain objects) is passed as props.
   return (
     <main id="main">
-      {/* Story order: hook → proof → gateway → what we do → where → when → how → who →
-          reviews → answers → policies → act. Section backgrounds alternate plain / alt
-          (--bg-1) so each block reads as its own band. */}
+      {/* Story order: hook → proof → gateway → what we do → where (with this month's
+          best picks) → how → who → reviews → answers → policies → act. Section
+          backgrounds alternate plain / alt (--bg-1) so each block reads as its own band. */}
       <Hero />
-      <SeasonalSection packages={packages}>
-        <SeasonFilter packages={packages} />
-      </SeasonalSection>
       <TrustStrip />
       <ExploreLinks />
       <Services />
-      <Destinations destinations={destinations} packages={packages}>
+      <Destinations
+        destinations={destinations}
+        packages={packages}
+        seasonal={<SeasonRail packages={packages} />}
+      >
         <DestinationTiles destinations={destinations} packages={packages} />
       </Destinations>
       <HowItWorks />

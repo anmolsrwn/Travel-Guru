@@ -4,10 +4,10 @@
 import { test } from 'node:test';
 import { propertyTag, assertProperty, fc } from '../helpers.js';
 import { composeQuoteWhatsAppMessage } from '../../lib/logic.js';
-import { QUOTE_SERVICE_OPTIONS, CALLBACK_SLOTS } from '../../lib/data.js';
+import { QUOTE_SERVICE_OPTIONS, CALLBACK_SLOTS, BUSINESS } from '../../lib/data.js';
 
 const validFormArb = fc.record({
-  services: fc.subarray(QUOTE_SERVICE_OPTIONS, { minLength: 1, maxLength: 4 }),
+  services: fc.subarray(QUOTE_SERVICE_OPTIONS, { minLength: 1, maxLength: Math.min(4, QUOTE_SERVICE_OPTIONS.length) }),
   fullName: fc.string({ minLength: 2, maxLength: 40 }),
   phone: fc.integer({ min: 10000000, max: 9999999999 }).map((n) => String(n)),
   adults: fc.integer({ min: 1, max: 6 }),
@@ -24,7 +24,7 @@ test(propertyTag(25, 'WhatsApp quote message completeness'), () => {
   // 25a: message is always a non-empty string
   assertProperty(
     fc.property(validFormArb, (data) => {
-      const msg = composeQuoteWhatsAppMessage(data);
+      const msg = composeQuoteWhatsAppMessage(data, BUSINESS);
       return typeof msg === 'string' && msg.trim().length > 0;
     }),
   );
@@ -32,15 +32,15 @@ test(propertyTag(25, 'WhatsApp quote message completeness'), () => {
   // 25b: message contains the fullName
   assertProperty(
     fc.property(validFormArb.filter((d) => d.fullName.trim().length >= 2), (data) => {
-      const msg = composeQuoteWhatsAppMessage(data);
-      return msg.includes(data.fullName);
+      const msg = composeQuoteWhatsAppMessage(data, BUSINESS);
+      return msg.includes(data.fullName.trim());
     }),
   );
 
   // 25c: message contains at least one service
   assertProperty(
     fc.property(validFormArb, (data) => {
-      const msg = composeQuoteWhatsAppMessage(data);
+      const msg = composeQuoteWhatsAppMessage(data, BUSINESS);
       return data.services.some((svc) => msg.includes(svc));
     }),
   );
@@ -48,8 +48,8 @@ test(propertyTag(25, 'WhatsApp quote message completeness'), () => {
   // 25d: message contains the destinations when non-empty
   assertProperty(
     fc.property(validFormArb.filter((d) => d.destinations.trim().length > 0), (data) => {
-      const msg = composeQuoteWhatsAppMessage(data);
-      return msg.includes(data.destinations);
+      const msg = composeQuoteWhatsAppMessage(data, BUSINESS);
+      return msg.includes(data.destinations.trim());
     }),
   );
 });

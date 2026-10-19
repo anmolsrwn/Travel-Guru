@@ -15,6 +15,13 @@ const LINKS = [
     cta: "Browse trips",
   },
   {
+    href: "/#custom-trips",
+    icon: "🧭",
+    title: "Custom Trips",
+    text: "Destinations without a ready itinerary. We design the whole trip around you.",
+    cta: "See custom trips",
+  },
+  {
     href: "/forex",
     icon: "₹",
     title: "Forex Counter",

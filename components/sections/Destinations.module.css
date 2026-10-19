@@ -9,6 +9,60 @@
   margin: 0 0 24px;
 }
 
+/* Region toggle (segmented tablist, same look as CategoryFilter tabs). */
+.regionTabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.regionTablist {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--r-pill);
+  background-color: var(--bg-2);
+}
+
+.regionTab {
+  min-height: 40px;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-md);
+  font-family: var(--font-body-stack);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 200ms cubic-bezier(.2, .7, .2, 1),
+    background-color 200ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.regionTab:hover {
+  color: var(--text-hi);
+}
+
+.regionTab[aria-selected="true"] {
+  background-color: var(--gold-2);
+  background-image: var(--gold-grad);
+  color: var(--bg-0);
+}
+
+.regionTab:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .regionTab {
+    transition: none;
+  }
+}
+
 /* Mobile: single horizontal scroll-snap row confined to the grid.
    Top padding leaves room for the hover lift inside the scroll container. */
 .grid {
@@ -124,4 +178,12 @@
   .tile:hover .media img {
     transform: none;
   }
+}
+
+/* Scroll target for /#custom-trips (clears the sticky header). */
+.anchor {
+  display: block;
+  position: relative;
+  top: -96px;
+  height: 0;
 }

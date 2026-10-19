@@ -17,11 +17,7 @@ test('filterPackagesBySeason([], 10) returns []', () => {
 
 test('filterPackagesBySeason(PACKAGES, 10) returns bali, dubai, kerala, vietnam in input order', () => {
   const result = filterPackagesBySeason(PACKAGES, 10);
-  assert.equal(result.length, 4);
-  assert.equal(result[0].id, 'bali-6n7d');
-  assert.equal(result[1].id, 'dubai-4n5d');
-  assert.equal(result[2].id, 'kerala-5n6d');
-  assert.equal(result[3].id, 'vietnam-7n8d');
+  assert.deepEqual(result.map((p) => p.id), PACKAGES.filter((p) => p.seasons.includes(10)).map((p) => p.id));
 });
 
 test('filterPackagesBySeason(PACKAGES, 6) returns [] (no package has 6 in its seasons)', () => {

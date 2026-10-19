@@ -29,7 +29,7 @@ test(propertyTag(16, 'Cancellation monotonicity and invalid input'), () => {
     fc.property(
       fc.oneof(
         fc.integer({ min: -1000, max: -1 }),
-        fc.float({ min: 0.1, max: 100.9, noNaN: true }).filter((n) => !Number.isInteger(n)),
+        fc.float({ min: Math.fround(0.1), max: Math.fround(100.9), noNaN: true }).filter((n) => !Number.isInteger(n)),
         fc.constant(NaN),
         fc.constant(null),
         fc.string(),

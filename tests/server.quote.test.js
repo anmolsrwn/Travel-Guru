@@ -12,7 +12,7 @@ const NOW = new Date("2025-12-31T19:00:00.000Z");
 const DEADLINE = "2026-01-01T19:00:00.000Z";
 
 const VALID = {
-  services: ["Flights", "Hotels"],
+  services: ["Flights", "Train"],
   destinations: "Bali",
   departureDate: "2026-02-10",
   fullName: "  Asha Verma ",

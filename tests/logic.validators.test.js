@@ -7,7 +7,7 @@ import * as L from "../lib/logic.js";
 const TODAY = "2026-03-10";
 
 const validQuote = () => ({
-  services: ["Flights", "Hotels"],
+  services: ["Flights", "Train"],
   departureCity: "Raipur",
   destinations: "Bali",
   departureDate: "2026-03-11",
@@ -81,7 +81,7 @@ test("validateQuoteForm: missing fields use defaults and never throw", () => {
 });
 
 test("validateQuoteForm: WhatsApp mode is lenient on empty email, date and destinations", () => {
-  const minimal = { services: ["Visa"], fullName: "Ravi", phone: "9876543210" };
+  const minimal = { services: ["Train"], fullName: "Ravi", phone: "9876543210" };
   assert.equal(L.validateQuoteForm(minimal, TODAY, { mode: "whatsapp" }).valid, true);
   assert.deepEqual(keys(L.validateQuoteForm({ ...minimal, email: "nope" }, TODAY, { mode: "whatsapp" })), ["email"]);
   assert.deepEqual(
@@ -131,7 +131,7 @@ test("validateQuoteForm: boundary lengths are accepted", () => {
       email: `${"a".repeat(245)}@mail.com`,
       adults: 12,
       children: 8,
-      services: [...Array(6)].map(() => "Hotels"),
+      services: [...Array(2)].map(() => "Train"),
     },
     TODAY,
   );

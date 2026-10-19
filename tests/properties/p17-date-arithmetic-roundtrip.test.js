@@ -6,7 +6,7 @@ import { propertyTag, assertProperty, fc } from '../helpers.js';
 import { addDays } from '../../lib/logic.js';
 
 // Generate valid ISO dates in a safe range (avoid year overflow)
-const isoArb = fc.date({ min: new Date('2000-01-01'), max: new Date('2050-12-31') })
+const isoArb = fc.date({ noInvalidDate: true, min: new Date('2000-01-01'), max: new Date('2050-12-31') })
   .map((d) => d.toISOString().slice(0, 10));
 
 test(propertyTag(17, 'Date arithmetic round-trip'), () =>

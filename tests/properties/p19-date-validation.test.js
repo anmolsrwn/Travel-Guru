@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import { propertyTag, assertProperty, fc } from '../helpers.js';
 import { isDateOnOrAfter, minDepartureDate } from '../../lib/logic.js';
 
-const isoArb = fc.date({ min: new Date('2000-01-01'), max: new Date('2050-12-31') })
+const isoArb = fc.date({ noInvalidDate: true, min: new Date('2000-01-01'), max: new Date('2050-12-31') })
   .map((d) => d.toISOString().slice(0, 10));
 
 test(propertyTag(19, 'Date validation'), () => {

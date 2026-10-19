@@ -42,7 +42,7 @@ function buildCsp() {
     // server components and server actions on our own origin. In development the HMR websocket
     // is same-origin as well. wa.me / tel: / mailto: links are navigations, not fetches, and are
     // not governed by connect-src.
-    "connect-src 'self'",
+    "connect-src 'self' https://api.web3forms.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",

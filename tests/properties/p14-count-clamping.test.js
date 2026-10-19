@@ -50,7 +50,7 @@ test(propertyTag(14, 'Count clamping'), () => {
 
   // 14d: truncates fractional part
   assertProperty(
-    fc.property(fc.float({ min: 1.0, max: 11.99, noNaN: true }), (n) => {
+    fc.property(fc.float({ min: 1.0, max: Math.fround(11.99), noNaN: true }), (n) => {
       return clampCount(n, 1, 12) === Math.trunc(n);
     }),
   );

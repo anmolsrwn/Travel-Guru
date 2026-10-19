@@ -16,6 +16,8 @@ const EXACT_DEPS = {
   '@supabase/supabase-js': '2.117.3',
   '@supabase/ssr': '0.12.7',
   'server-only': '0.0.1',
+  exceljs: '4.4.0',
+  nodemailer: '10.1.1',
 };
 const EXACT_DEV_DEPS = {
   'fast-check': '4.10.2',

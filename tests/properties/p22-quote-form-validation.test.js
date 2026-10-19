@@ -15,7 +15,7 @@ import {
   LIMITS,
 } from '../../lib/data.js';
 
-const isoArb = fc.date({ min: new Date('2025-01-01'), max: new Date('2030-12-31') })
+const isoArb = fc.date({ noInvalidDate: true, min: new Date('2025-01-01'), max: new Date('2030-12-31') })
   .map((d) => d.toISOString().slice(0, 10));
 
 const validFormArb = fc.record({

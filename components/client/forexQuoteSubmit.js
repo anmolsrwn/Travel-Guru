@@ -1,6 +1,7 @@
 // Client helper for POST /api/forex-quote. Never throws; takes `fetchImpl` so it is testable.
 import { API_LIMITS } from "../../lib/data.js";
 import { isValidTicketId } from "../../lib/logic.js";
+import { sendWeb3Alert } from "./web3Notify.js";
 
 export const FOREX_QUOTE_ENDPOINT = "/api/forex-quote";
 
@@ -38,6 +39,14 @@ export async function postForexQuote(data, { fetchImpl = globalThis.fetch, timeo
     if (res.status === 201) {
       const deadline = typeof b.callbackDeadline === "string" ? new Date(b.callbackDeadline) : null;
       if (isValidTicketId(b.ticketId) && deadline && !Number.isNaN(deadline.getTime()) && b.quote && typeof b.quote === "object") {
+        sendWeb3Alert(`New forex quote ${b.ticketId} - ${data?.fullName ?? ""}`, {
+          "Ticket ID": b.ticketId,
+          Name: data?.fullName,
+          Phone: data?.phone,
+          Email: data?.email,
+          Forex: `${data?.direction ?? ""} ${data?.amount ?? ""} ${data?.currency ?? ""}`,
+          "Call-back slot": data?.callbackSlot,
+        });
         return {
           type: "ticket",
           ticketId: b.ticketId,

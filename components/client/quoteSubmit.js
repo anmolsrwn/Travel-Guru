@@ -3,6 +3,7 @@
 // parameter so node --test can drive it. Relative imports: also loaded by node --test.
 import { API_LIMITS, BUSINESS, CALLBACK_SLOTS } from "../../lib/data.js";
 import { composeQuoteWhatsAppMessage, isValidTicketId } from "../../lib/logic.js";
+import { sendWeb3Alert } from "./web3Notify.js";
 
 export const QUOTE_ENDPOINT = "/api/quote";
 
@@ -67,7 +68,25 @@ export async function postQuote(data, { fetchImpl = globalThis.fetch, timeoutMs 
     } catch {
       body = null;
     }
-    return quoteOutcome(res.status, body);
+    const outcome = quoteOutcome(res.status, body);
+    if (outcome.type === "ticket") {
+      sendWeb3Alert(`New quote ${outcome.ticketId} - ${data?.fullName ?? ""}`, {
+        "Ticket ID": outcome.ticketId,
+        Name: data?.fullName,
+        Phone: data?.phone,
+        Email: data?.email,
+        Services: data?.services,
+        From: data?.departureCity,
+        Destinations: data?.destinations,
+        "Departure date": data?.departureDate,
+        Adults: data?.adults,
+        Children: data?.children,
+        Budget: data?.budget,
+        "Call-back slot": callbackSlotLabel(data?.callbackSlot),
+        Notes: data?.notes,
+      });
+    }
+    return outcome;
   } catch {
     return { type: "failed" };
   } finally {

@@ -5,6 +5,7 @@
 // (Requirements 38.1, 39.1, 39.3).
 import { randomInt } from "node:crypto";
 import { handleBooking } from "@/lib/server/booking";
+import { notifyBooking } from "@/lib/server/notify";
 import { createRateLimiter } from "@/lib/server/rate-limit";
 import { API_LIMITS, RATE_LIMITS } from "@/lib/data";
 import { getBookingDb } from "@/lib/supabase/db";
@@ -48,6 +49,7 @@ export async function POST(request) {
       db: getBookingDb(),
       limiter,
       log,
+      notify: (row, bookingRef) => notifyBooking(row, bookingRef, log),
     });
     return json(res.body, res.status, res.headers);
   } catch {
