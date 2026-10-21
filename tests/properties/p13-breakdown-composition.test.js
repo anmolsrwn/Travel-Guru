@@ -9,7 +9,7 @@ import { BUSINESS, LIMITS } from '../../lib/data.js';
 const policy = BUSINESS.paymentPolicy;
 const [aMin, aMax] = LIMITS.adults;
 const [cMin, cMax] = LIMITS.children;
-const isoArb = fc.date({ min: new Date('2024-01-01'), max: new Date('2029-12-31') })
+const isoArb = fc.date({ noInvalidDate: true, min: new Date('2024-01-01'), max: new Date('2029-12-31') })
   .map((d) => d.toISOString().slice(0, 10));
 
 const tierArb = fc.record({

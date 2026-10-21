@@ -11,7 +11,7 @@ test("buildMetadata derives title, URLs, image and icons from BUSINESS", () => {
   assert.equal(m.openGraph.url, BUSINESS.website, "openGraph.url");
   assert.deepEqual(
     m.openGraph.images[0],
-    { url: "https://travelgururaipur.com/assets/og-image.jpg", width: 1200, height: 630, alt: m.title },
+    { url: new URL(BUSINESS.ogImage, BUSINESS.website).href, width: 1200, height: 630, alt: m.title },
     "openGraph.images[0]",
   );
   assert.equal(m.twitter.card, "summary_large_image", "twitter.card");
