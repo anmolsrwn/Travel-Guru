@@ -4,7 +4,7 @@
 // (leads-actions.js, bookings/actions.js, packages/actions.js, ...).
 // Sign-in only: there is deliberately no sign-up action (Requirement 42.1).
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { createSessionClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/server/rate-limit";
 import { clientIp } from "@/lib/server/request";
@@ -26,7 +26,7 @@ const MESSAGES = Object.freeze({
 
 /**
  * useActionState-compatible sign-in action.
- * Returns { error } on failure; redirects to /admin on success.
+ * Returns { error } on failure; redirects (replacing the history entry) to /admin on success.
  * @param {{ error?: string } | undefined} _prevState
  * @param {FormData} formData
  */
@@ -57,8 +57,9 @@ export async function signIn(_prevState, formData) {
     return { error: MESSAGES.unavailable };
   }
 
-  // redirect() throws, so it stays outside the try block.
-  redirect("/admin");
+  // redirect() throws, so it stays outside the try block. "replace" swaps the login page out of
+  // the history, so Back from the admin area does not return to the sign-in form.
+  redirect("/admin", RedirectType.replace);
 }
 
 /** Ends the Supabase session, clears its cookies and returns to the login page (Requirement 42.7). */

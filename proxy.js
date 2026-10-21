@@ -61,6 +61,16 @@ export async function proxy(request) {
   const { pathname } = request.nextUrl;
   const isLogin = pathname === LOGIN_PATH || pathname === `${LOGIN_PATH}/`;
 
+  // Already signed in: the sign-in form is pointless (and Back from the admin area lands on it),
+  // so send the visitor straight to the admin home.
+  if (user && isLogin) {
+    const redirect = NextResponse.redirect(new URL("/admin", request.url));
+    for (const cookie of response.cookies.getAll()) {
+      redirect.cookies.set(cookie);
+    }
+    response = redirect;
+  }
+
   if (!user && !isLogin) {
     const redirect = NextResponse.redirect(new URL(LOGIN_PATH, request.url));
     // Carry any cookie changes (e.g. cleared stale session) onto the redirect.
