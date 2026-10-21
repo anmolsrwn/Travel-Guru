@@ -53,30 +53,27 @@ export default async function AdminBookingsPage({ searchParams }) {
   const from = (page - 1) * PAGE_SIZE;
 
   // Falls back to the old column list (everything shown as read) until migration 0004 is applied.
-  let { data, count, error } = await session.supabase
-    .from("bookings")
-    .select(COLUMNS, { count: "exact" })
-    .order("created_at", { ascending: false })
-    .order("id", { ascending: false })
-    .range(from, from + PAGE_SIZE - 1);
-  if (error) {
-    const retry = await session.supabase
+  let { data, count, error } = { data: null, count: 0, error: null };
+  let unreadCount = 0;
+  let openCount = 0;
+  const pageQuery = (columns) =>
+    session.supabase
       .from("bookings")
-      .select(COLUMNS.replace(",is_read,is_done", ""), { count: "exact" })
+      .select(columns, { count: "exact" })
       .order("created_at", { ascending: false })
       .order("id", { ascending: false })
       .range(from, from + PAGE_SIZE - 1);
-    ({ data, count, error } = retry);
-  }
+  const countWhere = (column) =>
+    session.supabase.from("bookings").select("id", { count: "exact", head: true }).eq(column, false);
 
-  const { count: unreadCount } = await session.supabase
-    .from("bookings")
-    .select("id", { count: "exact", head: true })
-    .eq("is_read", false);
-  const { count: openCount } = await session.supabase
-    .from("bookings")
-    .select("id", { count: "exact", head: true })
-    .eq("is_done", false);
+  // The three queries are independent: run them together (one round trip of waiting, not three).
+  const [main, unread, open] = await Promise.all([pageQuery(COLUMNS), countWhere("is_read"), countWhere("is_done")]);
+  ({ data, count, error } = main);
+  unreadCount = unread.count ?? 0;
+  openCount = open.count ?? 0;
+  if (error) {
+    ({ data, count, error } = await pageQuery(COLUMNS.replace(",is_read,is_done", "")));
+  }
 
   const rows = (data ?? []).map((r) => ({ ...r, package_title: r.packages?.title ?? null }));
   const total = typeof count === "number" ? count : from + rows.length;

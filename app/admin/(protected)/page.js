@@ -33,31 +33,27 @@ export default async function AdminLeadsPage({ searchParams }) {
   const from = (page - 1) * PAGE_SIZE;
 
   // Falls back to the old column list (everything shown as read) until migration 0003 is applied.
-  let { data, count, error } = await session.supabase
-    .from("leads")
-    .select(LEAD_COLUMNS, { count: "exact" })
-    .order("created_at", { ascending: false })
-    .order("id", { ascending: false })
-    .range(from, from + PAGE_SIZE - 1);
-  if (error) {
-    const retry = await session.supabase
+  let { data, count, error } = { data: null, count: 0, error: null };
+  let unreadCount = 0;
+  let openCount = 0;
+  const pageQuery = (columns) =>
+    session.supabase
       .from("leads")
-      .select(LEAD_COLUMNS.replace(", is_read, is_done", ""), { count: "exact" })
+      .select(columns, { count: "exact" })
       .order("created_at", { ascending: false })
       .order("id", { ascending: false })
       .range(from, from + PAGE_SIZE - 1);
-    ({ data, count, error } = retry);
+  const countWhere = (column) =>
+    session.supabase.from("leads").select("id", { count: "exact", head: true }).eq(column, false);
+
+  // The three queries are independent: run them together (one round trip of waiting, not three).
+  const [main, unread, open] = await Promise.all([pageQuery(LEAD_COLUMNS), countWhere("is_read"), countWhere("is_done")]);
+  ({ data, count, error } = main);
+  unreadCount = unread.count ?? 0;
+  openCount = open.count ?? 0;
+  if (error) {
+    ({ data, count, error } = await pageQuery(LEAD_COLUMNS.replace(", is_read, is_done", "")));
   }
-
-  const { count: unreadCount } = await session.supabase
-    .from("leads")
-    .select("id", { count: "exact", head: true })
-    .eq("is_read", false);
-
-  const { count: openCount } = await session.supabase
-    .from("leads")
-    .select("id", { count: "exact", head: true })
-    .eq("is_done", false);
 
   const leads = error ? [] : data || [];
   const total = error ? 0 : count ?? leads.length;

@@ -114,7 +114,8 @@ async function updateLeadFlag(id, column, value) {
     return { ok: false, error: "Could not update. Try again." };
   }
 
-  revalidatePath("/admin");
+  // No revalidatePath here: the row updates optimistically, and re-rendering the whole list on every
+  // open / tick would add a full round trip. The counts in the header refresh on the next visit.
   return { ok: true, value: result.value };
 }
 
