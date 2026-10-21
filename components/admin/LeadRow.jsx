@@ -5,12 +5,12 @@
 //   - new (unread) rows are bold; opening the row makes it normal weight.
 //   - the tick box starts empty; the admin ticks it once the query is solved (unticking undoes it).
 import { useId, useState, useTransition } from "react";
-import { setLeadDone, setLeadRead } from "@/app/admin/(protected)/leads-actions";
 import s from "./LeadsTable.module.css";
 
 const COLUMNS = 5;
 
-export default function LeadRow({ id, name, initialRead, initialDone, label, detail, children }) {
+// `onRead(id, bool)` and `onDone(id, bool)` are Server Actions returning { ok, error? }.
+export default function LeadRow({ id, name, initialRead, initialDone, label, detail, onRead, onDone, children }) {
   const detailId = useId();
   const [read, setRead] = useState(initialRead);
   const [done, setDone] = useState(initialDone);
@@ -37,7 +37,7 @@ export default function LeadRow({ id, name, initialRead, initialDone, label, det
   }
 
   function markRead() {
-    if (!read) save(setLeadRead, setRead, false, true);
+    if (!read) save(onRead, setRead, false, true);
   }
 
   function toggle() {
@@ -47,7 +47,7 @@ export default function LeadRow({ id, name, initialRead, initialDone, label, det
 
   function onTick(next) {
     markRead(); // solving a query implies it was opened
-    save(setLeadDone, setDone, done, next);
+    save(onDone, setDone, done, next);
   }
 
   const className = [s.summary, read ? "" : s.unread, done ? s.done : ""].filter(Boolean).join(" ");

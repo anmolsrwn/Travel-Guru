@@ -3,9 +3,10 @@
 // from status: no edit or delete controls.
 import { BUSINESS, CURRENCIES, LEAD_STATUSES } from "@/lib/data";
 import { buildWhatsAppUrl, formatPrice } from "@/lib/logic";
-import { updateLeadStatus } from "@/app/admin/(protected)/leads-actions";
+import { setLeadDone, setLeadRead, updateLeadStatus } from "@/app/admin/(protected)/leads-actions";
 import StatusSelect from "./StatusSelect";
 import LeadRow from "./LeadRow";
+import Detail from "./DetailItem";
 import t from "@/components/ui/DataTable.module.css";
 import s from "./LeadsTable.module.css";
 import a from "./AdminPage.module.css";
@@ -63,16 +64,6 @@ function forexSummary(details) {
   }
   const parts = [dir, amountText, code].filter(Boolean);
   return parts.length ? `Forex: ${parts.join(" ")}` : null;
-}
-
-/** One label / value pair in the expanded details. */
-function Detail({ label, wide, children }) {
-  return (
-    <div className={wide ? `${s.detailItem} ${s.detailWide}` : s.detailItem}>
-      <dt>{label}</dt>
-      <dd>{children}</dd>
-    </div>
-  );
 }
 
 /** Everything except name, date and services: shown when a row is expanded. */
@@ -146,6 +137,8 @@ export default function LeadsTable({ leads }) {
                   name={lead.full_name}
                   initialRead={lead.is_read !== false}
                   initialDone={lead.is_done === true}
+                  onRead={setLeadRead}
+                  onDone={setLeadDone}
                   label={`${lead.ticket_id} from ${lead.full_name}`}
                   detail={<LeadDetails lead={lead} />}
                 >

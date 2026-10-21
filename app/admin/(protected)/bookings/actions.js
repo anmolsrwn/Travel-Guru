@@ -66,3 +66,50 @@ export async function updateBookingStatus(_prevState, formData) {
   revalidatePath("/admin/bookings");
   return { ok: true, status: result.value, message: `Saved: ${result.value}` };
 }
+
+/** Shared admin-gated write of one boolean booking flag (`is_read` or `is_done`). */
+async function updateBookingFlag(id, column, value) {
+  const bookingId = typeof id === "string" ? id : "";
+  const session = await getVerifiedAdminSession();
+  if (session.status === "not-configured") return { ok: false, error: MESSAGES.notConfigured };
+
+  const result = await runAdminMutation({
+    getUser: () => (session.status === "ok" ? session.user : null),
+    isAdminUser: () => session.status === "ok",
+    validate() {
+      const errors = {};
+      if (!UUID_RE.test(bookingId)) errors.id = "Invalid booking id";
+      if (typeof value !== "boolean") errors.value = "Invalid value";
+      return { valid: Object.keys(errors).length === 0, errors };
+    },
+    async mutate() {
+      const { data, error } = await session.supabase
+        .from("bookings")
+        .update({ [column]: value })
+        .eq("id", bookingId)
+        .select(column);
+      if (error) throw error;
+      if (!Array.isArray(data) || data.length !== 1) throw new Error(MESSAGES.notFound);
+      return data[0][column];
+    },
+  });
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") return { ok: false, error: MESSAGES.unauthenticated };
+    if (result.reason === "forbidden") return { ok: false, error: MESSAGES.forbidden };
+    return { ok: false, error: "Could not update. Try again." };
+  }
+
+  revalidatePath("/admin/bookings");
+  return { ok: true, value: result.value };
+}
+
+/** Mark a booking opened (read) or unread: `(id, read)`. */
+export async function setBookingRead(id, read) {
+  return updateBookingFlag(id, "is_read", read);
+}
+
+/** Mark a booking dealt with (ticked) or not: `(id, done)`. */
+export async function setBookingDone(id, done) {
+  return updateBookingFlag(id, "is_done", done);
+}

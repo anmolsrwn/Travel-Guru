@@ -32,6 +32,8 @@ const COLUMNS = [
   "balance_due_date",
   "rule",
   "status",
+  "is_read",
+  "is_done",
   // Many-to-one embed through bookings.package_id → packages.id (admins read all packages).
   "packages(title)",
 ].join(",");
@@ -50,12 +52,31 @@ export default async function AdminBookingsPage({ searchParams }) {
   const page = parsePage((await searchParams)?.page);
   const from = (page - 1) * PAGE_SIZE;
 
-  const { data, count, error } = await session.supabase
+  // Falls back to the old column list (everything shown as read) until migration 0004 is applied.
+  let { data, count, error } = await session.supabase
     .from("bookings")
     .select(COLUMNS, { count: "exact" })
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .range(from, from + PAGE_SIZE - 1);
+  if (error) {
+    const retry = await session.supabase
+      .from("bookings")
+      .select(COLUMNS.replace(",is_read,is_done", ""), { count: "exact" })
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    ({ data, count, error } = retry);
+  }
+
+  const { count: unreadCount } = await session.supabase
+    .from("bookings")
+    .select("id", { count: "exact", head: true })
+    .eq("is_read", false);
+  const { count: openCount } = await session.supabase
+    .from("bookings")
+    .select("id", { count: "exact", head: true })
+    .eq("is_done", false);
 
   const rows = (data ?? []).map((r) => ({ ...r, package_title: r.packages?.title ?? null }));
   const total = typeof count === "number" ? count : from + rows.length;
@@ -67,7 +88,7 @@ export default async function AdminBookingsPage({ searchParams }) {
       <PageHeader
         eyebrow="Reservations"
         title="Bookings"
-        subtitle={`Booking requests, newest first. Times are shown in IST.${error ? "" : ` ${total} total.`}`}
+        subtitle={`Booking requests, newest first. Times are shown in IST.${error ? "" : ` ${total} total${unreadCount ? `, ${unreadCount} unread` : ""}${openCount ? `, ${openCount} to do` : ""}.`}`}
       />
       <ExportPanel type="bookings" />
       {error ? (
