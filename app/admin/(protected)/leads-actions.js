@@ -68,3 +68,62 @@ export async function updateLeadStatus(_prev, formData) {
   revalidatePath("/admin");
   return { ok: true, status: result.value };
 }
+
+/** Shared admin-gated write of one boolean lead flag (`is_read` or `is_done`). */
+async function updateLeadFlag(id, column, value) {
+  const leadId = typeof id === "string" ? id : "";
+  const supabase = await createSessionClient();
+  if (!supabase) return { ok: false, error: "Database not configured" };
+
+  const result = await runAdminMutation({
+    async getUser() {
+      const { data, error } = await supabase.auth.getUser();
+      return error ? null : (data?.user ?? null);
+    },
+    async isAdminUser(user) {
+      const { data, error } = await supabase
+        .from("admins")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data?.user_id === user.id;
+    },
+    validate() {
+      const errors = {};
+      if (!UUID_RE.test(leadId)) errors.id = "Invalid lead id";
+      if (typeof value !== "boolean") errors.value = "Invalid value";
+      return { valid: Object.keys(errors).length === 0, errors };
+    },
+    async mutate() {
+      const { data, error } = await supabase
+        .from("leads")
+        .update({ [column]: value })
+        .eq("id", leadId)
+        .select(column)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error("Lead not found");
+      return data[column];
+    },
+  });
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") return { ok: false, error: "Your session has expired. Sign in again." };
+    if (result.reason === "forbidden") return { ok: false, error: "Not authorised" };
+    return { ok: false, error: "Could not update. Try again." };
+  }
+
+  revalidatePath("/admin");
+  return { ok: true, value: result.value };
+}
+
+/** Mark a quotation opened (read) or unread: `(id, read)`. */
+export async function setLeadRead(id, read) {
+  return updateLeadFlag(id, "is_read", read);
+}
+
+/** Mark a quotation solved (ticked) or not: `(id, done)`. */
+export async function setLeadDone(id, done) {
+  return updateLeadFlag(id, "is_done", done);
+}

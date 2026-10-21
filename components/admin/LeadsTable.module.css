@@ -101,3 +101,115 @@
   color: var(--danger);
   font-weight: 600;
 }
+
+/* Inbox-style state: unread rows are bold with a gold marker; the tick box means "solved". */
+.unread > td {
+  font-weight: 700;
+  color: var(--text-hi);
+}
+
+.unread > td:first-child {
+  box-shadow: inset 3px 0 0 var(--gold-2);
+}
+
+.check {
+  width: 44px;
+  text-align: center;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--gold-2);
+  cursor: pointer;
+}
+
+.check input:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.rowError {
+  display: block;
+  margin-top: 4px;
+  color: var(--danger);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Solved rows are dimmed so open queries stand out. */
+.done > td {
+  opacity: 0.6;
+}
+
+/* ---------- Collapsible rows ---------- */
+
+.summary {
+  cursor: pointer;
+}
+
+.nameButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nameButton:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.chevron {
+  width: 32px;
+  color: var(--gold-2);
+  text-align: center;
+}
+
+.detailRow > td {
+  background: var(--gold-a06);
+}
+
+.detailCell > .details {
+  flex: 1;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px 24px;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.detailItem dt {
+  margin: 0 0 2px;
+  color: var(--text-lo);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detailItem dd {
+  margin: 0;
+  color: var(--text-hi);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.detailWide {
+  grid-column: 1 / -1;
+}
+
+.notesText {
+  display: block;
+  max-width: 60ch;
+  white-space: pre-wrap;
+}

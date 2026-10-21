@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 50;
 const LEAD_COLUMNS =
-  "id, ticket_id, created_at, services, departure_city, destinations, departure_date, adults, children, child_ages, hotel_category, meal_plan, budget, full_name, phone, email, callback_slot, callback_deadline, notes, forex_details, status";
+  "id, ticket_id, created_at, services, departure_city, destinations, departure_date, adults, children, child_ages, hotel_category, meal_plan, budget, full_name, phone, email, callback_slot, callback_deadline, notes, forex_details, status, is_read, is_done";
 
 /** `?page=` → positive integer (default 1). */
 function parsePage(raw) {
@@ -32,12 +32,32 @@ export default async function AdminLeadsPage({ searchParams }) {
   const page = parsePage((await searchParams)?.page);
   const from = (page - 1) * PAGE_SIZE;
 
-  const { data, count, error } = await session.supabase
+  // Falls back to the old column list (everything shown as read) until migration 0003 is applied.
+  let { data, count, error } = await session.supabase
     .from("leads")
     .select(LEAD_COLUMNS, { count: "exact" })
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .range(from, from + PAGE_SIZE - 1);
+  if (error) {
+    const retry = await session.supabase
+      .from("leads")
+      .select(LEAD_COLUMNS.replace(", is_read, is_done", ""), { count: "exact" })
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    ({ data, count, error } = retry);
+  }
+
+  const { count: unreadCount } = await session.supabase
+    .from("leads")
+    .select("id", { count: "exact", head: true })
+    .eq("is_read", false);
+
+  const { count: openCount } = await session.supabase
+    .from("leads")
+    .select("id", { count: "exact", head: true })
+    .eq("is_done", false);
 
   const leads = error ? [] : data || [];
   const total = error ? 0 : count ?? leads.length;
@@ -48,7 +68,7 @@ export default async function AdminLeadsPage({ searchParams }) {
       <PageHeader
         eyebrow="Enquiries"
         title="Quotations"
-        subtitle={`Quotation requests, newest first. Times are shown in IST.${error ? "" : ` ${total} total.`}`}
+        subtitle={`Quotation requests, newest first. Times are shown in IST.${error ? "" : ` ${total} total${unreadCount ? `, ${unreadCount} unread` : ""}${openCount ? `, ${openCount} to solve` : ""}.`}`}
       />
       <ExportPanel type="leads" />
 
