@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo SVG to JPG Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #canvas {
+            border: 2px solid #ccc;
+            margin: 20px 0;
+            display: none;
+        }
+        #preview {
+            margin: 20px 0;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .info {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Travel Guru Raipur Logo Converter</h1>
+    <div class="info">
+        <p>This will convert the logo.svg to JPG format with white background</p>
+    </div>
+    
+    <div id="preview">
+        <h3>Preview:</h3>
+        <img id="svgPreview" src="public/assets/logo.svg" alt="Logo Preview" style="max-width: 300px;">
+    </div>
+    
+    <button onclick="convertToJPG()">Convert to JPG</button>
+    <button id="downloadBtn" onclick="downloadJPG()" style="display: none;">Download JPG</button>
+    
+    <canvas id="canvas"></canvas>
+    
+    <div id="result"></div>
+
+    <script>
+        let jpgDataUrl = null;
+
+        async function convertToJPG() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const resultDiv = document.getElementById('result');
+            
+            // Set canvas size (2x for better quality)
+            const width = 400;
+            const height = 420;
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Fill with white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+            
+            try {
+                // Load and draw SVG
+                const response = await fetch('public/assets/logo.svg');
+                const svgText = await response.text();
+                const blob = new Blob([svgText], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Convert to JPG
+                    jpgDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                    
+                    // Show result
+                    resultDiv.innerHTML = `
+                        <h3>Converted JPG:</h3>
+                        <img src="${jpgDataUrl}" style="max-width: 300px; border: 2px solid #ccc;">
+                        <p style="color: green; font-weight: bold;">✓ Conversion successful!</p>
+                    `;
+                    
+                    document.getElementById('downloadBtn').style.display = 'inline-block';
+                    URL.revokeObjectURL(url);
+                };
+                
+                img.onerror = function() {
+                    resultDiv.innerHTML = '<p style="color: red;">Error loading SVG</p>';
+                };
+                
+                img.src = url;
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        function downloadJPG() {
+            if (!jpgDataUrl) {
+                alert('Please convert the image first!');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.download = 'logo.jpg';
+            link.href = jpgDataUrl;
+            link.click();
+        }
+    </script>
+</body>
+</html>

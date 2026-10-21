@@ -1,3 +1,6 @@
 {
-    "javascript.autoClosingTags": false
+    "javascript.autoClosingTags": false,
+    "kiroAgent.enableDebugLogs": true,
+    "kiroAgent.notifications.agent.success": true,
+    "kiroAgent.notifications.agent.failure": true
 }

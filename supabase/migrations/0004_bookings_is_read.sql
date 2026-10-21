@@ -18,4 +18,4 @@ end $$;
 alter table public.bookings add column if not exists is_done boolean not null default false;
 
 -- Admins may update only status, is_read and is_done (RLS still requires is_admin()).
-grant update (status, is_read, is_done) on public.bookings to authenticated;
+grant update (status, is_read, is_done) on public.bookings to authenticated;  
