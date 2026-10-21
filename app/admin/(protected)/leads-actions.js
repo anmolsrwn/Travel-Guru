@@ -128,3 +128,89 @@ export async function setLeadRead(id, read) {
 export async function setLeadDone(id, done) {
   return updateLeadFlag(id, "is_done", done);
 }
+
+/** Permanently delete a quotation: `(id)`. Admin-gated; RLS needs the 0005 delete policy. */
+export async function deleteLead(id) {
+  const leadId = typeof id === "string" ? id : "";
+  const supabase = await createSessionClient();
+  if (!supabase) return { ok: false, error: "Database not configured" };
+
+  const result = await runAdminMutation({
+    async getUser() {
+      const { data, error } = await supabase.auth.getUser();
+      return error ? null : (data?.user ?? null);
+    },
+    async isAdminUser(user) {
+      const { data, error } = await supabase
+        .from("admins")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data?.user_id === user.id;
+    },
+    validate() {
+      const errors = {};
+      if (!UUID_RE.test(leadId)) errors.id = "Invalid lead id";
+      return { valid: Object.keys(errors).length === 0, errors };
+    },
+    async mutate() {
+      const { data, error } = await supabase.from("leads").delete().eq("id", leadId).select("id");
+      if (error) throw error;
+      if (!Array.isArray(data) || data.length !== 1) throw new Error("Lead not found");
+      return true;
+    },
+  });
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") return { ok: false, error: "Your session has expired. Sign in again." };
+    if (result.reason === "forbidden") return { ok: false, error: "Not authorised" };
+    return { ok: false, error: "Could not delete. Try again." };
+  }
+
+  revalidatePath("/admin");
+  return { ok: true };
+}
+
+/** Permanently delete several quotations: `(ids)`. Returns { ok, deleted: string[] }. */
+export async function deleteLeads(ids) {
+  const list = Array.isArray(ids) ? [...new Set(ids)] : [];
+  const supabase = await createSessionClient();
+  if (!supabase) return { ok: false, error: "Database not configured" };
+
+  const result = await runAdminMutation({
+    async getUser() {
+      const { data, error } = await supabase.auth.getUser();
+      return error ? null : (data?.user ?? null);
+    },
+    async isAdminUser(user) {
+      const { data, error } = await supabase
+        .from("admins")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data?.user_id === user.id;
+    },
+    validate() {
+      const errors = {};
+      if (list.length === 0 || list.length > 200) errors.ids = "Select between 1 and 200 rows";
+      else if (!list.every((id) => typeof id === "string" && UUID_RE.test(id))) errors.ids = "Invalid lead id";
+      return { valid: Object.keys(errors).length === 0, errors };
+    },
+    async mutate() {
+      const { data, error } = await supabase.from("leads").delete().in("id", list).select("id");
+      if (error) throw error;
+      return (data ?? []).map((row) => row.id);
+    },
+  });
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") return { ok: false, error: "Your session has expired. Sign in again." };
+    if (result.reason === "forbidden") return { ok: false, error: "Not authorised" };
+    return { ok: false, error: "Could not delete. Try again." };
+  }
+
+  revalidatePath("/admin");
+  return { ok: true, deleted: result.value };
+}

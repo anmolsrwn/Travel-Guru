@@ -213,3 +213,80 @@
   max-width: 60ch;
   white-space: pre-wrap;
 }
+
+/* ---------- Delete ---------- */
+
+.remove {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.deleteButton {
+  padding: 4px 10px;
+  border: 1px solid var(--danger);
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--danger);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.deleteButton:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+/* ---------- Bulk select ---------- */
+
+.bulkBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--gold-a06);
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+.clearButton {
+  padding: 4px 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--text-md);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.deleteButton:disabled,
+.clearButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.selectBox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--gold-2);
+  cursor: pointer;
+}
+
+.selectCell {
+  width: 36px;
+  text-align: center;
+}

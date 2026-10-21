@@ -6,7 +6,8 @@ import { BOOKING_STATUSES } from "@/lib/data";
 import BookingStatusSelect from "@/components/admin/BookingStatusSelect";
 import LeadRow from "./LeadRow";
 import Detail from "./DetailItem";
-import { setBookingDone, setBookingRead } from "@/app/admin/(protected)/bookings/actions";
+import { BulkProvider, SelectAll } from "./BulkSelect";
+import { deleteBooking, deleteBookings, setBookingDone, setBookingRead } from "@/app/admin/(protected)/bookings/actions";
 import t from "@/components/ui/DataTable.module.css";
 import a from "./AdminPage.module.css";
 import s from "./LeadsTable.module.css";
@@ -72,17 +73,20 @@ function BookingDetails({ b }) {
 /** @param {{ rows: Array<Record<string, any>> }} props */
 export default function BookingsTable({ rows }) {
   return (
+    <BulkProvider ids={rows.map((b) => b.id)} onDeleteMany={deleteBookings} noun="booking">
     <div className={a.card}>
       <div className={`${t.wrap} ${a.scroll}`}>
         <table className={`${t.table} ${s.table}`}>
           <caption className="sr-only">Booking requests, newest first. Select a row to see its details.</caption>
           <thead>
             <tr>
+              <th scope="col"><SelectAll /></th>
               <th scope="col"><span className="sr-only">Done</span></th>
               <th scope="col">Name</th>
               <th scope="col">Date</th>
               <th scope="col">Package</th>
               <th scope="col"><span className="sr-only">Details</span></th>
+              <th scope="col"><span className="sr-only">Delete</span></th>
             </tr>
           </thead>
           <tbody>
@@ -95,6 +99,7 @@ export default function BookingsTable({ rows }) {
                 initialDone={b.is_done === true}
                 onRead={setBookingRead}
                 onDone={setBookingDone}
+                onDelete={deleteBooking}
                 label={`${b.booking_ref} from ${b.lead_name}`}
                 detail={<BookingDetails b={b} />}
               >
@@ -106,5 +111,6 @@ export default function BookingsTable({ rows }) {
         </table>
       </div>
     </div>
+    </BulkProvider>
   );
 }

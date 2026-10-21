@@ -114,3 +114,67 @@ export async function setBookingRead(id, read) {
 export async function setBookingDone(id, done) {
   return updateBookingFlag(id, "is_done", done);
 }
+
+/** Permanently delete a booking: `(id)`. Admin-gated; RLS needs the 0005 delete policy. */
+export async function deleteBooking(id) {
+  const bookingId = typeof id === "string" ? id : "";
+  const session = await getVerifiedAdminSession();
+  if (session.status === "not-configured") return { ok: false, error: MESSAGES.notConfigured };
+
+  const result = await runAdminMutation({
+    getUser: () => (session.status === "ok" ? session.user : null),
+    isAdminUser: () => session.status === "ok",
+    validate() {
+      const errors = {};
+      if (!UUID_RE.test(bookingId)) errors.id = "Invalid booking id";
+      return { valid: Object.keys(errors).length === 0, errors };
+    },
+    async mutate() {
+      const { data, error } = await session.supabase.from("bookings").delete().eq("id", bookingId).select("id");
+      if (error) throw error;
+      if (!Array.isArray(data) || data.length !== 1) throw new Error(MESSAGES.notFound);
+      return true;
+    },
+  });
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") return { ok: false, error: MESSAGES.unauthenticated };
+    if (result.reason === "forbidden") return { ok: false, error: MESSAGES.forbidden };
+    return { ok: false, error: "Could not delete. Try again." };
+  }
+
+  revalidatePath("/admin/bookings");
+  return { ok: true };
+}
+
+/** Permanently delete several bookings: `(ids)`. Returns { ok, deleted: string[] }. */
+export async function deleteBookings(ids) {
+  const list = Array.isArray(ids) ? [...new Set(ids)] : [];
+  const session = await getVerifiedAdminSession();
+  if (session.status === "not-configured") return { ok: false, error: MESSAGES.notConfigured };
+
+  const result = await runAdminMutation({
+    getUser: () => (session.status === "ok" ? session.user : null),
+    isAdminUser: () => session.status === "ok",
+    validate() {
+      const errors = {};
+      if (list.length === 0 || list.length > 200) errors.ids = "Select between 1 and 200 rows";
+      else if (!list.every((id) => typeof id === "string" && UUID_RE.test(id))) errors.ids = "Invalid booking id";
+      return { valid: Object.keys(errors).length === 0, errors };
+    },
+    async mutate() {
+      const { data, error } = await session.supabase.from("bookings").delete().in("id", list).select("id");
+      if (error) throw error;
+      return (data ?? []).map((row) => row.id);
+    },
+  });
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") return { ok: false, error: MESSAGES.unauthenticated };
+    if (result.reason === "forbidden") return { ok: false, error: MESSAGES.forbidden };
+    return { ok: false, error: "Could not delete. Try again." };
+  }
+
+  revalidatePath("/admin/bookings");
+  return { ok: true, deleted: result.value };
+}

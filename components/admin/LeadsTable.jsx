@@ -3,7 +3,8 @@
 // from status: no edit or delete controls.
 import { BUSINESS, CURRENCIES, LEAD_STATUSES } from "@/lib/data";
 import { buildWhatsAppUrl, formatPrice } from "@/lib/logic";
-import { setLeadDone, setLeadRead, updateLeadStatus } from "@/app/admin/(protected)/leads-actions";
+import { BulkProvider, SelectAll } from "./BulkSelect";
+import { deleteLead, deleteLeads, setLeadDone, setLeadRead, updateLeadStatus } from "@/app/admin/(protected)/leads-actions";
 import StatusSelect from "./StatusSelect";
 import LeadRow from "./LeadRow";
 import Detail from "./DetailItem";
@@ -114,17 +115,20 @@ function LeadDetails({ lead }) {
 
 export default function LeadsTable({ leads }) {
   return (
+    <BulkProvider ids={leads.map((l) => l.id)} onDeleteMany={deleteLeads} noun="quotation">
     <div className={a.card}>
       <div className={`${t.wrap} ${a.scroll}`}>
         <table className={`${t.table} ${s.table}`}>
           <caption className="sr-only">Quotation requests, newest first. Select a row to see its details.</caption>
           <thead>
             <tr>
+              <th scope="col"><SelectAll /></th>
               <th scope="col"><span className="sr-only">Solved</span></th>
               <th scope="col">Name</th>
               <th scope="col">Date</th>
               <th scope="col">Service</th>
               <th scope="col"><span className="sr-only">Details</span></th>
+              <th scope="col"><span className="sr-only">Delete</span></th>
             </tr>
           </thead>
           <tbody>
@@ -139,6 +143,7 @@ export default function LeadsTable({ leads }) {
                   initialDone={lead.is_done === true}
                   onRead={setLeadRead}
                   onDone={setLeadDone}
+                  onDelete={deleteLead}
                   label={`${lead.ticket_id} from ${lead.full_name}`}
                   detail={<LeadDetails lead={lead} />}
                 >
@@ -167,5 +172,6 @@ export default function LeadsTable({ leads }) {
         </table>
       </div>
     </div>
+    </BulkProvider>
   );
 }
