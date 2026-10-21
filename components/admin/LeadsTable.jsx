@@ -122,13 +122,13 @@ export default function LeadsTable({ leads }) {
           <caption className="sr-only">Quotation requests, newest first. Select a row to see its details.</caption>
           <thead>
             <tr>
-              <th scope="col"><SelectAll /></th>
               <th scope="col"><span className="sr-only">Solved</span></th>
               <th scope="col">Name</th>
               <th scope="col">Date</th>
               <th scope="col">Service</th>
               <th scope="col"><span className="sr-only">Details</span></th>
               <th scope="col"><span className="sr-only">Delete</span></th>
+              <th scope="col"><SelectAll /></th>
             </tr>
           </thead>
           <tbody>

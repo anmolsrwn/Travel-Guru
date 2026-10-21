@@ -79,16 +79,6 @@ export default function LeadRow({ id, name, initialRead, initialDone, label, det
   return (
     <>
       <tr className={className} onClick={toggle}>
-        <td data-label="Select" className={s.selectCell}>
-          <input
-            type="checkbox"
-            className={s.selectBox}
-            checked={bulk.selected.has(id)}
-            onChange={(event) => bulk.toggle(id, event.target.checked)}
-            onClick={(event) => event.stopPropagation()}
-            aria-label={`Select ${label}`}
-          />
-        </td>
         <td data-label="Solved" className={s.check}>
           <input
             type="checkbox"
@@ -131,6 +121,16 @@ export default function LeadRow({ id, name, initialRead, initialDone, label, det
           >
             Delete
           </button>
+        </td>
+        <td data-label="Select" className={s.selectCell}>
+          <input
+            type="checkbox"
+            className={s.selectBox}
+            checked={bulk.selected.has(id)}
+            onChange={(event) => bulk.toggle(id, event.target.checked)}
+            onClick={(event) => event.stopPropagation()}
+            aria-label={`Select ${label}`}
+          />
         </td>
       </tr>
       {open ? (

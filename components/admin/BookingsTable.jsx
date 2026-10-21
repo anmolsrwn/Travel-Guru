@@ -80,13 +80,13 @@ export default function BookingsTable({ rows }) {
           <caption className="sr-only">Booking requests, newest first. Select a row to see its details.</caption>
           <thead>
             <tr>
-              <th scope="col"><SelectAll /></th>
               <th scope="col"><span className="sr-only">Done</span></th>
               <th scope="col">Name</th>
               <th scope="col">Date</th>
               <th scope="col">Package</th>
               <th scope="col"><span className="sr-only">Details</span></th>
               <th scope="col"><span className="sr-only">Delete</span></th>
+              <th scope="col"><SelectAll /></th>
             </tr>
           </thead>
           <tbody>
