@@ -1,7 +1,10 @@
 // Pure state helpers for the QuoteForm (task 13.9). No React, no DOM: importable from
 // node --test. The component keeps one `form` object (Quote_Form_Data + honeypot) and
 // one `errors` object keyed like validateQuoteForm's errors.
-import { BUSINESS, QUOTE_SERVICE_OPTIONS } from "../../lib/data.js"; // relative: also loaded by node --test
+import { BUSINESS, QUOTE_SERVICE_OPTIONS, TICKET_SERVICES } from "../../lib/data.js"; // relative: also loaded by node --test
+
+/** Stored name of the Trip tile (shown as "Trip"). */
+const TRIP_SERVICE = "Holidays";
 
 /** Fields in form order; used to focus the first invalid field (Req 15.19). */
 export const QUOTE_FIELD_ORDER = [
@@ -12,6 +15,11 @@ export const QUOTE_FIELD_ORDER = [
   "departureCity",
   "destinations",
   "departureDate",
+  "ticketJourney",
+  "returnDate",
+  "transport",
+  "flightClass",
+  "trainClass",
   "duration",
   "tripType",
   "adults",
@@ -37,6 +45,11 @@ export function initialQuoteForm() {
     departureCity: BUSINESS.originCity.name,
     destinations: "",
     departureDate: "",
+    journey: "One way", // flight / train requests only
+    returnDate: "",
+    transport: "Any", // trip requests only: Flight | Train | Any
+    flightClass: "",
+    trainClass: "",
     duration: "",
     tripType: "",
     adults: 2,
@@ -61,10 +74,20 @@ export function checkService(services, option) {
   return QUOTE_SERVICE_OPTIONS.filter((o) => o === option || services.includes(o));
 }
 
+/**
+ * A Trip and flight / train tickets are separate kinds of request, so ticking one side clears
+ * the other. Anything else (and unknown options) leaves the list alone.
+ */
+function clearConflicts(services, option) {
+  if (option === TRIP_SERVICE) return services.filter((s) => !TICKET_SERVICES.includes(s));
+  if (TICKET_SERVICES.includes(option)) return services.filter((s) => s !== TRIP_SERVICE);
+  return services;
+}
+
 /** `services` with `option` toggled (tile click), in QUOTE_SERVICE_OPTIONS order. */
 export function toggleService(services, option) {
   if (services.includes(option)) return services.filter((o) => o !== option);
-  return checkService(services, option);
+  return checkService(clearConflicts(services, option), option);
 }
 
 /**
@@ -86,7 +109,7 @@ export function applyQuoteIntent(form, errors, intent) {
   };
 
   if (intent.type === "service") {
-    const services = checkService(form.services, intent.value);
+    const services = checkService(clearConflicts(form.services, intent.value), intent.value);
     const fx = intent.forex;
     if (fx && typeof fx === "object") {
       const next = { ...form, services };
@@ -104,11 +127,24 @@ export function applyQuoteIntent(form, errors, intent) {
   }
   if (intent.type === "destination") {
     return {
-      form: { ...form, destinations: String(intent.value ?? ""), services: checkService(form.services, intent.service) },
+      form: { ...form, destinations: String(intent.value ?? ""), services: checkService(clearConflicts(form.services, intent.service), intent.service) },
       errors: without(["services", "destinations"]),
     };
   }
   return { form, errors };
+}
+
+/** True when any selected service is a flight or train ticket. */
+export function hasTicketService(services) {
+  return Array.isArray(services) && services.some((s) => TICKET_SERVICES.includes(s));
+}
+
+/**
+ * Ticket mode: every selected service is a flight, train or forex request, so the holiday
+ * fields (duration, trip type, hotel, meals, budget) are hidden and not sent.
+ */
+export function isTicketMode(services) {
+  return Array.isArray(services) && services.every((s) => TICKET_SERVICES.includes(s) || s === "Forex");
 }
 
 /**
@@ -116,8 +152,31 @@ export function applyQuoteIntent(form, errors, intent) {
  * dropped while children is 0, since that field is hidden (Req 15.3).
  */
 export function quotePayload(form) {
-  const { forexDirection, forexCurrency, forexAmount, ...rest } = form;
+  const { forexDirection, forexCurrency, forexAmount, journey, returnDate, transport, flightClass, trainClass, ...rest } = form;
   const payload = { ...rest, childAges: form.children > 0 ? form.childAges : "" };
+  if (isTicketMode(form.services)) {
+    // Hidden holiday fields may hold stale values from before; never send them.
+    payload.duration = "";
+    payload.tripType = "";
+    payload.hotelCategory = "";
+    payload.mealPlan = "";
+    payload.budget = "";
+  }
+  if (form.services.includes(TRIP_SERVICE) && !hasTicketService(form.services)) {
+    // Trip: how the customer wants to get there, plus an optional class for that mode.
+    payload.ticketDetails = {
+      transport,
+      flightClass: transport === "Flight" ? flightClass : "",
+      trainClass: transport === "Train" ? trainClass : "",
+    };
+  } else if (hasTicketService(form.services)) {
+    payload.ticketDetails = {
+      journey,
+      returnDate: journey === "Round trip" ? returnDate : "",
+      flightClass: form.services.includes("Flights") ? flightClass : "",
+      trainClass: form.services.includes("Train") ? trainClass : "",
+    };
+  }
   if (form.services.includes("Forex")) {
     payload.forexDetails = { direction: forexDirection, currency: forexCurrency, amount: Number(forexAmount) };
   }

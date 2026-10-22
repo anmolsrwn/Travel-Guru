@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import { propertyTag, assertProperty, fc } from '../helpers.js';
 import { composeQuoteWhatsAppMessage } from '../../lib/logic.js';
-import { QUOTE_SERVICE_OPTIONS, CALLBACK_SLOTS, BUSINESS } from '../../lib/data.js';
+import { QUOTE_SERVICE_OPTIONS, CALLBACK_SLOTS, BUSINESS, serviceLabel } from '../../lib/data.js';
 
 const validFormArb = fc.record({
   services: fc.subarray(QUOTE_SERVICE_OPTIONS, { minLength: 1, maxLength: Math.min(4, QUOTE_SERVICE_OPTIONS.length) }),
@@ -41,7 +41,7 @@ test(propertyTag(25, 'WhatsApp quote message completeness'), () => {
   assertProperty(
     fc.property(validFormArb, (data) => {
       const msg = composeQuoteWhatsAppMessage(data, BUSINESS);
-      return data.services.some((svc) => msg.includes(svc));
+      return data.services.some((svc) => msg.includes(serviceLabel(svc)));
     }),
   );
 

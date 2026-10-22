@@ -100,7 +100,7 @@ test('ticketSummaryRows: wireframe rows, empty optional rows omitted (Req 17.6)'
     callbackSlot: 'morning',
   });
   assert.deepEqual(rows, [
-    { label: 'Services', value: 'Holidays, Flights' },
+    { label: 'Services', value: 'Trip, Flights' },
     { label: 'Route', value: 'Raipur → Bali' },
     { label: 'Departs', value: '14 Mar 2026' },
     { label: 'Duration', value: '5-7 days' },

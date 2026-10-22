@@ -1,7 +1,7 @@
 // Quotations (leads) table for /admin (Requirement 43.1, 43.2, 43.6). Rendered on the
 // server; only the per-row StatusSelect is a client component. Read-only apart
 // from status: no edit or delete controls.
-import { BUSINESS, CURRENCIES, LEAD_STATUSES } from "@/lib/data";
+import { BUSINESS, CURRENCIES, LEAD_STATUSES, serviceLabel } from "@/lib/data";
 import { buildWhatsAppUrl, formatPrice } from "@/lib/logic";
 import { BulkProvider, SelectAll } from "./BulkSelect";
 import { deleteLead, deleteLeads, setLeadDone, setLeadRead, updateLeadStatus } from "@/app/admin/(protected)/leads-actions";
@@ -72,6 +72,7 @@ function LeadDetails({ lead }) {
   const wa = whatsAppNumber(lead.phone);
   const waText = `Hello ${lead.full_name}, this is ${BUSINESS.brandName} about your quotation request ${lead.ticket_id}.`;
   const forex = forexSummary(lead.forex_details);
+  const ticket = lead.ticket_details && typeof lead.ticket_details === "object" ? lead.ticket_details : null;
   return (
     <dl className={s.details}>
       <Detail label="Ticket">{lead.ticket_id}</Detail>
@@ -90,10 +91,21 @@ function LeadDetails({ lead }) {
       <Detail label="Departure">
         {[lead.departure_city, lead.departure_date].filter(Boolean).join(", ") || "—"}
       </Detail>
+      {ticket?.transport && <Detail label="Travel by">{ticket.transport}</Detail>}
+      {ticket?.journey && (
+        <Detail label="Journey">
+          {ticket.journey}
+          {ticket.returnDate ? `, returning ${ticket.returnDate}` : ""}
+        </Detail>
+      )}
+      {ticket?.flightClass && <Detail label="Flight class">{ticket.flightClass}</Detail>}
+      {ticket?.trainClass && <Detail label="Train class">{ticket.trainClass}</Detail>}
       <Detail label="Travellers">{travellers(lead)}</Detail>
-      <Detail label="Hotel / meal / budget">
-        {[lead.hotel_category, lead.meal_plan, lead.budget].filter(Boolean).join(" / ") || "—"}
-      </Detail>
+      {[lead.hotel_category, lead.meal_plan, lead.budget].some(Boolean) && (
+        <Detail label="Hotel / meal / budget">
+          {[lead.hotel_category, lead.meal_plan, lead.budget].filter(Boolean).join(" / ")}
+        </Detail>
+      )}
       <Detail label="Call-back slot">{lead.callback_slot || "—"}</Detail>
       <Detail label="Call-back deadline">{formatIst(lead.callback_deadline)}</Detail>
       {forex && <Detail label="Forex">{forex}</Detail>}
@@ -156,7 +168,7 @@ export default function LeadsTable({ leads }) {
                             key={service}
                             className={service === "Forex" ? `${s.badge} ${s.badgeForex}` : s.badge}
                           >
-                            {service}
+                            {serviceLabel(service)}
                           </span>
                         ))}
                       </span>

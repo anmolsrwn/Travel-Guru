@@ -1,7 +1,7 @@
 // Pure helpers for the quote submit and TicketModal (task 13.10, Req 17.6–17.13,
 // 19.1–19.5, 27.8). No React; DOM-free except postQuote, which takes `fetch` as a
 // parameter so node --test can drive it. Relative imports: also loaded by node --test.
-import { API_LIMITS, BUSINESS, CALLBACK_SLOTS } from "../../lib/data.js";
+import { API_LIMITS, BUSINESS, CALLBACK_SLOTS, serviceLabel } from "../../lib/data.js";
 import { composeQuoteWhatsAppMessage, isValidTicketId } from "../../lib/logic.js";
 import { sendWeb3Alert } from "./web3Notify.js";
 
@@ -75,10 +75,15 @@ export async function postQuote(data, { fetchImpl = globalThis.fetch, timeoutMs 
         Name: data?.fullName,
         Phone: data?.phone,
         Email: data?.email,
-        Services: data?.services,
+        Services: Array.isArray(data?.services) ? data.services.map(serviceLabel) : data?.services,
+        "Travel by": data?.ticketDetails?.transport,
         From: data?.departureCity,
         Destinations: data?.destinations,
         "Departure date": data?.departureDate,
+        Journey: data?.ticketDetails?.journey,
+        "Return date": data?.ticketDetails?.returnDate,
+        "Flight class": data?.ticketDetails?.flightClass,
+        "Train class": data?.ticketDetails?.trainClass,
         Adults: data?.adults,
         Children: data?.children,
         Budget: data?.budget,
@@ -149,7 +154,7 @@ export function travellersText(adults, children, childAges) {
 export function ticketSummaryRows(data) {
   const d = data ?? {};
   const t = (v) => String(v ?? "").trim();
-  const services = Array.isArray(d.services) ? d.services.join(", ") : "";
+  const services = Array.isArray(d.services) ? d.services.map(serviceLabel).join(", ") : "";
   const from = t(d.departureCity);
   const to = t(d.destinations);
   const route = from && to ? `${from} → ${to}` : from || to;
@@ -157,6 +162,11 @@ export function ticketSummaryRows(data) {
     ["Services", services],
     ["Route", route],
     ["Departs", formatTripDate(d.departureDate)],
+    ["Travel by", t(d.ticketDetails?.transport)],
+    ["Journey", t(d.ticketDetails?.journey)],
+    ["Returns", formatTripDate(d.ticketDetails?.returnDate)],
+    ["Flight class", t(d.ticketDetails?.flightClass)],
+    ["Train class", t(d.ticketDetails?.trainClass)],
     ["Duration", t(d.duration)],
     ["Travellers", travellersText(d.adults, d.children, d.childAges)],
     ["Hotel category", t(d.hotelCategory)],

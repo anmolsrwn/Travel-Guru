@@ -26,13 +26,18 @@ import {
   CALLBACK_SLOTS,
   CURRENCIES,
   DURATIONS,
+  FLIGHT_CLASSES,
   FOREX_CURRENCIES,
   HOTEL_CATEGORIES,
+  JOURNEY_TYPES,
   LIMITS,
   MEAL_PLANS,
   QUOTE_SERVICE_OPTIONS,
   SERVICES,
+  TRAIN_CLASSES,
+  TRANSPORT_MODES,
   TRIP_TYPES,
+  serviceLabel,
 } from "@/lib/data";
 import {
   buildWhatsAppUrl,
@@ -50,7 +55,9 @@ import { localTodayISO, useLocalTodayISO } from "./localToday";
 import {
   applyQuoteIntent,
   firstInvalidField,
+  hasTicketService,
   initialQuoteForm,
+  isTicketMode,
   parseCount,
   quotePayload,
   toggleService,
@@ -74,6 +81,8 @@ const SELECT_OPTIONS = {
   hotelCategory: HOTEL_CATEGORIES.map((v) => ({ value: v, label: v })),
   mealPlan: MEAL_PLANS.map((v) => ({ value: v, label: v })),
   budget: BUDGETS.map((v) => ({ value: v, label: v })),
+  flightClass: FLIGHT_CLASSES.map((v) => ({ value: v, label: v })),
+  trainClass: TRAIN_CLASSES.map((v) => ({ value: v, label: v })),
   callbackSlot: CALLBACK_SLOTS.map((slot) => ({ value: slot.id, label: slot.label })),
 };
 
@@ -306,6 +315,9 @@ export function QuoteForm() {
   }
 
   const servicesInvalid = Boolean(errors.services);
+  // Ticket mode: only flights / train (/ forex) are offered, so the holiday fields are hidden.
+  const ticketMode = isTicketMode(form.services);
+  const ticketish = hasTicketService(form.services);
 
   return (
     <form className={`${card.glass} ${s.form}`} noValidate onSubmit={handleSubmit} aria-label="Quotation request">
@@ -340,7 +352,7 @@ export function QuoteForm() {
                         <ServiceGlyph name={service.icon} />
                       </span>
                     )}
-                    <span className={svc.tileLabel}>{option}</span>
+                    <span className={svc.tileLabel}>{serviceLabel(option)}</span>
                     <span className={svc.check} aria-hidden="true" />
                   </span>
                 </label>
@@ -433,7 +445,7 @@ export function QuoteForm() {
         </h3>
         <div className={s.grid}>
           <div className={f.field}>
-            {label("departureCity", "Departure City")}
+            {label("departureCity", ticketish ? "From" : "Departure City")}
             <input
               type="text"
               className={f.input}
@@ -447,11 +459,11 @@ export function QuoteForm() {
           </div>
 
           <div className={f.field}>
-            {label("destinations", "Destination(s)", { required: true })}
+            {label("destinations", ticketish ? "To" : "Destination(s)", { required: true })}
             <input
               type="text"
               className={f.input}
-              placeholder="e.g. Bali, Singapore"
+              placeholder={ticketish ? "e.g. Delhi, Dubai" : "e.g. Bali, Singapore"}
               maxLength={LIMITS.destinationsMax}
               value={form.destinations}
               onChange={(e) => update("destinations", e.target.value)}
@@ -461,7 +473,7 @@ export function QuoteForm() {
           </div>
 
           <div className={f.field}>
-            {label("departureDate", "Departure Date", { required: true })}
+            {label("departureDate", ticketish ? "Travel date" : "Departure Date", { required: true })}
             <input
               type="date"
               className={f.input}
@@ -473,8 +485,95 @@ export function QuoteForm() {
             {errorText("departureDate")}
           </div>
 
-          {selectField("duration", "Duration")}
-          {selectField("tripType", "Trip type")}
+          {ticketish && (
+            <>
+              <div className={f.field}>
+                <span className={f.label} id="q-ticketJourney-label">
+                  Journey
+                </span>
+                <div
+                  className={s.radioGroup}
+                  role="radiogroup"
+                  aria-labelledby="q-ticketJourney-label"
+                  aria-invalid={errors.ticketJourney ? "true" : undefined}
+                  aria-describedby={errors.ticketJourney ? errorId("ticketJourney") : undefined}
+                >
+                  {JOURNEY_TYPES.map((value, i) => (
+                    <label key={value} className={s.radioOption}>
+                      <input
+                        type="radio"
+                        name="journey"
+                        id={i === 0 ? fieldId("ticketJourney") : undefined}
+                        value={value}
+                        checked={form.journey === value}
+                        onChange={() => update("journey", value, ["ticketJourney", "returnDate"])}
+                      />
+                      <span>{value}</span>
+                    </label>
+                  ))}
+                </div>
+                {errorText("ticketJourney")}
+              </div>
+
+              {form.journey === "Round trip" && (
+                <div className={f.field}>
+                  {label("returnDate", "Return date", { required: true })}
+                  <input
+                    type="date"
+                    className={f.input}
+                    min={form.departureDate || minDate}
+                    value={form.returnDate}
+                    onChange={(e) => update("returnDate", e.target.value)}
+                    {...a11y("returnDate")}
+                  />
+                  {errorText("returnDate")}
+                </div>
+              )}
+
+              {form.services.includes("Flights") && selectField("flightClass", "Flight class", { optional: true })}
+              {form.services.includes("Train") && selectField("trainClass", "Train class", { optional: true })}
+            </>
+          )}
+
+          {!ticketMode && (
+            <>
+              {form.services.includes("Holidays") && (
+                <>
+                  <div className={f.field}>
+                    <span className={f.label} id="q-transport-label">
+                      Travel by
+                    </span>
+                    <div
+                      className={s.radioGroup}
+                      role="radiogroup"
+                      aria-labelledby="q-transport-label"
+                      aria-invalid={errors.transport ? "true" : undefined}
+                      aria-describedby={errors.transport ? errorId("transport") : undefined}
+                    >
+                      {TRANSPORT_MODES.map((value, i) => (
+                        <label key={value} className={s.radioOption}>
+                          <input
+                            type="radio"
+                            name="transport"
+                            id={i === 0 ? fieldId("transport") : undefined}
+                            value={value}
+                            checked={form.transport === value}
+                            onChange={() => update("transport", value)}
+                          />
+                          <span>{value}</span>
+                        </label>
+                      ))}
+                    </div>
+                    {errorText("transport")}
+                  </div>
+                  {form.transport === "Flight" && selectField("flightClass", "Flight class", { optional: true })}
+                  {form.transport === "Train" && selectField("trainClass", "Train class", { optional: true })}
+                </>
+              )}
+              {selectField("duration", "Duration")}
+              {selectField("tripType", "Trip type")}
+            </>
+          )}
 
           <div className={s.counts}>
             {stepper("adults", "Adults", LIMITS.adults)}
@@ -497,9 +596,13 @@ export function QuoteForm() {
             </div>
           )}
 
-          {selectField("hotelCategory", "Hotel category")}
-          {selectField("mealPlan", "Meal plan", { optional: true })}
-          {selectField("budget", "Budget")}
+          {!ticketMode && (
+            <>
+              {selectField("hotelCategory", "Hotel category")}
+              {selectField("mealPlan", "Meal plan", { optional: true })}
+              {selectField("budget", "Budget")}
+            </>
+          )}
         </div>
       </div>
 
@@ -559,6 +662,7 @@ export function QuoteForm() {
             <textarea
               className={f.textarea}
               rows={4}
+              placeholder={ticketish ? "e.g. morning flight, preferred airline or train name" : undefined}
               maxLength={LIMITS.notesMax}
               value={form.notes}
               onChange={(e) => update("notes", e.target.value)}

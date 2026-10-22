@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 50;
 const LEAD_COLUMNS =
-  "id, ticket_id, created_at, services, departure_city, destinations, departure_date, adults, children, child_ages, hotel_category, meal_plan, budget, full_name, phone, email, callback_slot, callback_deadline, notes, forex_details, status, is_read, is_done";
+  "id, ticket_id, created_at, services, departure_city, destinations, departure_date, adults, children, child_ages, hotel_category, meal_plan, budget, full_name, phone, email, callback_slot, callback_deadline, notes, forex_details, status, is_read, is_done, ticket_details";
 
 /** `?page=` → positive integer (default 1). */
 function parsePage(raw) {
@@ -32,7 +32,7 @@ export default async function AdminLeadsPage({ searchParams }) {
   const page = parsePage((await searchParams)?.page);
   const from = (page - 1) * PAGE_SIZE;
 
-  // Falls back to the old column list (everything shown as read) until migration 0003 is applied.
+  // Falls back to older column lists (everything shown as read) until migrations 0003 and 0006 are applied.
   let { data, count, error } = { data: null, count: 0, error: null };
   let unreadCount = 0;
   let openCount = 0;
@@ -51,8 +51,12 @@ export default async function AdminLeadsPage({ searchParams }) {
   ({ data, count, error } = main);
   unreadCount = unread.count ?? 0;
   openCount = open.count ?? 0;
+  // Older databases: first drop ticket_details (migration 0006), then the read / done flags too.
   if (error) {
-    ({ data, count, error } = await pageQuery(LEAD_COLUMNS.replace(", is_read, is_done", "")));
+    ({ data, count, error } = await pageQuery(LEAD_COLUMNS.replace(", ticket_details", "")));
+  }
+  if (error) {
+    ({ data, count, error } = await pageQuery(LEAD_COLUMNS.replace(", is_read, is_done, ticket_details", "")));
   }
 
   const leads = error ? [] : data || [];

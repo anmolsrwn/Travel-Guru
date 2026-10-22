@@ -94,7 +94,8 @@ test('applyQuoteIntent: destination replaces destinations and keeps existing ser
     type: 'destination', value: 'Bali', service: DESTINATION_QUOTE_SERVICE, nonce: 2,
   });
   assert.equal(r.form.destinations, 'Bali');
-  assert.deepEqual(r.form.services, ['Train']); // Holidays is no longer a quote option, so nothing extra is ticked
+  // The Trip tile (stored as Holidays) replaces any ticked flight / train tile.
+  assert.deepEqual(r.form.services, [DESTINATION_QUOTE_SERVICE]);
   assert.deepEqual(r.errors, { email: 'e' });
 });
 

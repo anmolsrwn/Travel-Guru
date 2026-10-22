@@ -174,8 +174,8 @@ test('CALLBACK_SLOTS has at least 1 entry with id and label', () => {
 // ---------------------------------------------------------------------------
 // QUOTE_SERVICE_OPTIONS
 // ---------------------------------------------------------------------------
-test('QUOTE_SERVICE_OPTIONS has 2 unique non-empty strings (Flights, Train)', () => {
-  assert.deepEqual(QUOTE_SERVICE_OPTIONS, ['Flights', 'Train']);
+test('QUOTE_SERVICE_OPTIONS has 3 unique non-empty strings (Flights, Train, Holidays shown as Trip)', () => {
+  assert.deepEqual(QUOTE_SERVICE_OPTIONS, ['Flights', 'Train', 'Holidays']);
   assert.ok(!QUOTE_SERVICE_OPTIONS.includes('Packages'), 'Packages is not a quote form option');
   assert.ok(!QUOTE_SERVICE_OPTIONS.includes('Forex'), 'Forex is not a quote form option');
   assert.ok(!QUOTE_SERVICE_OPTIONS.includes('Travel Insurance'), 'Travel Insurance is not a quote form option');
